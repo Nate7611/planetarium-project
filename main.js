@@ -28,6 +28,7 @@ const renderer = new THREE.WebGLRenderer({
 
 const distanceText = document.getElementById('distance');
 const timeText = document.getElementById('time');
+const timeElapsed = document.getElementById('time-elapsed');
 const timeScaleText = document.getElementById('slider-text');
 const timeScaleSlider = document.getElementById('time-slider');
 
@@ -134,8 +135,14 @@ const timeClock = new THREE.Clock();
 var pos = 0;
 var speed = 1;
 var timeScale = 1;
+var elapsedTime = 0;
 
 function animate() {
+  //Around the 35,000 mph the voyager is moving
+  pos = (0.00001124 * speed) * movementClock.getDelta();
+
+  elapsedTime += timeClock.getDelta() * speed;
+
   //Convert string to number
   timeScale = Number(timeScaleSlider.value);
 
@@ -147,6 +154,8 @@ function animate() {
 
   //Kilometers
   //distanceText.innerHTML =  Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999) + " km from the Sun";
+
+  timeElapsed.innerHTML = Math.trunc(elapsedTime);
 
   //Time to next planet
   for (let i = 0; i < planets.length; i++) {
@@ -161,9 +170,6 @@ function animate() {
 
   //Set orbit control orgin to object
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
-
-  //Around the 35,000 mph the voyager is moving
-  pos = (0.00001124 * speed) * movementClock.getDelta();
 
   switch (timeScale) {
     case 1:
