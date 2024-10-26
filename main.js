@@ -135,13 +135,41 @@ const timeClock = new THREE.Clock();
 var pos = 0;
 var speed = 1;
 var timeScale = 1;
-var elapsedTime = 0;
+var elapsedTimeRaw = 0;
+var elapsedSeconds = 0;
+var elapsedMinutes = 0;
+var elapsedHours = 0;
+var elapsedDays = 0;
+var elapsedYears = 0;
 
 function animate() {
   //Around the 35,000 mph the voyager is moving
   pos = (0.00001124 * speed) * movementClock.getDelta();
 
-  elapsedTime += timeClock.getDelta() * speed;
+  //Converting Seconds to largest form
+  elapsedTimeRaw += timeClock.getDelta() * speed;
+  elapsedSeconds = Math.trunc(elapsedTimeRaw - 60 * Math.trunc(elapsedTimeRaw / 60))
+  elapsedMinutes = Math.trunc((elapsedTimeRaw / 60) - 60 * Math.trunc(elapsedTimeRaw / 3600));
+  elapsedHours = Math.trunc((elapsedTimeRaw/3600) - 24 * Math.trunc(elapsedTimeRaw/86400));
+  elapsedDays = Math.trunc((elapsedTimeRaw/86400) - 365.25 * Math.trunc(elapsedTimeRaw/31557600));
+  elapsedYears = Math.trunc(elapsedTimeRaw / 31557600);
+
+  //Error Checking
+  if (elapsedSeconds < 0 || elapsedSeconds > 60) {
+    console.log("Error Seconds: " + elapsedSeconds);
+  }
+  if (elapsedMinutes < 0 || elapsedMinutes > 60) {
+    console.log("Error Minutes: " + elapsedMinutes);
+  }
+  if (elapsedHours < 0 || elapsedHours > 24) {
+    console.log("Error Hours: " + elapsedHours);
+  }
+  if (elapsedDays < 0 || elapsedDays > 365) {
+    console.log("Error Days: " + elapsedDays);
+  }
+  if (elapsedYears < 0) {
+    console.log("Error Years: " + elapsedYears);
+  }
 
   //Convert string to number
   timeScale = Number(timeScaleSlider.value);
@@ -155,7 +183,7 @@ function animate() {
   //Kilometers
   //distanceText.innerHTML =  Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999) + " km from the Sun";
 
-  timeElapsed.innerHTML = Math.trunc(elapsedTime);
+  timeElapsed.innerHTML = elapsedYears + " Year(s) " + elapsedDays + " Day(s) " + elapsedHours + " Hour(s) " + elapsedMinutes + " Minute(s) " + elapsedSeconds + " Second(s) ";
 
   //Time to next planet
   for (let i = 0; i < planets.length; i++) {
