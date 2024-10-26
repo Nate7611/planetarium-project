@@ -1,0 +1,118 @@
+/* 1. Use a more-intuitive box-sizing model */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+* {
+  margin: 0;
+}
+
+body {
+  /* 3. Add accessible line-height */
+  line-height: 1.5;
+  /* 4. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 5. Improve media defaults */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 6. Inherit fonts for form controls */
+input, button, textarea, select {
+  font: inherit;
+}
+
+/* 7. Avoid text overflows */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* 8. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/*
+  9. Create a root stacking context
+*/
+#root, #__next {
+  isolation: isolate;
+}
+
+/*
+  End CSS Reset
+*/
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+#distance { 
+  position: absolute;
+  top: 0px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  z-index: 100;
+  display:block;
+  color: white;
+  font-size: 3rem;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+}
+
+#time { 
+  position: absolute;
+  top: 55px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  z-index: 100;
+  display:block;
+  color: white;
+  font-size: 3rem;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+}
+
+#slider-text{
+  position: absolute;
+  bottom: 50px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  z-index: 100;
+  display:block;
+  color: white;
+  font-size: 2.5rem;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  bottom: 20px;
+  left: 25%;
+  width: 50%;
+  height: 25px;
+  border-radius: 10px;
+  background: #26658c;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
