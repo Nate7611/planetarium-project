@@ -8,15 +8,16 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 const scene = new THREE.Scene();
 
+const light = new THREE.AmbientLight( 0x404040, 100 );
+scene.add(light);
+
 //Space background
 scene.background = new THREE.CubeTextureLoader()
   .setPath('textures/cube/space/')
   .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
 
 //Lower background brightness
-scene.backgroundIntensity = 0.2
-
-const light = new THREE.PointLight(0xffffff, 100000, 100); light.position.set(50, 50, 50); scene.add(light);
+scene.backgroundIntensity = 0.7
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.0000001, 10000);
 
@@ -39,48 +40,61 @@ const control = new OrbitControls(camera, renderer.domElement);
 control.enableDamping = true;
 control.maxDistance = 0.000005;
 
-const sunGeometry = new THREE.SphereGeometry(0.5, 64, 32);
-const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xfcba03, wireframe: false });
+//Load Textures
+const textureLoader = new THREE.TextureLoader();
+const sunTexture = textureLoader.load('textures/sun.jpg' );
+const mercuryTexture = textureLoader.load('textures/mercury.jpg' );
+const venusTexture = textureLoader.load('textures/venus.jpg' );
+const earthTexture = textureLoader.load('textures/earth/earth-surface.jpg' );
+const earthNormal = textureLoader.load('textures/earth/earth-normal.tif' );
+const marsTexture = textureLoader.load('textures/mars.jpg' );
+const jupiterTexture = textureLoader.load('textures/jupiter.jpg' );
+const saturnTexture = textureLoader.load('textures/saturn.jpg' );
+const uranusTexture = textureLoader.load('textures/uranus.jpg' );
+const neptuneTexture = textureLoader.load('textures/neptune.jpg' );
+
+const sunGeometry = new THREE.SphereGeometry(0.5, 128, 64);
+const sunMaterial = new THREE.MeshStandardMaterial({ map: sunTexture });
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 scene.add(sun);
 
-const mercuryGeometry = new THREE.SphereGeometry(0.0017525, 32, 16);
-const mercuryMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: false });
+const mercuryGeometry = new THREE.SphereGeometry(0.0017525, 64, 32);
+const mercuryMaterial = new THREE.MeshStandardMaterial({ map: mercuryTexture });
 const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
 scene.add(mercury);
 
-const venusGeometry = new THREE.SphereGeometry(0.0043465, 32, 16);
-const venusMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: false });
+const venusGeometry = new THREE.SphereGeometry(0.0043465, 64, 32);
+const venusMaterial = new THREE.MeshStandardMaterial({ map: venusTexture });
 const venus = new THREE.Mesh(venusGeometry, venusMaterial);
 scene.add(venus);
 
-const earthGeometry = new THREE.SphereGeometry(0.004576, 32, 16);
-const earthMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: false });
+const earthGeometry = new THREE.SphereGeometry(0.004576, 64, 32);
+const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normalMap: earthNormal });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 scene.add(earth);
 
-const marsGeometry = new THREE.SphereGeometry(0.002435, 32, 16);
-const marsMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: false });
+const marsGeometry = new THREE.SphereGeometry(0.002435, 64, 32);
+const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture });
 const mars = new THREE.Mesh(marsGeometry, marsMaterial);
 scene.add(mars);
 
-const jupiterGeometry = new THREE.SphereGeometry(0.0502, 32, 16);
-const jupiterMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: false });
+const jupiterGeometry = new THREE.SphereGeometry(0.0502, 64, 32);
+const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture });
 const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
 scene.add(jupiter);
 
-const saturnGeometry = new THREE.SphereGeometry(0.041845, 32, 16);
-const saturnMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: false });
+const saturnGeometry = new THREE.SphereGeometry(0.041845, 64, 32);
+const saturnMaterial = new THREE.MeshStandardMaterial({ map: saturnTexture });
 const saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
 scene.add(saturn);
 
-const uranusGeometry = new THREE.SphereGeometry(0.01822, 32, 16);
-const uranusMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: false });
+const uranusGeometry = new THREE.SphereGeometry(0.01822, 64, 32);
+const uranusMaterial = new THREE.MeshStandardMaterial({ map: uranusTexture });
 const uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
 scene.add(uranus);
 
-const neptuneGeometry = new THREE.SphereGeometry(0.01769, 32, 16);
-const neptuneMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, wireframe: false });
+const neptuneGeometry = new THREE.SphereGeometry(0.01769, 64, 32);
+const neptuneMaterial = new THREE.MeshStandardMaterial({ map: neptuneTexture });
 const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
 scene.add(neptune);
 
@@ -97,6 +111,7 @@ loader.load('models/voyager.glb', (gltf) => {
 });
 
 function loaded() {
+  //voyagerModel.position.setZ(107.4)
   animate();
 }
 
@@ -111,8 +126,7 @@ saturn.position.setZ(1029);
 uranus.position.setZ(2067);
 neptune.position.setZ(3235);
 
-//voyager.position.setZ(0.5000001);
-camera.position.setZ(0.501)
+camera.position.setZ(0.51)
 
 const movementClock = new THREE.Clock();
 const timeClock = new THREE.Clock();

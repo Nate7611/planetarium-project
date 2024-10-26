@@ -84,6 +84,20 @@ canvas {
   font-weight: bold;
 }
 
+#time-elapsed { 
+  position: absolute;
+  top: 55px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  z-index: 100;
+  display:block;
+  color: white;
+  font-size: 3rem;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+}
+
 #slider-text{
   position: absolute;
   bottom: 50px;
