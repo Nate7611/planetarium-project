@@ -49,6 +49,7 @@ const mercuryTexture = textureLoader.load('textures/mercury.jpg' );
 const venusTexture = textureLoader.load('textures/venus.jpg' );
 const earthTexture = textureLoader.load('textures/earth/earth-surface.jpg' );
 const earthNormal = textureLoader.load('textures/earth/earth-normal.tif' );
+const earthCloudTexture = textureLoader.load('textures/earth/earth-cloud.jpg' );
 const marsTexture = textureLoader.load('textures/mars.jpg' );
 const jupiterTexture = textureLoader.load('textures/jupiter.jpg' );
 const saturnTexture = textureLoader.load('textures/saturn.jpg' );
@@ -70,10 +71,15 @@ const venusMaterial = new THREE.MeshStandardMaterial({ map: venusTexture });
 const venus = new THREE.Mesh(venusGeometry, venusMaterial);
 scene.add(venus);
 
-const earthGeometry = new THREE.SphereGeometry(0.004576, 64, 32);
-const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normalMap: earthNormal });
+const earthGeometry = new THREE.SphereGeometry(0.004576, 128, 64);
+const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normalMap: earthNormal, normalScale: new THREE.Vector2(1, 1)});
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 scene.add(earth);
+
+const earthCloudGeometry = new THREE.SphereGeometry(0.00463, 256, 128);
+const earthCloudMaterial = new THREE.MeshStandardMaterial({ alphaMap: earthCloudTexture, displacementMap: earthCloudTexture, displacementScale: -0.000005, transparent: true, opacity: 1.0 });
+const earthCloud = new THREE.Mesh(earthCloudGeometry, earthCloudMaterial);
+scene.add(earthCloud);
 
 const marsGeometry = new THREE.SphereGeometry(0.002435, 64, 32);
 const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture });
@@ -113,7 +119,7 @@ loader.load('models/voyager.glb', (gltf) => {
 });
 
 function loaded() {
-  voyagerModel.position.setZ(1)
+  //voyagerModel.position.setZ(107.51)
   animate();
 }
 
@@ -122,6 +128,7 @@ const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune];
 mercury.position.setZ(41.6);
 venus.position.setZ(77.73);
 earth.position.setZ(107.5);
+earthCloud.position.setZ(107.5);
 mars.position.setZ(163.7);
 jupiter.position.setZ(559.3);
 saturn.position.setZ(1029);
@@ -143,10 +150,10 @@ var elapsedDays = 0;
 var elapsedYears = 0;
 
 //Assign speed to all these
-const rotObjects = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune]
+const rotObjects = [sun, mercury, venus, earth, earthCloud, mars, jupiter, saturn, uranus, neptune]
 
 //Planet rotation speed in earth days (starts with sun)
-const rotSpeed = [27, 58.66667, 243.018056, 0.997222, 1.025, 0.413194, 0.439583, 0.718056, 0.666667]
+const rotSpeed = [27, 58.66667, 243.018056, 0.997222, 0.8, 1.025, 0.413194, 0.439583, 0.718056, 0.666667]
 
 function animate() {
   //Need to do this to get accurate deltatime
