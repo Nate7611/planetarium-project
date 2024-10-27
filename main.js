@@ -40,6 +40,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 const control = new OrbitControls(camera, renderer.domElement);
 control.enableDamping = true;
 control.maxDistance = 0.000005;
+control.minDistance = 0.0000006;
 
 //Load Textures
 const textureLoader = new THREE.TextureLoader();
@@ -112,7 +113,7 @@ loader.load('models/voyager.glb', (gltf) => {
 });
 
 function loaded() {
-  //voyagerModel.position.setZ(3234.9)
+  voyagerModel.position.setZ(1)
   animate();
 }
 
@@ -141,6 +142,12 @@ var elapsedHours = 0;
 var elapsedDays = 0;
 var elapsedYears = 0;
 
+//Assign speed to all these
+const rotObjects = [sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune]
+
+//Planet rotation speed in earth days (starts with sun)
+const rotSpeed = [27, 58.66667, 243.018056, 0.997222, 1.025, 0.413194, 0.439583, 0.718056, 0.666667]
+
 function animate() {
   //Need to do this to get accurate deltatime
   timer.update();
@@ -149,9 +156,10 @@ function animate() {
   var delta = timer.getDelta();
 
   //Rotate planets
-  sun.rotateY((0.00000143476 * delta) * speed);
-  console.log((0.00000143476 * delta) * speed)
-
+  for (let i = 0; i < rotObjects.length; i++) {
+    rotObjects[i].rotateY(((2 * Math.PI) / (rotSpeed[i] * 86400) * delta) * speed);
+  } 
+  
   //Around the 35,000 mph the voyager is moving
   pos = (0.00001124 * speed) * delta;
 
@@ -171,42 +179,19 @@ function animate() {
   String(elapsedMinutes).padStart(2, "0") + " Minute(s) " + 
   String(elapsedSeconds).padStart(2, "0") + " Second(s)";
 
-
-  //Error Checking
-  if (elapsedSeconds < 0 || elapsedSeconds > 60) {
-    console.log("Error Seconds: " + elapsedSeconds);
-  }
-  if (elapsedMinutes < 0 || elapsedMinutes > 60) {
-    console.log("Error Minutes: " + elapsedMinutes);
-  }
-  if (elapsedHours < 0 || elapsedHours > 24) {
-    console.log("Error Hours: " + elapsedHours);
-  }
-  if (elapsedDays < 0 || elapsedDays > 365) {
-    console.log("Error Days: " + elapsedDays);
-  }
-  if (elapsedYears < 0) {
-    console.log("Error Years: " + elapsedYears);
-  }
-
   //Move voyager and camera
-  voyagerModel.position.add(new THREE.Vector3(0, 0, pos));
-  camera.position.add(new THREE.Vector3(0, 0, pos));
+  //voyagerModel.position.add(new THREE.Vector3(0, 0, pos));
+  //camera.position.add(new THREE.Vector3(0, 0, pos));
 
   //Miles
-  distanceText.innerHTML = Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432474.349797) + " mi from the Sun";
+  distanceText.innerHTML = Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34) + " mi from the Sun";
 
   //Kilometers
   //distanceText.innerHTML =  Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999) + " km from the Sun";
 
   //Stop Voyager when at planet
   planets.forEach((planet, index) => {
-    const distanceToPlanet = voyagerModel.position.distanceTo(planet.position);
-    //console.log(distanceToPlanet)
-    if (distanceToPlanet < 0.005) {
-      timeScaleSlider.value = 1;
-      //timeText.innerHTML = `Arrived at ${['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'][index]}`;
-    }
+    planet
   });
 
   //console.log(voyagerModel.position.z)
@@ -267,6 +252,24 @@ function animate() {
   //every second is 180 days - 15552000
   //every second is a year - 31557600
 
+  //Debug
+  //Time Elapsed Error Checking
+  if (elapsedSeconds < 0 || elapsedSeconds > 60) {
+    console.log("Error Seconds: " + elapsedSeconds);
+  }
+  if (elapsedMinutes < 0 || elapsedMinutes > 60) {
+    console.log("Error Minutes: " + elapsedMinutes);
+  }
+  if (elapsedHours < 0 || elapsedHours > 24) {
+    console.log("Error Hours: " + elapsedHours);
+  }
+  if (elapsedDays < 0 || elapsedDays > 365) {
+    console.log("Error Days: " + elapsedDays);
+  }
+  if (elapsedYears < 0) {
+    console.log("Error Years: " + elapsedYears);
+  }
+
   window.addEventListener('resize', () => {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -277,5 +280,7 @@ function animate() {
   control.update();
 
   requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+
   renderer.render(scene, camera);
 }
