@@ -48,7 +48,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /*
   End CSS Reset
+  From Josh W Comeau
+  https://www.joshwcomeau.com/css/custom-css-reset/
 */
+
+p {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  z-index: 100;
+  display:block;
+  color: white;
+  font-size: 3rem;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+}
 
 canvas {
   position: fixed;
@@ -57,59 +71,19 @@ canvas {
 }
 
 #distance { 
-  position: absolute;
   top: 0px;
-  margin: 0 auto;
-  text-align: center;
-  width: 100%;
-  z-index: 100;
-  display:block;
-  color: white;
-  font-size: 3rem;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-weight: bold;
 }
 
 #time { 
-  position: absolute;
   top: 55px;
-  margin: 0 auto;
-  text-align: center;
-  width: 100%;
-  z-index: 100;
-  display:block;
-  color: white;
-  font-size: 3rem;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-weight: bold;
 }
 
 #time-elapsed {
-  position: absolute;
   top: 110px;
-  margin: 0 auto;
-  text-align: center;
-  width: 100%;
-  z-index: 100;
-  display:block;
-  color: white;
-  font-size: 3rem;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-weight: bold;
 }
 
 #slider-text{
-  position: absolute;
   bottom: 50px;
-  margin: 0 auto;
-  text-align: center;
-  width: 100%;
-  z-index: 100;
-  display:block;
-  color: white;
-  font-size: 2.5rem;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  font-weight: bold;
 }
 
 .slider {

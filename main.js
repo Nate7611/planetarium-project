@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { Timer } from 'three/addons/misc/Timer.js';
 
 const scene = new THREE.Scene();
 
@@ -112,7 +112,7 @@ loader.load('models/voyager.glb', (gltf) => {
 });
 
 function loaded() {
-  //voyagerModel.position.setZ(107.4)
+  //voyagerModel.position.setZ(3234.9)
   animate();
 }
 
@@ -129,8 +129,7 @@ neptune.position.setZ(3235);
 
 camera.position.setZ(0.51)
 
-const movementClock = new THREE.Clock();
-const timeClock = new THREE.Clock();
+const timer = new Timer();
 
 var pos = 0;
 var speed = 1;
@@ -143,16 +142,35 @@ var elapsedDays = 0;
 var elapsedYears = 0;
 
 function animate() {
+  //Need to do this to get accurate deltatime
+  timer.update();
+
+  //Deltatime
+  var delta = timer.getDelta();
+
+  //Rotate planets
+  sun.rotateY((0.00000143476 * delta) * speed);
+  console.log((0.00000143476 * delta) * speed)
+
   //Around the 35,000 mph the voyager is moving
-  pos = (0.00001124 * speed) * movementClock.getDelta();
+  pos = (0.00001124 * speed) * delta;
 
   //Converting Seconds to largest form
-  elapsedTimeRaw += timeClock.getDelta() * speed;
+  elapsedTimeRaw += delta * speed;
   elapsedSeconds = Math.trunc(elapsedTimeRaw - 60 * Math.trunc(elapsedTimeRaw / 60))
   elapsedMinutes = Math.trunc((elapsedTimeRaw / 60) - 60 * Math.trunc(elapsedTimeRaw / 3600));
-  elapsedHours = Math.trunc((elapsedTimeRaw/3600) - 24 * Math.trunc(elapsedTimeRaw/86400));
-  elapsedDays = Math.trunc((elapsedTimeRaw/86400) - 365.25 * Math.trunc(elapsedTimeRaw/31557600));
+  elapsedHours = Math.trunc((elapsedTimeRaw / 3600) - 24 * Math.trunc(elapsedTimeRaw / 86400));
+  elapsedDays = Math.trunc((elapsedTimeRaw / 86400) - 365.25 * Math.trunc(elapsedTimeRaw / 31557600));
   elapsedYears = Math.trunc(elapsedTimeRaw / 31557600);
+
+  //Write time elapsed to canvas
+  timeElapsed.innerHTML = 
+  elapsedYears + " Year(s) " + 
+  String(elapsedDays).padStart(3, "0") + " Day(s) " + 
+  String(elapsedHours).padStart(2, "0") + " Hour(s) " + 
+  String(elapsedMinutes).padStart(2, "0") + " Minute(s) " + 
+  String(elapsedSeconds).padStart(2, "0") + " Second(s)";
+
 
   //Error Checking
   if (elapsedSeconds < 0 || elapsedSeconds > 60) {
@@ -171,9 +189,7 @@ function animate() {
     console.log("Error Years: " + elapsedYears);
   }
 
-  //Convert string to number
-  timeScale = Number(timeScaleSlider.value);
-
+  //Move voyager and camera
   voyagerModel.position.add(new THREE.Vector3(0, 0, pos));
   camera.position.add(new THREE.Vector3(0, 0, pos));
 
@@ -183,14 +199,17 @@ function animate() {
   //Kilometers
   //distanceText.innerHTML =  Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999) + " km from the Sun";
 
-  timeElapsed.innerHTML = elapsedYears + " Year(s) " + elapsedDays + " Day(s) " + elapsedHours + " Hour(s) " + elapsedMinutes + " Minute(s) " + elapsedSeconds + " Second(s) ";
-
-  //Time to next planet
-  for (let i = 0; i < planets.length; i++) {
-    if (voyagerModel.position.z < planets[i]) {
-
+  //Stop Voyager when at planet
+  planets.forEach((planet, index) => {
+    const distanceToPlanet = voyagerModel.position.distanceTo(planet.position);
+    //console.log(distanceToPlanet)
+    if (distanceToPlanet < 0.005) {
+      timeScaleSlider.value = 1;
+      //timeText.innerHTML = `Arrived at ${['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'][index]}`;
     }
-  }
+  });
+
+  //console.log(voyagerModel.position.z)
 
   if (voyagerModel.position.z < mercury.position.z) {
     timeText.innerHTML = Math.round((mercury.position.z - voyagerModel.position.z) / (0.00001124 * speed));
@@ -199,6 +218,10 @@ function animate() {
   //Set orbit control orgin to object
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
 
+  //Convert string to number
+  timeScale = Number(timeScaleSlider.value);
+
+  //Control time scale from slider value
   switch (timeScale) {
     case 1:
       //Realtime
