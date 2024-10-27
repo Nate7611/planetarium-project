@@ -8,7 +8,7 @@ import { Timer } from 'three/addons/misc/Timer.js';
 
 const scene = new THREE.Scene();
 
-const light = new THREE.AmbientLight( 0x404040, 100 );
+const light = new THREE.AmbientLight(0x404040, 100);
 scene.add(light);
 
 //Space background
@@ -44,17 +44,16 @@ control.minDistance = 0.0000006;
 
 //Load Textures
 const textureLoader = new THREE.TextureLoader();
-const sunTexture = textureLoader.load('textures/sun.jpg' );
-const mercuryTexture = textureLoader.load('textures/mercury.jpg' );
-const venusTexture = textureLoader.load('textures/venus.jpg' );
-const earthTexture = textureLoader.load('textures/earth/earth-surface.jpg' );
-const earthNormal = textureLoader.load('textures/earth/earth-normal.tif' );
-const earthCloudTexture = textureLoader.load('textures/earth/earth-cloud.jpg' );
-const marsTexture = textureLoader.load('textures/mars.jpg' );
-const jupiterTexture = textureLoader.load('textures/jupiter.jpg' );
-const saturnTexture = textureLoader.load('textures/saturn.jpg' );
-const uranusTexture = textureLoader.load('textures/uranus.jpg' );
-const neptuneTexture = textureLoader.load('textures/neptune.jpg' );
+const sunTexture = textureLoader.load('textures/sun.jpg');
+const mercuryTexture = textureLoader.load('textures/mercury.jpg');
+const venusTexture = textureLoader.load('textures/venus.jpg');
+const earthTexture = textureLoader.load('textures/earth/earth-surface.jpg');
+const earthNormal = textureLoader.load('textures/earth/earth-normal.tif');
+const earthCloudTexture = textureLoader.load('textures/earth/earth-cloud.jpg');
+const marsTexture = textureLoader.load('textures/mars.jpg');
+const jupiterTexture = textureLoader.load('textures/jupiter.jpg');
+const uranusTexture = textureLoader.load('textures/uranus.jpg');
+const neptuneTexture = textureLoader.load('textures/neptune.jpg');
 
 const sunGeometry = new THREE.SphereGeometry(0.5, 128, 64);
 const sunMaterial = new THREE.MeshStandardMaterial({ map: sunTexture });
@@ -72,7 +71,7 @@ const venus = new THREE.Mesh(venusGeometry, venusMaterial);
 scene.add(venus);
 
 const earthGeometry = new THREE.SphereGeometry(0.004576, 128, 64);
-const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normalMap: earthNormal, normalScale: new THREE.Vector2(1, 1)});
+const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normalMap: earthNormal, normalScale: new THREE.Vector2(1, 1) });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 scene.add(earth);
 
@@ -91,10 +90,13 @@ const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture });
 const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
 scene.add(jupiter);
 
+//Keeping for scale reference
+/*
 const saturnGeometry = new THREE.SphereGeometry(0.041845, 64, 32);
-const saturnMaterial = new THREE.MeshStandardMaterial({ map: saturnTexture });
+const saturnMaterial = new THREE.MeshStandardMaterial({ wireframe: true});
 const saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
 scene.add(saturn);
+*/
 
 const uranusGeometry = new THREE.SphereGeometry(0.01822, 64, 32);
 const uranusMaterial = new THREE.MeshStandardMaterial({ map: uranusTexture });
@@ -106,38 +108,28 @@ const neptuneMaterial = new THREE.MeshStandardMaterial({ map: neptuneTexture });
 const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
 scene.add(neptune);
 
-let voyagerModel;
+//Load models
 const loader = new GLTFLoader();
+let voyagerModel;
 loader.load('models/voyager.glb', (gltf) => {
   voyagerModel = gltf.scene;
   voyagerModel.scale.set(0.0000001, 0.0000001, 0.0000001);
-  voyagerModel.position.set(0, -0.0000001, 0.5000001);
+  voyagerModel.position.set(0, -0.0000001, 0);
   voyagerModel.rotation.set((90 * Math.PI) / 180.0, (90 * Math.PI) / 180, 0)
   scene.add(voyagerModel);
 
   loaded();
 });
 
-function loaded() {
-  //voyagerModel.position.setZ(107.51)
-  animate();
-}
+let saturnModel;
+loader.load('models/saturn.glb', (gltf) => {
+  saturnModel = gltf.scene;
+  saturnModel.scale.set(0.01, 0.01, 0.01);
+  saturnModel.position.set(0, 0, 1029);
+  scene.add(saturnModel);
+});
 
-const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune];
-
-mercury.position.setZ(41.6);
-venus.position.setZ(77.73);
-earth.position.setZ(107.5);
-earthCloud.position.setZ(107.5);
-mars.position.setZ(163.7);
-jupiter.position.setZ(559.3);
-saturn.position.setZ(1029);
-uranus.position.setZ(2067);
-neptune.position.setZ(3235);
-
-camera.position.setZ(0.51)
-
-const timer = new Timer();
+var timer = new Timer();
 
 var pos = 0;
 var speed = 1;
@@ -149,11 +141,38 @@ var elapsedHours = 0;
 var elapsedDays = 0;
 var elapsedYears = 0;
 
-//Assign speed to all these
-const rotObjects = [sun, mercury, venus, earth, earthCloud, mars, jupiter, saturn, uranus, neptune]
+var planets = [];
+var rotObjects = [];
+var rotSpeed = [];
 
-//Planet rotation speed in earth days (starts with sun)
-const rotSpeed = [27, 58.66667, 243.018056, 0.997222, 0.8, 1.025, 0.413194, 0.439583, 0.718056, 0.666667]
+function loaded() {
+  voyagerModel.position.setZ(1028.9)
+  voyagerModel.position.setY(0.1)
+  setup();
+}
+
+function setup() {
+  planets = [mercury, venus, earth, mars, jupiter, saturnModel, uranus, neptune];
+
+  mercury.position.setZ(41.6);
+  venus.position.setZ(77.73);
+  earth.position.setZ(107.5);
+  earthCloud.position.setZ(107.5);
+  mars.position.setZ(163.7);
+  jupiter.position.setZ(559.3);
+  uranus.position.setZ(2067);
+  neptune.position.setZ(3235);
+
+  camera.position.setZ(0.51)
+
+  //Assign speed to all these
+  rotObjects = [sun, mercury, venus, earth, earthCloud, mars, jupiter, saturnModel, uranus, neptune]
+
+  //Planet rotation speed in earth days (starts with sun)
+  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 0.8, 1.025, 0.413194, 0.439583, 0.718056, 0.666667]
+
+  animate();
+}
 
 function animate() {
   //Need to do this to get accurate deltatime
@@ -165,8 +184,8 @@ function animate() {
   //Rotate planets
   for (let i = 0; i < rotObjects.length; i++) {
     rotObjects[i].rotateY(((2 * Math.PI) / (rotSpeed[i] * 86400) * delta) * speed);
-  } 
-  
+  }
+
   //Around the 35,000 mph the voyager is moving
   pos = (0.00001124 * speed) * delta;
 
@@ -179,12 +198,12 @@ function animate() {
   elapsedYears = Math.trunc(elapsedTimeRaw / 31557600);
 
   //Write time elapsed to canvas
-  timeElapsed.innerHTML = 
-  elapsedYears + " Year(s) " + 
-  String(elapsedDays).padStart(3, "0") + " Day(s) " + 
-  String(elapsedHours).padStart(2, "0") + " Hour(s) " + 
-  String(elapsedMinutes).padStart(2, "0") + " Minute(s) " + 
-  String(elapsedSeconds).padStart(2, "0") + " Second(s)";
+  timeElapsed.innerHTML =
+    elapsedYears + " Year(s) " +
+    String(elapsedDays).padStart(3, "0") + " Day(s) " +
+    String(elapsedHours).padStart(2, "0") + " Hour(s) " +
+    String(elapsedMinutes).padStart(2, "0") + " Minute(s) " +
+    String(elapsedSeconds).padStart(2, "0") + " Second(s)";
 
   //Move voyager and camera
   //voyagerModel.position.add(new THREE.Vector3(0, 0, pos));
