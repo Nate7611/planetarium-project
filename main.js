@@ -9,7 +9,6 @@ import { Timer } from 'three/addons/misc/Timer.js';
 const scene = new THREE.Scene();
 
 const light = new THREE.AmbientLight(0x404040, 100);
-scene.add(light);
 
 //Space background
 scene.background = new THREE.CubeTextureLoader()
@@ -26,29 +25,57 @@ const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#bg'),
 });
 
+//Load html elements
 const distanceText = document.getElementById('distance');
 const timeText = document.getElementById('time');
 const timeElapsed = document.getElementById('time-elapsed');
 const timeScaleText = document.getElementById('slider-text');
 const timeScaleSlider = document.getElementById('time-slider');
+const loadingScreen = document.getElementById("loading-screen");
+const loadingBar = document.getElementById("loading-bar");
 
 timeScaleSlider.value = 1;
 
+//Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
+//Create orbit controls
 const control = new OrbitControls(camera, renderer.domElement);
+
+//Makes orbit controls smooth
 control.enableDamping = true;
+
+//Control max and min zoom of camera 
 control.maxDistance = 0.000005;
 control.minDistance = 0.0000006;
 
+// Create a Loading Manager
+const loadingManager = new THREE.LoadingManager(
+  () => {
+    // Called when all assets are loaded
+    console.log("All assets loaded.");
+    loadingScreen.style.display = 'none';
+    setup();
+  },
+  (url, itemsLoaded, itemsTotal) => {
+    // Called during loading to update progress
+    console.log(`Loading file: ${url}. Loaded ${itemsLoaded} of ${itemsTotal} files.`);
+    loadingBar.style.width = String((itemsLoaded/itemsTotal) * 100 + "%")
+  },
+  (url) => {
+    // Called if there’s an error loading
+    console.error(`There was an error loading ${url}`);
+  }
+);
+
 //Load Textures
-const textureLoader = new THREE.TextureLoader();
+const textureLoader = new THREE.TextureLoader(loadingManager);
 const sunTexture = textureLoader.load('textures/sun.jpg');
 const mercuryTexture = textureLoader.load('textures/mercury.jpg');
 const venusTexture = textureLoader.load('textures/venus.jpg');
 const earthTexture = textureLoader.load('textures/earth/earth-surface.jpg');
-const earthNormal = textureLoader.load('textures/earth/earth-normal.tif');
+const earthNormal = textureLoader.load('textures/earth/earth-normal.jpg');
 const earthCloudTexture = textureLoader.load('textures/earth/earth-cloud.jpg');
 const moonTexture = textureLoader.load('textures/moon.jpg');
 const marsTexture = textureLoader.load('textures/mars.jpg');
@@ -57,71 +84,60 @@ const uranusTexture = textureLoader.load('textures/uranus.jpg');
 const neptuneTexture = textureLoader.load('textures/neptune.jpg');
 const plutoTexture = textureLoader.load('textures/pluto.jpg');
 
+//Create planets
 const sunGeometry = new THREE.SphereGeometry(0.5, 128, 64);
 const sunMaterial = new THREE.MeshStandardMaterial({ map: sunTexture });
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
-scene.add(sun);
 
 const mercuryGeometry = new THREE.SphereGeometry(0.0017525, 64, 32);
 const mercuryMaterial = new THREE.MeshStandardMaterial({ map: mercuryTexture });
 const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
-scene.add(mercury);
 
 const venusGeometry = new THREE.SphereGeometry(0.0043465, 64, 32);
 const venusMaterial = new THREE.MeshStandardMaterial({ map: venusTexture });
 const venus = new THREE.Mesh(venusGeometry, venusMaterial);
-scene.add(venus);
 
 const earthGeometry = new THREE.SphereGeometry(0.004576, 128, 64);
 const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normalMap: earthNormal, normalScale: new THREE.Vector2(1, 1) });
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-scene.add(earth);
+
+const earthCloudGeometry = new THREE.SphereGeometry(0.00464, 128, 64);
+const earthCloudMaterial = new THREE.MeshStandardMaterial({ alphaMap: earthCloudTexture, displacementMap: earthCloudTexture, displacementScale: -0.000005, transparent: true, opacity: 1.0 });
+const earthCloud = new THREE.Mesh(earthCloudGeometry, earthCloudMaterial);
 
 const moonGeometry = new THREE.SphereGeometry(0.00125, 64, 32);
 const moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
 const moon = new THREE.Mesh(moonGeometry, moonMaterial);
-scene.add(moon);
-
-const earthCloudGeometry = new THREE.SphereGeometry(0.00463, 256, 128);
-const earthCloudMaterial = new THREE.MeshStandardMaterial({ alphaMap: earthCloudTexture, displacementMap: earthCloudTexture, displacementScale: -0.000005, transparent: true, opacity: 1.0 });
-const earthCloud = new THREE.Mesh(earthCloudGeometry, earthCloudMaterial);
-scene.add(earthCloud);
 
 const marsGeometry = new THREE.SphereGeometry(0.002435, 64, 32);
 const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture });
 const mars = new THREE.Mesh(marsGeometry, marsMaterial);
-scene.add(mars);
 
 const jupiterGeometry = new THREE.SphereGeometry(0.0502, 64, 32);
 const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture });
 const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
-scene.add(jupiter);
 
 /*
 Keeping for scale reference
 const saturnGeometry = new THREE.SphereGeometry(0.041845, 64, 32);
 const saturnMaterial = new THREE.MeshStandardMaterial({ wireframe: true});
 const saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
-scene.add(saturn);
 */
 
 const uranusGeometry = new THREE.SphereGeometry(0.01822, 64, 32);
 const uranusMaterial = new THREE.MeshStandardMaterial({ map: uranusTexture });
 const uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
-scene.add(uranus);
 
 const neptuneGeometry = new THREE.SphereGeometry(0.01769, 64, 32);
 const neptuneMaterial = new THREE.MeshStandardMaterial({ map: neptuneTexture });
 const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
-scene.add(neptune);
 
 const plutoGeometry = new THREE.SphereGeometry(0.00085366912, 64, 32);
 const plutoMaterial = new THREE.MeshStandardMaterial({ map: plutoTexture });
 const pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
-scene.add(pluto);
 
 //Load models
-const loader = new GLTFLoader();
+const loader = new GLTFLoader(loadingManager);
 let voyagerModel;
 loader.load('models/voyager.glb', (gltf) => {
   voyagerModel = gltf.scene;
@@ -129,8 +145,6 @@ loader.load('models/voyager.glb', (gltf) => {
   voyagerModel.position.set(0, -0.0000001, 0);
   voyagerModel.rotation.set((90 * Math.PI) / 180, (90 * Math.PI) / 180, 0)
   scene.add(voyagerModel);
-
-  loaded();
 });
 
 let saturnModel;
@@ -153,21 +167,33 @@ var elapsedHours = 0;
 var elapsedDays = 0;
 var elapsedYears = 0;
 
-var planets = [];
 var rotObjects = [];
 var rotSpeed = [];
 
-function loaded() {
-  //voyagerModel.position.setZ(0.500001);
-  //voyagerModel.position.setZ(559.3)
-  voyagerModel.position.setZ(4219.9)
-  //voyagerModel.position.setY(0.06);
-  setup();
-}
-
 function setup() {
-  //planets = [mercury, venus, earth, mars, jupiter, saturnModel, uranus, neptune];
+  //Add objects to scene
+  scene.add(
+    sun,
+    mercury,
+    venus,
+    earth,
+    earthCloud,
+    moon,
+    mars,
+    jupiter,
+    saturnModel,
+    uranus,
+    neptune,
+    pluto,
+    voyagerModel,
+    light
+  )
 
+  //voyagerModel.position.setZ(0.500001);
+  voyagerModel.position.setZ(107.49)
+  //voyagerModel.position.setY(0.06);
+
+  //Set planet distance from sun
   mercury.position.setZ(41.6);
   venus.position.setZ(77.73);
   earth.position.setZ(107.5);
@@ -179,6 +205,7 @@ function setup() {
   neptune.position.setZ(3235);
   pluto.position.setZ(4220);
 
+  //Make camera face sun on load
   camera.position.setZ(0.51)
 
   //Assign speed to all these
@@ -232,8 +259,6 @@ function animate() {
   //distanceText.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + " km from the Sun";
 
   //Stop Voyager when at planet
-  //console.log(voyagerModel.position.z);
-
   if (voyagerModel.position.z < mercury.position.z) {
     timeText.innerHTML = Math.round((mercury.position.z - voyagerModel.position.z) / (0.00001124 * speed));
   }
@@ -283,12 +308,11 @@ function animate() {
       break;
   }
 
-  //every second is a minute - 60
-  //every second is an hour - 3600
-  //every second is a day - 86400
-  //every second is 30 days - 2592000
-  //every second is 180 days - 15552000
-  //every second is a year - 31557600
+
+  //Need to do this for orbit control damping
+  control.update();
+
+
 
   //Debug
   //Time Elapsed Error Checking
@@ -308,17 +332,23 @@ function animate() {
     console.log("Error Years: " + elapsedYears);
   }
 
-  window.addEventListener('resize', () => {
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-  });
+  //every second is a minute - 60
+  //every second is an hour - 3600
+  //every second is a day - 86400
+  //every second is 30 days - 2592000
+  //every second is 180 days - 15552000
+  //every second is a year - 31557600  
 
-  control.update();
+  //End Debug
 
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
-
-  renderer.render(scene, camera);
 }
+
+//Update program size and aspect ratio when window size changes
+window.addEventListener('resize', () => {
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+});
