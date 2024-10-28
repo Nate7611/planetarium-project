@@ -50,6 +50,7 @@ const venusTexture = textureLoader.load('textures/venus.jpg');
 const earthTexture = textureLoader.load('textures/earth/earth-surface.jpg');
 const earthNormal = textureLoader.load('textures/earth/earth-normal.tif');
 const earthCloudTexture = textureLoader.load('textures/earth/earth-cloud.jpg');
+const moonTexture = textureLoader.load('textures/moon.jpg');
 const marsTexture = textureLoader.load('textures/mars.jpg');
 const jupiterTexture = textureLoader.load('textures/jupiter.jpg');
 const uranusTexture = textureLoader.load('textures/uranus.jpg');
@@ -75,6 +76,11 @@ const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normal
 const earth = new THREE.Mesh(earthGeometry, earthMaterial);
 scene.add(earth);
 
+const moonGeometry = new THREE.SphereGeometry(0.00125, 64, 32);
+const moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+scene.add(moon);
+
 const earthCloudGeometry = new THREE.SphereGeometry(0.00463, 256, 128);
 const earthCloudMaterial = new THREE.MeshStandardMaterial({ alphaMap: earthCloudTexture, displacementMap: earthCloudTexture, displacementScale: -0.000005, transparent: true, opacity: 1.0 });
 const earthCloud = new THREE.Mesh(earthCloudGeometry, earthCloudMaterial);
@@ -90,8 +96,8 @@ const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture });
 const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
 scene.add(jupiter);
 
-//Keeping for scale reference
 /*
+Keeping for scale reference
 const saturnGeometry = new THREE.SphereGeometry(0.041845, 64, 32);
 const saturnMaterial = new THREE.MeshStandardMaterial({ wireframe: true});
 const saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
@@ -115,7 +121,7 @@ loader.load('models/voyager.glb', (gltf) => {
   voyagerModel = gltf.scene;
   voyagerModel.scale.set(0.0000001, 0.0000001, 0.0000001);
   voyagerModel.position.set(0, -0.0000001, 0);
-  voyagerModel.rotation.set((90 * Math.PI) / 180.0, (90 * Math.PI) / 180, 0)
+  voyagerModel.rotation.set((90 * Math.PI) / 180, (90 * Math.PI) / 180, 0)
   scene.add(voyagerModel);
 
   loaded();
@@ -146,18 +152,21 @@ var rotObjects = [];
 var rotSpeed = [];
 
 function loaded() {
-  voyagerModel.position.setZ(1028.9)
-  voyagerModel.position.setY(0.1)
+  //voyagerModel.position.setZ(0.500001);
+  //voyagerModel.position.setZ(559.3)
+  voyagerModel.position.setZ(107.5 + 0.26620135201)
+  //voyagerModel.position.setY(0.06);
   setup();
 }
 
 function setup() {
-  planets = [mercury, venus, earth, mars, jupiter, saturnModel, uranus, neptune];
+  //planets = [mercury, venus, earth, mars, jupiter, saturnModel, uranus, neptune];
 
   mercury.position.setZ(41.6);
   venus.position.setZ(77.73);
   earth.position.setZ(107.5);
   earthCloud.position.setZ(107.5);
+  moon.position.setZ(107.5 + 0.27620135201);
   mars.position.setZ(163.7);
   jupiter.position.setZ(559.3);
   uranus.position.setZ(2067);
@@ -166,10 +175,10 @@ function setup() {
   camera.position.setZ(0.51)
 
   //Assign speed to all these
-  rotObjects = [sun, mercury, venus, earth, earthCloud, mars, jupiter, saturnModel, uranus, neptune]
+  rotObjects = [sun, mercury, venus, earth, earthCloud, moon, mars, jupiter, saturnModel, uranus, neptune]
 
   //Planet rotation speed in earth days (starts with sun)
-  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 0.8, 1.025, 0.413194, 0.439583, 0.718056, 0.666667]
+  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 0.8, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667]
 
   animate();
 }
@@ -180,6 +189,10 @@ function animate() {
 
   //Deltatime
   var delta = timer.getDelta();
+
+  //Move voyager and camera
+  voyagerModel.position.add(new THREE.Vector3(0, 0, pos));
+  camera.position.add(new THREE.Vector3(0, 0, pos));
 
   //Rotate planets
   for (let i = 0; i < rotObjects.length; i++) {
@@ -205,22 +218,14 @@ function animate() {
     String(elapsedMinutes).padStart(2, "0") + " Minute(s) " +
     String(elapsedSeconds).padStart(2, "0") + " Second(s)";
 
-  //Move voyager and camera
-  //voyagerModel.position.add(new THREE.Vector3(0, 0, pos));
-  //camera.position.add(new THREE.Vector3(0, 0, pos));
+  //Miles from Sun
+  distanceText.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + " mi from the Sun";
 
-  //Miles
-  distanceText.innerHTML = Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34) + " mi from the Sun";
-
-  //Kilometers
-  //distanceText.innerHTML =  Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999) + " km from the Sun";
+  //Kilometers from Sun
+  //distanceText.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + " km from the Sun";
 
   //Stop Voyager when at planet
-  planets.forEach((planet, index) => {
-    planet
-  });
-
-  //console.log(voyagerModel.position.z)
+  //console.log(voyagerModel.position.z);
 
   if (voyagerModel.position.z < mercury.position.z) {
     timeText.innerHTML = Math.round((mercury.position.z - voyagerModel.position.z) / (0.00001124 * speed));
