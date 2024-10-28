@@ -55,6 +55,7 @@ const marsTexture = textureLoader.load('textures/mars.jpg');
 const jupiterTexture = textureLoader.load('textures/jupiter.jpg');
 const uranusTexture = textureLoader.load('textures/uranus.jpg');
 const neptuneTexture = textureLoader.load('textures/neptune.jpg');
+const plutoTexture = textureLoader.load('textures/pluto.jpg');
 
 const sunGeometry = new THREE.SphereGeometry(0.5, 128, 64);
 const sunMaterial = new THREE.MeshStandardMaterial({ map: sunTexture });
@@ -114,6 +115,11 @@ const neptuneMaterial = new THREE.MeshStandardMaterial({ map: neptuneTexture });
 const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
 scene.add(neptune);
 
+const plutoGeometry = new THREE.SphereGeometry(0.00085366912, 64, 32);
+const plutoMaterial = new THREE.MeshStandardMaterial({ map: plutoTexture });
+const pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
+scene.add(pluto);
+
 //Load models
 const loader = new GLTFLoader();
 let voyagerModel;
@@ -154,7 +160,7 @@ var rotSpeed = [];
 function loaded() {
   //voyagerModel.position.setZ(0.500001);
   //voyagerModel.position.setZ(559.3)
-  voyagerModel.position.setZ(107.5 + 0.26620135201)
+  voyagerModel.position.setZ(4219.9)
   //voyagerModel.position.setY(0.06);
   setup();
 }
@@ -171,14 +177,15 @@ function setup() {
   jupiter.position.setZ(559.3);
   uranus.position.setZ(2067);
   neptune.position.setZ(3235);
+  pluto.position.setZ(4220);
 
   camera.position.setZ(0.51)
 
   //Assign speed to all these
-  rotObjects = [sun, mercury, venus, earth, earthCloud, moon, mars, jupiter, saturnModel, uranus, neptune]
+  rotObjects = [sun, mercury, venus, earth, earthCloud, moon, mars, jupiter, saturnModel, uranus, neptune, pluto]
 
   //Planet rotation speed in earth days (starts with sun)
-  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 0.8, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667]
+  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 0.8, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667, 6.4]
 
   animate();
 }
