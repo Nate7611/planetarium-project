@@ -69,53 +69,81 @@ const loadingManager = new THREE.LoadingManager(
   }
 );
 
-//Load Textures
-const textureLoader = new THREE.TextureLoader(loadingManager);
-const sunTexture = textureLoader.load('textures/sun.jpg');
-const mercuryTexture = textureLoader.load('textures/mercury.jpg');
-const venusTexture = textureLoader.load('textures/venus.jpg');
-const earthTexture = textureLoader.load('textures/earth/earth-surface.jpg');
-const earthNormal = textureLoader.load('textures/earth/earth-normal.jpg');
-const earthCloudTexture = textureLoader.load('textures/earth/earth-cloud.jpg');
-const moonTexture = textureLoader.load('textures/moon.jpg');
-const marsTexture = textureLoader.load('textures/mars.jpg');
-const jupiterTexture = textureLoader.load('textures/jupiter.jpg');
-const uranusTexture = textureLoader.load('textures/uranus.jpg');
-const neptuneTexture = textureLoader.load('textures/neptune.jpg');
-const plutoTexture = textureLoader.load('textures/pluto.jpg');
+//Load Textures (bit of a mess but should run better than textureloader)
+const bitmapLoader = new THREE.ImageBitmapLoader(loadingManager);
 
-//Create planets
+let sunTexture, mercuryTexture, venusTexture, earthTexture, earthNormal, earthCloudTexture, moonTexture, marsTexture, jupiterTexture, uranusTexture, neptuneTexture, plutoTexture;
+let sun, mercury, venus, earth, earthCloud, moon, mars, jupiter, uranus, neptune, pluto;
+
+bitmapLoader.load('textures/sun.jpg', (imageBitmap) => {
+  sunTexture = new THREE.Texture(imageBitmap);
+  sunTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/mercury.jpg', (imageBitmap) => {
+  mercuryTexture = new THREE.Texture(imageBitmap);
+  mercuryTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/venus.jpg', (imageBitmap) => {
+  venusTexture = new THREE.Texture(imageBitmap);
+  venusTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/earth/earth-surface.jpg', (imageBitmap) => {
+  earthTexture = new THREE.Texture(imageBitmap);
+  earthTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/earth/earth-normal.jpg', (imageBitmap) => {
+  earthNormal = new THREE.Texture(imageBitmap);
+  earthNormal.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/earth/earth-cloud.jpg', (imageBitmap) => {
+  earthCloudTexture = new THREE.Texture(imageBitmap);
+  earthCloudTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/moon.jpg', (imageBitmap) => {
+  moonTexture = new THREE.Texture(imageBitmap);
+  moonTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/mars.jpg', (imageBitmap) => {
+  marsTexture = new THREE.Texture(imageBitmap);
+  marsTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/jupiter.jpg', (imageBitmap) => {
+  jupiterTexture = new THREE.Texture(imageBitmap);
+  jupiterTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/uranus.jpg', (imageBitmap) => {
+  uranusTexture = new THREE.Texture(imageBitmap);
+  uranusTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/neptune.jpg', (imageBitmap) => {
+  neptuneTexture = new THREE.Texture(imageBitmap);
+  neptuneTexture.needsUpdate = true;
+});
+
+bitmapLoader.load('textures/pluto.jpg', (imageBitmap) => {
+  plutoTexture = new THREE.Texture(imageBitmap);
+  plutoTexture.needsUpdate = true;
+});
+
+//Create planets geometry
 const sunGeometry = new THREE.SphereGeometry(0.5, 128, 64);
-const sunMaterial = new THREE.MeshStandardMaterial({ map: sunTexture });
-const sun = new THREE.Mesh(sunGeometry, sunMaterial);
-
 const mercuryGeometry = new THREE.SphereGeometry(0.0017525, 64, 32);
-const mercuryMaterial = new THREE.MeshStandardMaterial({ map: mercuryTexture });
-const mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
-
 const venusGeometry = new THREE.SphereGeometry(0.0043465, 64, 32);
-const venusMaterial = new THREE.MeshStandardMaterial({ map: venusTexture });
-const venus = new THREE.Mesh(venusGeometry, venusMaterial);
-
-const earthGeometry = new THREE.SphereGeometry(0.004576, 128, 64);
-const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normalMap: earthNormal, normalScale: new THREE.Vector2(1, 1) });
-const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-
-const earthCloudGeometry = new THREE.SphereGeometry(0.00464, 128, 64);
-const earthCloudMaterial = new THREE.MeshStandardMaterial({ alphaMap: earthCloudTexture, displacementMap: earthCloudTexture, displacementScale: -0.000005, transparent: true, opacity: 1.0 });
-const earthCloud = new THREE.Mesh(earthCloudGeometry, earthCloudMaterial);
-
+const earthGeometry = new THREE.SphereGeometry(0.004576, 64, 32);
+const earthCloudGeometry = new THREE.SphereGeometry(0.00464, 64, 32);
 const moonGeometry = new THREE.SphereGeometry(0.00125, 64, 32);
-const moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
-const moon = new THREE.Mesh(moonGeometry, moonMaterial);
-
 const marsGeometry = new THREE.SphereGeometry(0.002435, 64, 32);
-const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture });
-const mars = new THREE.Mesh(marsGeometry, marsMaterial);
-
 const jupiterGeometry = new THREE.SphereGeometry(0.0502, 64, 32);
-const jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture });
-const jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
 
 /*
 Keeping for scale reference
@@ -125,16 +153,8 @@ const saturn = new THREE.Mesh(saturnGeometry, saturnMaterial);
 */
 
 const uranusGeometry = new THREE.SphereGeometry(0.01822, 64, 32);
-const uranusMaterial = new THREE.MeshStandardMaterial({ map: uranusTexture });
-const uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
-
 const neptuneGeometry = new THREE.SphereGeometry(0.01769, 64, 32);
-const neptuneMaterial = new THREE.MeshStandardMaterial({ map: neptuneTexture });
-const neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
-
 const plutoGeometry = new THREE.SphereGeometry(0.00085366912, 64, 32);
-const plutoMaterial = new THREE.MeshStandardMaterial({ map: plutoTexture });
-const pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
 
 //Load models
 const loader = new GLTFLoader(loadingManager);
@@ -155,7 +175,11 @@ loader.load('models/saturn.glb', (gltf) => {
   scene.add(saturnModel);
 });
 
+renderer.compile(scene, camera, scene);
+
 var timer = new Timer();
+
+var frameCounter = 0;
 
 var pos = 0;
 var speed = 1;
@@ -171,6 +195,40 @@ var rotObjects = [];
 var rotSpeed = [];
 
 function setup() {
+  //Assign loaded textures
+  let sunMaterial = new THREE.MeshStandardMaterial({ map: sunTexture });
+  sun = new THREE.Mesh(sunGeometry, sunMaterial);
+
+  let mercuryMaterial = new THREE.MeshStandardMaterial({ map: mercuryTexture });
+  mercury = new THREE.Mesh(mercuryGeometry, mercuryMaterial);
+
+  let venusMaterial = new THREE.MeshStandardMaterial({ map: venusTexture });
+  venus = new THREE.Mesh(venusGeometry, venusMaterial);
+
+  let earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normalMap: earthNormal, normalScale: new THREE.Vector2(1, 1) });
+  earth = new THREE.Mesh(earthGeometry, earthMaterial);
+
+  let earthCloudMaterial = new THREE.MeshStandardMaterial({ alphaMap: earthCloudTexture, displacementMap: earthCloudTexture, displacementScale: -0.000005, transparent: true, opacity: 1.0 });
+  earthCloud = new THREE.Mesh(earthCloudGeometry, earthCloudMaterial);
+
+  let moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
+  moon = new THREE.Mesh(moonGeometry, moonMaterial);
+
+  let marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture });
+  mars = new THREE.Mesh(marsGeometry, marsMaterial);
+
+  let jupiterMaterial = new THREE.MeshStandardMaterial({ map: jupiterTexture });
+  jupiter = new THREE.Mesh(jupiterGeometry, jupiterMaterial);
+
+  let uranusMaterial = new THREE.MeshStandardMaterial({ map: uranusTexture });
+  uranus = new THREE.Mesh(uranusGeometry, uranusMaterial);
+
+  let neptuneMaterial = new THREE.MeshStandardMaterial({ map: neptuneTexture });
+  neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
+
+  let plutoMaterial = new THREE.MeshStandardMaterial({ map: plutoTexture });
+  pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
+
   //Add objects to scene
   scene.add(
     sun,
@@ -189,8 +247,7 @@ function setup() {
     light
   )
 
-  //voyagerModel.position.setZ(0.500001);
-  voyagerModel.position.setZ(107.49)
+  voyagerModel.position.setZ(0.500001);
   //voyagerModel.position.setY(0.06);
 
   //Set planet distance from sun
@@ -214,10 +271,26 @@ function setup() {
   //Planet rotation speed in earth days (starts with sun)
   rotSpeed = [27, 58.66667, 243.018056, 0.997222, 0.8, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667, 6.4]
 
+  //Gets rid of lag spike when turning camera around
+  scene.traverse(obj => obj.frustumCulled = false);
+  
+  //Compile scene (may help performance... idk)
+  renderer.compile(scene, camera);
+
   animate();
 }
 
 function animate() {
+  requestAnimationFrame(animate);
+
+  //Tracker for frustrum culling
+  frameCounter++;
+
+  //Turn back on culling after 1 frame, should help performance
+  if (frameCounter == 2) {
+    scene.traverse(obj => obj.frustumCulled = true);
+  }
+
   //Need to do this to get accurate deltatime
   timer.update();
 
@@ -341,7 +414,6 @@ function animate() {
 
   //End Debug
 
-  requestAnimationFrame(animate);
   renderer.render(scene, camera);
 }
 
