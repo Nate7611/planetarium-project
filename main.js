@@ -1,6 +1,7 @@
 import './style.css'
 
 import * as THREE from 'three';
+import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/17/Stats.js'
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -20,7 +21,7 @@ scene.background = new THREE.CubeTextureLoader()
 //Lower background brightness
 scene.backgroundIntensity = 0.7
 
-const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.0000001, 10000);
+const camera = new THREE.PerspectiveCamera(70, (window.innerWidth / 2) / (window.innerHeight / 2), 0.0000001, 10000);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
@@ -200,6 +201,10 @@ var planets = []
 var targetPlanet;
 var hasTarget = false;
 
+var stats = new Stats();
+stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild( stats.dom );
+
 function setup() {
   //Assign loaded textures
   let sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture, });
@@ -303,6 +308,8 @@ function setup() {
 
 function animate() {
   requestAnimationFrame(animate);
+
+  stats.begin();
 
   console.log(voyagerModel.position.z)
 
@@ -470,6 +477,8 @@ function animate() {
   //End Debug
 
   renderer.render(scene, camera);
+
+  stats.end();
 }
 
 //Update program size and aspect ratio when window size changes
