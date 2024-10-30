@@ -21,7 +21,7 @@ scene.background = new THREE.CubeTextureLoader()
 //Lower background brightness
 scene.backgroundIntensity = 0.7
 
-const camera = new THREE.PerspectiveCamera(70, (window.innerWidth / 2) / (window.innerHeight / 2), 0.0000001, 10000);
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.0000001, 10000);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
