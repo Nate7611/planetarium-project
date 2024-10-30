@@ -201,6 +201,7 @@ var planets = []
 var targetPlanet;
 var hasTarget = false;
 
+//Temporary just for tracking stats
 var stats = new Stats();
 stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild( stats.dom );
@@ -309,9 +310,8 @@ function setup() {
 function animate() {
   requestAnimationFrame(animate);
 
+  //Track fps
   stats.begin();
-
-  console.log(voyagerModel.position.z)
 
   //Tracker for frustrum culling
   frameCounter++;
