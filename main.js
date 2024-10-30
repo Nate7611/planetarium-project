@@ -8,7 +8,7 @@ import { Timer } from 'three/addons/misc/Timer.js';
 
 const scene = new THREE.Scene();
 
-const light = new THREE.AmbientLight(0x404040, 5);
+const light = new THREE.AmbientLight(0x404040, 8);
 const sunLight = new THREE.PointLight(0x404040, 500, 0, 0.5);
 sunLight.castShadow = true;
 
@@ -63,7 +63,7 @@ const loadingManager = new THREE.LoadingManager(
   (url, itemsLoaded, itemsTotal) => {
     // Called during loading to update progress
     console.log(`Loading file: ${url}. Loaded ${itemsLoaded} of ${itemsTotal} files.`);
-    loadingBar.style.width = String((itemsLoaded/itemsTotal) * 100 + "%")
+    loadingBar.style.width = String((itemsLoaded / itemsTotal) * 100 + "%")
   },
   (url) => {
     // Called if there’s an error loading
@@ -195,6 +195,7 @@ var elapsedYears = 0;
 
 var rotObjects = [];
 var rotSpeed = [];
+var planets = []
 
 function setup() {
   //Assign loaded textures
@@ -250,15 +251,28 @@ function setup() {
     sunLight
   )
 
+  //Position and height where you want the voyager to stop, not accurate to planet height or position 
+  planets = [
+    { "name": "mercury", "visited": false, "position": 41.596, "height": 0.0019 },
+    { "name": "venus", "visited": false, "position": 77.723, "height": 0.0045 },
+    { "name": "earth", "visited": false, "position": 107.492, "height": 0.0046 },
+    { "name": "moon", "visited": false, "position": 107.774, "height": 0.0013 },
+    { "name": "mars", "visited": false, "position": 163.696, "height": 0.00246 },
+    { "name": "jupiter", "visited": false, "position": 559.2, "height": 0.0509 },
+    { "name": "saturn", "visited": false, "position": 1028.9, "height": 0.0418 },
+    { "name": "uranus", "visited": false, "position": 2066.968, "height": 0.01829 },
+    { "name": "neptune", "visited": false, "position": 3234.968, "height": 0.01778 },
+    { "name": "pluto", "visited": false, "position": 4219.999, "height": 0.000856 }
+  ]
+
   voyagerModel.position.setZ(0.500001);
-  //voyagerModel.position.setY(0.06);
 
   //Set planet distance from sun
   mercury.position.setZ(41.6);
   venus.position.setZ(77.73);
   earth.position.setZ(107.5);
   earthCloud.position.setZ(107.5);
-  moon.position.setZ(107.5 + 0.27620135201);
+  moon.position.setZ(107.776201352);
   mars.position.setZ(163.7);
   jupiter.position.setZ(559.3);
   uranus.position.setZ(2067);
@@ -276,7 +290,7 @@ function setup() {
 
   //Gets rid of lag spike when turning camera around
   scene.traverse(obj => obj.frustumCulled = false);
-  
+
   //Compile scene (may help performance... idk)
   renderer.compile(scene, camera);
 
@@ -285,6 +299,8 @@ function setup() {
 
 function animate() {
   requestAnimationFrame(animate);
+
+  console.log(voyagerModel.position.z)
 
   //Tracker for frustrum culling
   frameCounter++;
@@ -300,6 +316,9 @@ function animate() {
   //Deltatime
   var delta = timer.getDelta();
 
+  //Around the 35,000 mph the voyager is moving
+  pos = (0.00001124 * speed) * delta;
+
   //Move voyager and camera
   voyagerModel.position.add(new THREE.Vector3(0, 0, pos));
   camera.position.add(new THREE.Vector3(0, 0, pos));
@@ -308,9 +327,6 @@ function animate() {
   for (let i = 0; i < rotObjects.length; i++) {
     rotObjects[i].rotateY(((2 * Math.PI) / (rotSpeed[i] * 86400) * delta) * speed);
   }
-
-  //Around the 35,000 mph the voyager is moving
-  pos = (0.00001124 * speed) * delta;
 
   //Converting Seconds to largest form
   elapsedTimeRaw += delta * speed;
@@ -331,17 +347,34 @@ function animate() {
   //Miles from Sun
   distanceText.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + " mi from the Sun";
 
-  console.log(distanceText.innerHTML);
-
   //Kilometers from Sun
   //distanceText.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + " km from the Sun";
 
   //Stop Voyager when at planet
-  if (voyagerModel.position.z < mercury.position.z) {
-    timeText.innerHTML = Math.round((mercury.position.z - voyagerModel.position.z) / (0.00001124 * speed));
+  for (let i = 0; i < planets.length; i++) {
+    if (voyagerModel.position.z >= planets[i].position && !planets[i].visited) {
+      planets[i].visited = true;
+      timeScaleSlider.value = 1;
+
+      //Store camoffset to restore after teleport
+      let camOffsetX = camera.position.x - voyagerModel.position.x;
+      let camOffsetY = camera.position.y - voyagerModel.position.y;
+      let camOffsetZ = camera.position.z - voyagerModel.position.z;
+
+      //Teleport to set location as high speeds can shoot past it
+      voyagerModel.position.z = planets[i].position;
+      voyagerModel.position.y = planets[i].height;
+
+      //Restore camera orbital position around voyager
+      camera.position.set(
+        voyagerModel.position.x + camOffsetX,
+        voyagerModel.position.y + camOffsetY,
+        voyagerModel.position.z + camOffsetZ
+      );
+    }
   }
 
-  //Set orbit control orgin to object
+  //Set orbit control orgin to voyager
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
 
   //Convert string to number
@@ -355,42 +388,44 @@ function animate() {
       timeScaleText.innerHTML = "Realtime"
       break;
     case 2:
+      //Every Second is an minute
+      speed = 60
+      timeScaleText.innerHTML = "1 Second = 1 Minute"
+      break;
+    case 3:
       //Every Second is an hour
       speed = 3600
       timeScaleText.innerHTML = "1 Second = 1 Hour"
       break;
-    case 3:
+    case 4:
       //Every Second is a day
       speed = 86400
       timeScaleText.innerHTML = "1 Second = 1 Day"
       break;
-    case 4:
+    case 5:
       //Every Second is 5 days
       speed = 432000
       timeScaleText.innerHTML = "1 Second = 5 Day"
       break;
-    case 5:
+    case 6:
       //Every Second is 15 days
       speed = 1296000
       timeScaleText.innerHTML = "1 Second = 15 Day"
       break;
-    case 6:
+    case 7:
       //Every Second is 30 days
       speed = 2592000
       timeScaleText.innerHTML = "1 Second = 30 Days"
       break;
-    case 7:
+    case 8:
       //Every Second is 180 days
       speed = 15552000
       timeScaleText.innerHTML = "1 Second = 180 Days"
       break;
   }
 
-
   //Need to do this for orbit control damping
   control.update();
-
-
 
   //Debug
   //Time Elapsed Error Checking
