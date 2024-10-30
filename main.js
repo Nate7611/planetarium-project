@@ -197,6 +197,9 @@ var rotObjects = [];
 var rotSpeed = [];
 var planets = []
 
+var targetPlanet;
+var hasTarget = false;
+
 function setup() {
   //Assign loaded textures
   let sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture, });
@@ -253,18 +256,19 @@ function setup() {
 
   //Position and height where you want the voyager to stop, not accurate to planet height or position 
   planets = [
-    { "name": "mercury", "visited": false, "position": 41.596, "height": 0.0019 },
-    { "name": "venus", "visited": false, "position": 77.723, "height": 0.0045 },
-    { "name": "earth", "visited": false, "position": 107.492, "height": 0.0046 },
-    { "name": "moon", "visited": false, "position": 107.774, "height": 0.0013 },
-    { "name": "mars", "visited": false, "position": 163.696, "height": 0.00246 },
-    { "name": "jupiter", "visited": false, "position": 559.2, "height": 0.0509 },
-    { "name": "saturn", "visited": false, "position": 1028.9, "height": 0.0418 },
-    { "name": "uranus", "visited": false, "position": 2066.968, "height": 0.01829 },
-    { "name": "neptune", "visited": false, "position": 3234.968, "height": 0.01778 },
-    { "name": "pluto", "visited": false, "position": 4219.999, "height": 0.000856 }
+    { "name": "Mercury", "visited": false, "position": 41.596, "height": 0.0019 },
+    { "name": "Venus", "visited": false, "position": 77.723, "height": 0.0045 },
+    { "name": "Earth", "visited": false, "position": 107.492, "height": 0.0046 },
+    { "name": "The Moon", "visited": false, "position": 107.774, "height": 0.0013 },
+    { "name": "Mars", "visited": false, "position": 163.696, "height": 0.00246 },
+    { "name": "Jupiter", "visited": false, "position": 559.2, "height": 0.0509 },
+    { "name": "Saturn", "visited": false, "position": 1028.9, "height": 0.0418 },
+    { "name": "Uranus", "visited": false, "position": 2066.968, "height": 0.01829 },
+    { "name": "Neptune", "visited": false, "position": 3234.968, "height": 0.01778 },
+    { "name": "Pluto", "visited": false, "position": 4219.999, "height": 0.000856 }
   ]
 
+  //Move voyager in front of sun
   voyagerModel.position.setZ(0.500001);
 
   //Set planet distance from sun
@@ -371,8 +375,19 @@ function animate() {
         voyagerModel.position.y + camOffsetY,
         voyagerModel.position.z + camOffsetZ
       );
+
+      hasTarget = false;
+    } 
+    else if (!hasTarget && planets[i].visited == false) {
+      //Set closest non visited planet as target
+      hasTarget = true;
+      targetPlanet = planets[i];
     }
   }
+
+  timeText.innerHTML = "Seconds until " + targetPlanet.name + ": " + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
+
+  console.log(targetPlanet);
 
   //Set orbit control orgin to voyager
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
