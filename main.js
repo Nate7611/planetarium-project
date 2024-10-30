@@ -8,7 +8,9 @@ import { Timer } from 'three/addons/misc/Timer.js';
 
 const scene = new THREE.Scene();
 
-const light = new THREE.AmbientLight(0x404040, 100);
+const light = new THREE.AmbientLight(0x404040, 5);
+const sunLight = new THREE.PointLight(0x404040, 500, 0, 0.5);
+sunLight.castShadow = true;
 
 //Space background
 scene.background = new THREE.CubeTextureLoader()
@@ -196,7 +198,7 @@ var rotSpeed = [];
 
 function setup() {
   //Assign loaded textures
-  let sunMaterial = new THREE.MeshStandardMaterial({ map: sunTexture });
+  let sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture, });
   sun = new THREE.Mesh(sunGeometry, sunMaterial);
 
   let mercuryMaterial = new THREE.MeshStandardMaterial({ map: mercuryTexture });
@@ -244,7 +246,8 @@ function setup() {
     neptune,
     pluto,
     voyagerModel,
-    light
+    light,
+    sunLight
   )
 
   voyagerModel.position.setZ(0.500001);
@@ -327,6 +330,8 @@ function animate() {
 
   //Miles from Sun
   distanceText.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + " mi from the Sun";
+
+  console.log(distanceText.innerHTML);
 
   //Kilometers from Sun
   //distanceText.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + " km from the Sun";
