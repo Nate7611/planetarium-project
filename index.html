@@ -14,11 +14,18 @@
 
 <body>
   <canvas id="bg"></canvas>
-  <p id="distance"></p>
-  <p id="time"></p>
-  <p id="time-elapsed"></p>
-  <p id="slider-text"></p>
-  <input type="range" min="1" max="8" value="1" class="slider" id="time-slider">
+  <div id="main-UI">
+    <p id="distance"></p>
+    <p id="time"></p>
+    <p id="time-elapsed"></p>
+    <p id="slider-text"></p>
+    <input type="range" min="1" max="8" value="1" class="slider" id="time-slider">
+  </div>
+
+  <div id="start-UI">
+    <button id="start-button">Start</button>
+  </div>
+
   <div id="loading-screen">
     <div id="loading-border">
       <div id="loading-bar"></div>

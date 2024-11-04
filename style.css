@@ -129,3 +129,16 @@ canvas {
   width: 0%;
   background-color: rgb(216, 216, 216);
 }
+
+#main-UI {
+  display: none;
+}
+
+#start-button {
+  position: fixed;
+  top: 90%;
+  left: 45%;
+  width: 10%;
+  height: 5%;
+  z-index: 999;
+}

@@ -29,13 +29,19 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 //Load html elements
+//Main UI
 const distanceText = document.getElementById('distance');
 const timeText = document.getElementById('time');
 const timeElapsed = document.getElementById('time-elapsed');
 const timeScaleText = document.getElementById('slider-text');
 const timeScaleSlider = document.getElementById('time-slider');
+
+//Loading UI
 const loadingScreen = document.getElementById("loading-screen");
 const loadingBar = document.getElementById("loading-bar");
+
+//Start UI
+const startButton = document.getElementById("start-button")
 
 timeScaleSlider.value = 1;
 
@@ -50,8 +56,14 @@ const control = new OrbitControls(camera, renderer.domElement);
 control.enableDamping = true;
 
 //Control max and min zoom of camera 
-control.maxDistance = 0.000005;
+control.maxDistance = 3;
 control.minDistance = 0.0000006;
+
+//Lock movement during start
+control.enableZoom = false;
+control.enableRotate = false;
+control.enablePan = false;
+
 
 // Create a Loading Manager
 const loadingManager = new THREE.LoadingManager(
@@ -196,15 +208,23 @@ var elapsedYears = 0;
 
 var rotObjects = [];
 var rotSpeed = [];
-var planets = []
+var planets = [];
+
+var startUI;
+var mainUI;
+
+var loaded = false;
+
+var startLoop;
+var started = false;
 
 var targetPlanet;
 var hasTarget = false;
 
 //Temporary just for tracking stats
 var stats = new Stats();
-stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild( stats.dom );
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom);
 
 function setup() {
   //Assign loaded textures
@@ -274,6 +294,9 @@ function setup() {
     { "name": "Pluto", "visited": false, "position": 4219.999, "height": 0.000856 }
   ]
 
+  mainUI = document.getElementById("main-UI");
+  startUI = document.getElementById("start-UI");
+
   //Move voyager in front of sun
   voyagerModel.position.setZ(0.500001);
 
@@ -290,7 +313,7 @@ function setup() {
   pluto.position.setZ(4220);
 
   //Make camera face sun on load
-  camera.position.setZ(0.51)
+  camera.position.setZ(1.81)
 
   //Assign speed to all these
   rotObjects = [sun, mercury, venus, earth, earthCloud, moon, mars, jupiter, saturnModel, uranus, neptune, pluto]
@@ -304,7 +327,61 @@ function setup() {
   //Compile scene (may help performance... idk)
   renderer.compile(scene, camera);
 
-  animate();
+  //Render scene
+  renderer.render(scene, camera);
+
+  loaded = true;
+
+  start();
+}
+
+//Run start if button is pressed and everything is loaded
+startButton.addEventListener("click", function() {
+  if(loaded) {
+    startUI.style.display = "none";
+    started = true;
+  }
+});
+
+//Start screen
+function start() {
+  //Store to cancle loop
+  startLoop = requestAnimationFrame(start);
+
+  //Set orbit target
+  control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
+
+  //Need to do this to get accurate deltatime
+  timer.update();
+
+  //Needed for control damping
+  control.update();
+
+  //Deltatime
+  var delta = timer.getDelta();
+
+  if (control.maxDistance > 0.000005 && started) {
+    //Gradually zoom into voyager
+    control.maxDistance *= 1 / (1 + (2.5 * delta));
+  } 
+  else if (control.maxDistance < 0.000005 && started) {
+    //Cancel loop
+    cancelAnimationFrame(startLoop);
+
+    control.maxDistance = 0.000005;
+
+    //Unlock cam
+    control.enableZoom = true;
+    control.enableRotate = true;
+
+    //Bring in main ui
+    mainUI.style.display = "block";
+
+    //Start main loop
+    animate();
+  }
+
+  renderer.render(scene, camera);
 }
 
 function animate() {
@@ -384,7 +461,7 @@ function animate() {
       );
 
       hasTarget = false;
-    } 
+    }
     else if (!hasTarget && planets[i].visited == false) {
       //Set closest non visited planet as target
       hasTarget = true;
@@ -393,8 +470,6 @@ function animate() {
   }
 
   timeText.innerHTML = "Seconds until " + targetPlanet.name + ": " + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
-
-  console.log(targetPlanet);
 
   //Set orbit control orgin to voyager
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
@@ -487,4 +562,5 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
+  renderer.render(scene, camera);
 });
