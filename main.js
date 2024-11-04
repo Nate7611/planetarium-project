@@ -360,6 +360,8 @@ function start() {
   //Deltatime
   var delta = timer.getDelta();
 
+  sun.rotateY(((2 * Math.PI) / (27 * 86400) * delta) * 43200);
+
   if (control.maxDistance > 0.000005 && started) {
     //Gradually zoom into voyager
     control.maxDistance *= 1 / (1 + (2.5 * delta));
@@ -469,6 +471,7 @@ function animate() {
     }
   }
 
+  //Time until next planet text
   timeText.innerHTML = "Seconds until " + targetPlanet.name + ": " + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
 
   //Set orbit control orgin to voyager
