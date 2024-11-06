@@ -6,6 +6,7 @@ import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/17/Stats.js'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Timer } from 'three/addons/misc/Timer.js';
+import { string } from 'three/webgpu';
 
 const scene = new THREE.Scene();
 
@@ -282,20 +283,23 @@ function setup() {
 
   //Position and height where you want the voyager to stop, not accurate to planet height or position 
   planets = [
-    { "name": "Mercury", "visited": false, "position": 41.596, "height": 0.0019 },
-    { "name": "Venus", "visited": false, "position": 77.723, "height": 0.0045 },
-    { "name": "Earth", "visited": false, "position": 107.492, "height": 0.0046 },
-    { "name": "The Moon", "visited": false, "position": 107.774, "height": 0.0013 },
-    { "name": "Mars", "visited": false, "position": 163.696, "height": 0.00246 },
-    { "name": "Jupiter", "visited": false, "position": 559.2, "height": 0.0509 },
-    { "name": "Saturn", "visited": false, "position": 1028.9, "height": 0.0418 },
-    { "name": "Uranus", "visited": false, "position": 2066.968, "height": 0.01829 },
-    { "name": "Neptune", "visited": false, "position": 3234.968, "height": 0.01778 },
-    { "name": "Pluto", "visited": false, "position": 4219.999, "height": 0.000856 }
+    { "name": "Mercury", "visited": false, "position": 41.596, "height": 0.0019, "object": mercury },
+    { "name": "Venus", "visited": false, "position": 77.723, "height": 0.0045, "object": venus },
+    { "name": "Earth", "visited": false, "position": 107.492, "height": 0.0046, "object": earth },
+    { "name": "The Moon", "visited": false, "position": 107.774, "height": 0.0013, "object": moon },
+    { "name": "Mars", "visited": false, "position": 163.696, "height": 0.00246, "object": mars },
+    { "name": "Jupiter", "visited": false, "position": 559.2, "height": 0.0509, "object": jupiter },
+    { "name": "Saturn", "visited": false, "position": 1028.9, "height": 0.0418, "object": saturnModel },
+    { "name": "Uranus", "visited": false, "position": 2066.968, "height": 0.01829, "object": uranus },
+    { "name": "Neptune", "visited": false, "position": 3234.968, "height": 0.01778, "object": neptune },
+    { "name": "Pluto", "visited": false, "position": 4219.999, "height": 0.000856, "object": pluto }
   ]
 
-  mainUI = document.getElementById("main-UI");
   startUI = document.getElementById("start-UI");
+  startUI.style.opacity = "1";
+
+  mainUI = document.getElementById("main-UI");
+  mainUI.style.opacity = "0";
 
   //Move voyager in front of sun
   voyagerModel.position.setZ(0.500001);
@@ -338,7 +342,6 @@ function setup() {
 //Run start if button is pressed and everything is loaded
 startButton.addEventListener("click", function() {
   if(loaded) {
-    startUI.style.display = "none";
     started = true;
   }
 });
@@ -362,6 +365,14 @@ function start() {
 
   sun.rotateY(((2 * Math.PI) / (27 * 86400) * delta) * 43200);
 
+  //Fade out and disable start UI
+  if (parseFloat(startUI.style.opacity) > 0 && started) {
+    startUI.style.opacity = Math.max(0, parseFloat(startUI.style.opacity) - (1 * delta));
+  } 
+  else if (parseFloat(startUI.style.opacity) <= 0 && started) {
+    startUI.style.display = "none";
+  }
+
   if (control.maxDistance > 0.000005 && started) {
     //Gradually zoom into voyager
     control.maxDistance *= 1 / (1 + (2.5 * delta));
@@ -370,6 +381,7 @@ function start() {
     //Cancel loop
     cancelAnimationFrame(startLoop);
 
+    //Set camera max zoom
     control.maxDistance = 0.000005;
 
     //Unlock cam
@@ -387,6 +399,7 @@ function start() {
 }
 
 function animate() {
+  //Create loop
   requestAnimationFrame(animate);
 
   //Track fps
@@ -405,6 +418,11 @@ function animate() {
 
   //Deltatime
   var delta = timer.getDelta();
+
+  //Fade in main UI
+  if (parseFloat(mainUI.style.opacity) < 1) {
+    mainUI.style.opacity = Math.min(1, parseFloat(mainUI.style.opacity) + (1 * delta));
+  }
 
   //Around the 35,000 mph the voyager is moving
   pos = (0.00001124 * speed) * delta;
