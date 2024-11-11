@@ -1,12 +1,9 @@
-import './style.css'
-
 import * as THREE from 'three';
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/17/Stats.js'
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Timer } from 'three/addons/misc/Timer.js';
-import { string } from 'three/webgpu';
 
 const scene = new THREE.Scene();
 
@@ -31,11 +28,12 @@ const renderer = new THREE.WebGLRenderer({
 
 //Load html elements
 //Main UI
-const distanceText = document.getElementById('distance');
-const timeText = document.getElementById('time');
-const timeElapsed = document.getElementById('time-elapsed');
-const timeScaleText = document.getElementById('slider-text');
-const timeScaleSlider = document.getElementById('time-slider');
+const distanceFromElement = document.getElementById('distance');
+const timeToElement = document.getElementById('time-until');
+const timeElapsedElement = document.getElementById('time-elapsed');
+const timeScaleElement = document.getElementById('speed-scale');
+const timeSlowButton = document.getElementById('slow-button');
+const timeFastButton = document.getElementById('fast-button');
 
 //Loading UI
 const loadingScreen = document.getElementById("loading-screen");
@@ -43,8 +41,6 @@ const loadingBar = document.getElementById("loading-bar");
 
 //Start UI
 const startButton = document.getElementById("start-button")
-
-timeScaleSlider.value = 1;
 
 //Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -341,10 +337,23 @@ function setup() {
 
 //Run start if button is pressed and everything is loaded
 startButton.addEventListener("click", function() {
-  if(loaded) {
+  if (loaded) {
     started = true;
   }
 });
+
+timeFastButton.addEventListener("click", function() {
+  if (loaded && timeScale < 8) {
+    timeScale++;
+  }
+})
+
+timeSlowButton.addEventListener("click", function() {
+  if (loaded && timeScale > 1) {
+    timeScale--;
+  }
+})
+
 
 //Start screen
 function start() {
@@ -445,7 +454,7 @@ function animate() {
   elapsedYears = Math.trunc(elapsedTimeRaw / 31557600);
 
   //Write time elapsed to canvas
-  timeElapsed.innerHTML =
+  timeElapsedElement.innerHTML =
     elapsedYears + " Year(s) " +
     String(elapsedDays).padStart(3, "0") + " Day(s) " +
     String(elapsedHours).padStart(2, "0") + " Hour(s) " +
@@ -453,16 +462,16 @@ function animate() {
     String(elapsedSeconds).padStart(2, "0") + " Second(s)";
 
   //Miles from Sun
-  distanceText.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + " mi from the Sun";
+  distanceFromElement.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + " mi from the Sun";
 
   //Kilometers from Sun
-  //distanceText.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + " km from the Sun";
+  //distanceFromElement.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + " km from the Sun";
 
   //Stop Voyager when at planet
   for (let i = 0; i < planets.length; i++) {
     if (voyagerModel.position.z >= planets[i].position && !planets[i].visited) {
       planets[i].visited = true;
-      timeScaleSlider.value = 1;
+      timeScale = 1;
 
       //Store camoffset to restore after teleport
       let camOffsetX = camera.position.x - voyagerModel.position.x;
@@ -490,55 +499,52 @@ function animate() {
   }
 
   //Time until next planet text
-  timeText.innerHTML = "Seconds until " + targetPlanet.name + ": " + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
+  timeToElement.innerHTML = "Seconds until " + targetPlanet.name + ": " + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
 
   //Set orbit control orgin to voyager
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
-
-  //Convert string to number
-  timeScale = Number(timeScaleSlider.value);
 
   //Control time scale from slider value
   switch (timeScale) {
     case 1:
       //Realtime
       speed = 1
-      timeScaleText.innerHTML = "Realtime"
+      timeScaleElement.innerHTML = "Real-time"
       break;
     case 2:
       //Every Second is an minute
       speed = 60
-      timeScaleText.innerHTML = "1 Second = 1 Minute"
+      timeScaleElement.innerHTML = "1s = 1m"
       break;
     case 3:
       //Every Second is an hour
       speed = 3600
-      timeScaleText.innerHTML = "1 Second = 1 Hour"
+      timeScaleElement.innerHTML = "1s = 1h"
       break;
     case 4:
       //Every Second is a day
       speed = 86400
-      timeScaleText.innerHTML = "1 Second = 1 Day"
+      timeScaleElement.innerHTML = "1s = 1d"
       break;
     case 5:
       //Every Second is 5 days
       speed = 432000
-      timeScaleText.innerHTML = "1 Second = 5 Day"
+      timeScaleElement.innerHTML = "1s = 5d"
       break;
     case 6:
       //Every Second is 15 days
       speed = 1296000
-      timeScaleText.innerHTML = "1 Second = 15 Day"
+      timeScaleElement.innerHTML = "1s = 15d"
       break;
     case 7:
       //Every Second is 30 days
       speed = 2592000
-      timeScaleText.innerHTML = "1 Second = 30 Days"
+      timeScaleElement.innerHTML = "1s = 30d"
       break;
     case 8:
       //Every Second is 180 days
       speed = 15552000
-      timeScaleText.innerHTML = "1 Second = 180 Days"
+      timeScaleElement.innerHTML = "1s = 180d"
       break;
   }
 

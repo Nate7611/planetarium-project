@@ -73,25 +73,6 @@ canvas {
   left: 0;
 }
 
-.slider {
-  -webkit-appearance: none;
-  appearance: none;
-  position: absolute;
-  bottom: 20px;
-  left: 25%;
-  width: 50%;
-  height: 25px;
-  border-radius: 10px;
-  background: #26658c;
-  opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-
-.slider:hover {
-  opacity: 1;
-}
-
 #loading-screen {
   position: fixed;
   top: 0;
@@ -129,4 +110,17 @@ canvas {
   height: 5%;
   z-index: 999;
   font-size: 2rem;
+}
+
+#fast-button, #slow-button {
+  position: fixed;
+  width: 10%;
+  height: 10%;
+  user-select: none;
+  cursor: pointer;
+  z-index: 999;
+}
+
+#slow-button {
+  transform: rotate(180deg);
 }
