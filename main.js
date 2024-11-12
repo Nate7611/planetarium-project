@@ -195,7 +195,7 @@ var frameCounter = 0;
 
 var pos = 0;
 var speed = 1;
-var timeScale = 1;
+var timeScale = 0;
 var elapsedTimeRaw = 0;
 var elapsedSeconds = 0;
 var elapsedMinutes = 0;
@@ -506,6 +506,11 @@ function animate() {
 
   //Control time scale from slider value
   switch (timeScale) {
+    case 0:
+      //Realtime
+      speed = 0
+      timeScaleElement.innerHTML = "Time Stopped"
+      break;
     case 1:
       //Realtime
       speed = 1

@@ -65,6 +65,7 @@ p {
   display:block;
   color: white;
   font-size: 3rem;
+  text-shadow: 3px 3px 5px black;
 }
 
 canvas {
@@ -104,12 +105,12 @@ canvas {
 
 #start-button {
   position: fixed;
-  top: 90%;
+  top: 88%;
   left: 45%;
   width: 10%;
-  height: 5%;
+  height: 7%;
   z-index: 999;
-  font-size: 2rem;
+  font-size: 3rem;
 }
 
 #fast-button, #slow-button {
@@ -119,6 +120,7 @@ canvas {
   user-select: none;
   cursor: pointer;
   z-index: 999;
+  filter: drop-shadow(5px 5px 10px black);
 }
 
 #slow-button {
