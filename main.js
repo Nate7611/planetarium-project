@@ -36,11 +36,11 @@ const timeSlowButton = document.getElementById('slow-button');
 const timeFastButton = document.getElementById('fast-button');
 
 //Loading UI
-const loadingScreen = document.getElementById("loading-screen");
-const loadingBar = document.getElementById("loading-bar");
+const loadingScreen = document.getElementById('loading-screen');
+const loadingBar = document.getElementById('loading-bar');
 
 //Start UI
-const startButton = document.getElementById("start-button")
+const startButton = document.getElementById('start-button')
 
 //Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -66,14 +66,14 @@ control.enablePan = false;
 const loadingManager = new THREE.LoadingManager(
   () => {
     // Called when all assets are loaded
-    console.log("All assets loaded.");
+    console.log('All assets loaded.');
     loadingScreen.style.display = 'none';
     setup();
   },
   (url, itemsLoaded, itemsTotal) => {
     // Called during loading to update progress
     console.log(`Loading file: ${url}. Loaded ${itemsLoaded} of ${itemsTotal} files.`);
-    loadingBar.style.width = String((itemsLoaded / itemsTotal) * 100 + "%")
+    loadingBar.style.width = String((itemsLoaded / itemsTotal) * 100 + '%')
   },
   (url) => {
     // Called if there’s an error loading
@@ -83,6 +83,7 @@ const loadingManager = new THREE.LoadingManager(
 
 //Load Textures (bit of a mess but should run better than textureloader)
 const bitmapLoader = new THREE.ImageBitmapLoader(loadingManager);
+bitmapLoader.setOptions( { imageOrientation: 'flipY' } );
 
 let sunTexture, mercuryTexture, venusTexture, earthTexture, earthNormal, earthCloudTexture, moonTexture, marsTexture, jupiterTexture, uranusTexture, neptuneTexture, plutoTexture;
 let sun, mercury, venus, earth, earthCloud, moon, mars, jupiter, uranus, neptune, pluto;
@@ -279,23 +280,23 @@ function setup() {
 
   //Position and height where you want the voyager to stop, not accurate to planet height or position 
   planets = [
-    { "name": "Mercury", "visited": false, "position": 41.596, "height": 0.0019, "object": mercury },
-    { "name": "Venus", "visited": false, "position": 77.723, "height": 0.0045, "object": venus },
-    { "name": "Earth", "visited": false, "position": 107.492, "height": 0.0046, "object": earth },
-    { "name": "The Moon", "visited": false, "position": 107.774, "height": 0.0013, "object": moon },
-    { "name": "Mars", "visited": false, "position": 163.696, "height": 0.00246, "object": mars },
-    { "name": "Jupiter", "visited": false, "position": 559.2, "height": 0.0509, "object": jupiter },
-    { "name": "Saturn", "visited": false, "position": 1028.9, "height": 0.0418, "object": saturnModel },
-    { "name": "Uranus", "visited": false, "position": 2066.968, "height": 0.01829, "object": uranus },
-    { "name": "Neptune", "visited": false, "position": 3234.968, "height": 0.01778, "object": neptune },
-    { "name": "Pluto", "visited": false, "position": 4219.999, "height": 0.000856, "object": pluto }
+    { 'name': 'Mercury', 'visited': false, 'position': 41.596, 'height': 0.0019, 'object': mercury },
+    { 'name': 'Venus', 'visited': false, 'position': 77.723, 'height': 0.0045, 'object': venus },
+    { 'name': 'Earth', 'visited': false, 'position': 107.492, 'height': 0.0046, 'object': earth },
+    { 'name': 'The Moon', 'visited': false, 'position': 107.774, 'height': 0.0013, 'object': moon },
+    { 'name': 'Mars', 'visited': false, 'position': 163.696, 'height': 0.00246, 'object': mars },
+    { 'name': 'Jupiter', 'visited': false, 'position': 559.2, 'height': 0.0509, 'object': jupiter },
+    { 'name': 'Saturn', 'visited': false, 'position': 1028.9, 'height': 0.0418, 'object': saturnModel },
+    { 'name': 'Uranus', 'visited': false, 'position': 2066.968, 'height': 0.01829, 'object': uranus },
+    { 'name': 'Neptune', 'visited': false, 'position': 3234.968, 'height': 0.01778, 'object': neptune },
+    { 'name': 'Pluto', 'visited': false, 'position': 4219.999, 'height': 0.000856, 'object': pluto }
   ]
 
-  startUI = document.getElementById("start-UI");
-  startUI.style.opacity = "1";
+  startUI = document.getElementById('start-UI');
+  startUI.style.opacity = '1';
 
-  mainUI = document.getElementById("main-UI");
-  mainUI.style.opacity = "0";
+  mainUI = document.getElementById('main-UI');
+  mainUI.style.opacity = '0';
 
   //Move voyager in front of sun
   voyagerModel.position.setZ(0.500001);
@@ -336,19 +337,19 @@ function setup() {
 }
 
 //Run start if button is pressed and everything is loaded
-startButton.addEventListener("click", function() {
+startButton.addEventListener('click', function() {
   if (loaded) {
     started = true;
   }
 });
 
-timeFastButton.addEventListener("click", function() {
+timeFastButton.addEventListener('click', function() {
   if (loaded && timeScale < 8) {
     timeScale++;
   }
 })
 
-timeSlowButton.addEventListener("click", function() {
+timeSlowButton.addEventListener('click', function() {
   if (loaded && timeScale > 1) {
     timeScale--;
   }
@@ -379,7 +380,7 @@ function start() {
     startUI.style.opacity = Math.max(0, parseFloat(startUI.style.opacity) - (1 * delta));
   } 
   else if (parseFloat(startUI.style.opacity) <= 0 && started) {
-    startUI.style.display = "none";
+    startUI.style.display = 'none';
   }
 
   if (control.maxDistance > 0.000005 && started) {
@@ -398,7 +399,7 @@ function start() {
     control.enableRotate = true;
 
     //Bring in main ui
-    mainUI.style.display = "block";
+    mainUI.style.display = 'block';
 
     //Start main loop
     animate();
@@ -455,17 +456,17 @@ function animate() {
 
   //Write time elapsed to canvas
   timeElapsedElement.innerHTML =
-    elapsedYears + " Year(s) " +
-    String(elapsedDays).padStart(3, "0") + " Day(s) " +
-    String(elapsedHours).padStart(2, "0") + " Hour(s) " +
-    String(elapsedMinutes).padStart(2, "0") + " Minute(s) " +
-    String(elapsedSeconds).padStart(2, "0") + " Second(s)";
+    elapsedYears + ' Year(s) ' +
+    String(elapsedDays).padStart(3, '0') + ' Day(s) ' +
+    String(elapsedHours).padStart(2, '0') + ' Hour(s) ' +
+    String(elapsedMinutes).padStart(2, '0') + ' Minute(s) ' +
+    String(elapsedSeconds).padStart(2, '0') + ' Second(s)';
 
   //Miles from Sun
-  distanceFromElement.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + " mi from the Sun";
+  distanceFromElement.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + ' mi from the Sun';
 
   //Kilometers from Sun
-  //distanceFromElement.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + " km from the Sun";
+  //distanceFromElement.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + ' km from the Sun';
 
   //Stop Voyager when at planet
   for (let i = 0; i < planets.length; i++) {
@@ -499,7 +500,7 @@ function animate() {
   }
 
   //Time until next planet text
-  timeToElement.innerHTML = "Seconds until " + targetPlanet.name + ": " + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
+  timeToElement.innerHTML = 'Seconds until ' + targetPlanet.name + ': ' + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
 
   //Set orbit control orgin to voyager
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
@@ -509,47 +510,47 @@ function animate() {
     case 0:
       //Realtime
       speed = 0
-      timeScaleElement.innerHTML = "Time Stopped"
+      timeScaleElement.innerHTML = 'Time Stopped'
       break;
     case 1:
       //Realtime
       speed = 1
-      timeScaleElement.innerHTML = "Real-time"
+      timeScaleElement.innerHTML = 'Real-time'
       break;
     case 2:
       //Every Second is an minute
       speed = 60
-      timeScaleElement.innerHTML = "1s = 1m"
+      timeScaleElement.innerHTML = '1s = 1m'
       break;
     case 3:
       //Every Second is an hour
       speed = 3600
-      timeScaleElement.innerHTML = "1s = 1h"
+      timeScaleElement.innerHTML = '1s = 1h'
       break;
     case 4:
       //Every Second is a day
       speed = 86400
-      timeScaleElement.innerHTML = "1s = 1d"
+      timeScaleElement.innerHTML = '1s = 1d'
       break;
     case 5:
       //Every Second is 5 days
       speed = 432000
-      timeScaleElement.innerHTML = "1s = 5d"
+      timeScaleElement.innerHTML = '1s = 5d'
       break;
     case 6:
       //Every Second is 15 days
       speed = 1296000
-      timeScaleElement.innerHTML = "1s = 15d"
+      timeScaleElement.innerHTML = '1s = 15d'
       break;
     case 7:
       //Every Second is 30 days
       speed = 2592000
-      timeScaleElement.innerHTML = "1s = 30d"
+      timeScaleElement.innerHTML = '1s = 30d'
       break;
     case 8:
       //Every Second is 180 days
       speed = 15552000
-      timeScaleElement.innerHTML = "1s = 180d"
+      timeScaleElement.innerHTML = '1s = 180d'
       break;
   }
 
@@ -559,19 +560,19 @@ function animate() {
   //Debug
   //Time Elapsed Error Checking
   if (elapsedSeconds < 0 || elapsedSeconds > 60) {
-    console.log("Error Seconds: " + elapsedSeconds);
+    console.log('Error Seconds: ' + elapsedSeconds);
   }
   if (elapsedMinutes < 0 || elapsedMinutes > 60) {
-    console.log("Error Minutes: " + elapsedMinutes);
+    console.log('Error Minutes: ' + elapsedMinutes);
   }
   if (elapsedHours < 0 || elapsedHours > 24) {
-    console.log("Error Hours: " + elapsedHours);
+    console.log('Error Hours: ' + elapsedHours);
   }
   if (elapsedDays < 0 || elapsedDays > 365) {
-    console.log("Error Days: " + elapsedDays);
+    console.log('Error Days: ' + elapsedDays);
   }
   if (elapsedYears < 0) {
-    console.log("Error Years: " + elapsedYears);
+    console.log('Error Years: ' + elapsedYears);
   }
 
   //every second is a minute - 60
