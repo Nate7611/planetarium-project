@@ -19,13 +19,14 @@ scene.background = new THREE.CubeTextureLoader()
 //Lower background brightness
 scene.backgroundIntensity = 0.7
 
-const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.0000001, 5000);
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.000000118, 5000);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
   canvas: document.querySelector('#bg'),
   alpha: true,
   powerPreference: "high-performance",
+  reverseDepthBuffer: true
 });
 
 //Load html elements
@@ -574,19 +575,19 @@ function animate() {
   //Debug
   //Time Elapsed Error Checking
   if (elapsedSeconds < 0 || elapsedSeconds > 60) {
-    console.log('Error Seconds: ' + elapsedSeconds);
+    console.error('Error Seconds: ' + elapsedSeconds);
   }
   if (elapsedMinutes < 0 || elapsedMinutes > 60) {
-    console.log('Error Minutes: ' + elapsedMinutes);
+    console.error('Error Minutes: ' + elapsedMinutes);
   }
   if (elapsedHours < 0 || elapsedHours > 24) {
-    console.log('Error Hours: ' + elapsedHours);
+    console.error('Error Hours: ' + elapsedHours);
   }
   if (elapsedDays < 0 || elapsedDays > 365) {
-    console.log('Error Days: ' + elapsedDays);
+    console.error('Error Days: ' + elapsedDays);
   }
   if (elapsedYears < 0) {
-    console.log('Error Years: ' + elapsedYears);
+    console.error('Error Years: ' + elapsedYears);
   }
 
   //every second is a minute - 60
