@@ -204,6 +204,8 @@ var elapsedHours = 0;
 var elapsedDays = 0;
 var elapsedYears = 0;
 
+var planetHeightOffset = 0.00005;
+
 var rotObjects = [];
 var rotSpeed = [];
 var planets = [];
@@ -218,6 +220,7 @@ var started = false;
 
 var targetPlanet;
 var hasTarget = false;
+var orbitingPlanet = false;
 
 //Temporary just for tracking stats
 var stats = new Stats();
@@ -303,15 +306,36 @@ function setup() {
 
   //Set planet distance from sun
   mercury.position.setZ(41.6);
+  mercury.position.setY(-0.0017525 - planetHeightOffset);
+
   venus.position.setZ(77.73);
+  venus.position.setY(-0.0043465 - planetHeightOffset);
+
   earth.position.setZ(107.5);
+  earth.position.setY(-0.004576 - planetHeightOffset);
+
   earthCloud.position.setZ(107.5);
+  earthCloud.position.setY(-0.00464 - planetHeightOffset);
+
   moon.position.setZ(107.776201352);
+  moon.position.setY(-0.00125 - planetHeightOffset);
+
   mars.position.setZ(163.7);
+  mars.position.setY(-0.002435 - planetHeightOffset);
+
   jupiter.position.setZ(559.3);
+  jupiter.position.setY(-0.0502 - planetHeightOffset);
+
+  saturnModel.position.setY(-0.041845 - planetHeightOffset);
+
   uranus.position.setZ(2067);
+  uranus.position.setY(-0.01822 - planetHeightOffset);
+
   neptune.position.setZ(3235);
+  neptune.position.setY(-0.01769 - planetHeightOffset);
+
   pluto.position.setZ(4220);
+  pluto.position.setY(-0.00085366912 - planetHeightOffset);
 
   //Make camera face sun on load
   camera.position.setZ(1.81)
@@ -472,7 +496,9 @@ function animate() {
   for (let i = 0; i < planets.length; i++) {
     if (voyagerModel.position.z >= planets[i].position && !planets[i].visited) {
       planets[i].visited = true;
-      timeScale = 1;
+      hasTarget = false;
+
+      timeScale = 0;
 
       //Store camoffset to restore after teleport
       let camOffsetX = camera.position.x - voyagerModel.position.x;
@@ -481,7 +507,6 @@ function animate() {
 
       //Teleport to set location as high speeds can shoot past it
       voyagerModel.position.z = planets[i].position;
-      voyagerModel.position.y = planets[i].height;
 
       //Restore camera orbital position around voyager
       camera.position.set(
@@ -489,8 +514,6 @@ function animate() {
         voyagerModel.position.y + camOffsetY,
         voyagerModel.position.z + camOffsetZ
       );
-
-      hasTarget = false;
     }
     else if (!hasTarget && planets[i].visited == false) {
       //Set closest non visited planet as target
@@ -503,7 +526,9 @@ function animate() {
   timeToElement.innerHTML = 'Seconds until ' + targetPlanet.name + ': ' + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
 
   //Set orbit control orgin to voyager
-  control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
+  if (!orbitingPlanet) {
+    control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
+  }
 
   //Control time scale from slider value
   switch (timeScale) {
