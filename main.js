@@ -64,7 +64,6 @@ control.enableZoom = false;
 control.enableRotate = false;
 control.enablePan = false;
 
-
 // Create a Loading Manager
 const loadingManager = new THREE.LoadingManager(
   () => {
