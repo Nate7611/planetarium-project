@@ -19,11 +19,13 @@ scene.background = new THREE.CubeTextureLoader()
 //Lower background brightness
 scene.backgroundIntensity = 0.7
 
-const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.0000001, 10000);
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.0000001, 5000);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
   canvas: document.querySelector('#bg'),
+  alpha: true,
+  powerPreference: "high-performance",
 });
 
 //Load html elements
@@ -103,19 +105,9 @@ bitmapLoader.load('textures/venus.jpg', (imageBitmap) => {
   venusTexture.needsUpdate = true;
 });
 
-bitmapLoader.load('textures/earth/earth-surface.jpg', (imageBitmap) => {
+bitmapLoader.load('textures/earth/earth-surface.webp', (imageBitmap) => {
   earthTexture = new THREE.Texture(imageBitmap);
   earthTexture.needsUpdate = true;
-});
-
-bitmapLoader.load('textures/earth/earth-normal.jpg', (imageBitmap) => {
-  earthNormal = new THREE.Texture(imageBitmap);
-  earthNormal.needsUpdate = true;
-});
-
-bitmapLoader.load('textures/earth/earth-cloud.jpg', (imageBitmap) => {
-  earthCloudTexture = new THREE.Texture(imageBitmap);
-  earthCloudTexture.needsUpdate = true;
 });
 
 bitmapLoader.load('textures/moon.jpg', (imageBitmap) => {
@@ -153,7 +145,6 @@ const sunGeometry = new THREE.SphereGeometry(0.5, 128, 64);
 const mercuryGeometry = new THREE.SphereGeometry(0.0017525, 64, 32);
 const venusGeometry = new THREE.SphereGeometry(0.0043465, 64, 32);
 const earthGeometry = new THREE.SphereGeometry(0.004576, 64, 32);
-const earthCloudGeometry = new THREE.SphereGeometry(0.00464, 64, 32);
 const moonGeometry = new THREE.SphereGeometry(0.00125, 64, 32);
 const marsGeometry = new THREE.SphereGeometry(0.002435, 64, 32);
 const jupiterGeometry = new THREE.SphereGeometry(0.0502, 64, 32);
@@ -238,11 +229,8 @@ function setup() {
   let venusMaterial = new THREE.MeshStandardMaterial({ map: venusTexture });
   venus = new THREE.Mesh(venusGeometry, venusMaterial);
 
-  let earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture, normalMap: earthNormal, normalScale: new THREE.Vector2(1, 1) });
+  let earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
   earth = new THREE.Mesh(earthGeometry, earthMaterial);
-
-  let earthCloudMaterial = new THREE.MeshStandardMaterial({ alphaMap: earthCloudTexture, displacementMap: earthCloudTexture, displacementScale: -0.000005, transparent: true, opacity: 1.0 });
-  earthCloud = new THREE.Mesh(earthCloudGeometry, earthCloudMaterial);
 
   let moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture });
   moon = new THREE.Mesh(moonGeometry, moonMaterial);
@@ -268,7 +256,6 @@ function setup() {
     mercury,
     venus,
     earth,
-    earthCloud,
     moon,
     mars,
     jupiter,
@@ -312,10 +299,7 @@ function setup() {
   venus.position.setY(-0.0043465 - planetHeightOffset);
 
   earth.position.setZ(107.5);
-  earth.position.setY(-0.004576 - planetHeightOffset);
-
-  earthCloud.position.setZ(107.5);
-  earthCloud.position.setY(-0.00464 - planetHeightOffset);
+  earth.position.setY(-0.00464 - planetHeightOffset);
 
   moon.position.setZ(107.776201352);
   moon.position.setY(-0.00125 - planetHeightOffset);
@@ -341,10 +325,10 @@ function setup() {
   camera.position.setZ(1.81)
 
   //Assign speed to all these
-  rotObjects = [sun, mercury, venus, earth, earthCloud, moon, mars, jupiter, saturnModel, uranus, neptune, pluto]
+  rotObjects = [sun, mercury, venus, earth, moon, mars, jupiter, saturnModel, uranus, neptune, pluto]
 
   //Planet rotation speed in earth days (starts with sun)
-  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 0.8, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667, 6.4]
+  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667, 6.4]
 
   //Gets rid of lag spike when turning camera around
   scene.traverse(obj => obj.frustumCulled = false);
@@ -368,7 +352,7 @@ startButton.addEventListener('click', function() {
 });
 
 timeFastButton.addEventListener('click', function() {
-  if (loaded && timeScale < 8) {
+  if (loaded && timeScale < 9) {
     timeScale++;
   }
 })
@@ -548,31 +532,36 @@ function animate() {
       timeScaleElement.innerHTML = '1s = 1m'
       break;
     case 3:
+      //Every Second is 5 minutes
+      speed = 300
+      timeScaleElement.innerHTML = '1s = 5m'
+      break;
+    case 4:
       //Every Second is an hour
       speed = 3600
       timeScaleElement.innerHTML = '1s = 1h'
       break;
-    case 4:
+    case 5:
       //Every Second is a day
       speed = 86400
       timeScaleElement.innerHTML = '1s = 1d'
       break;
-    case 5:
+    case 6:
       //Every Second is 5 days
       speed = 432000
       timeScaleElement.innerHTML = '1s = 5d'
       break;
-    case 6:
+    case 7:
       //Every Second is 15 days
       speed = 1296000
       timeScaleElement.innerHTML = '1s = 15d'
       break;
-    case 7:
+    case 8:
       //Every Second is 30 days
       speed = 2592000
       timeScaleElement.innerHTML = '1s = 30d'
       break;
-    case 8:
+    case 9:
       //Every Second is 180 days
       speed = 15552000
       timeScaleElement.innerHTML = '1s = 180d'
