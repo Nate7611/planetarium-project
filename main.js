@@ -322,10 +322,10 @@ function setup() {
   pluto.position.setY(-0.00085366912 - planetHeightOffset);
 
   //Make camera face sun on load
-  camera.position.setZ(1.81)
+  camera.position.setZ(1.81);
 
   //Assign speed to all these
-  rotObjects = [sun, mercury, venus, earth, moon, mars, jupiter, saturnModel, uranus, neptune, pluto]
+  rotObjects = [sun, mercury, venus, earth, moon, mars, jupiter, saturnModel, uranus, neptune, pluto];
 
   //Planet rotation speed in earth days (starts with sun)
   rotSpeed = [27, 58.66667, 243.018056, 0.997222, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667, 6.4]
@@ -351,6 +351,7 @@ startButton.addEventListener('click', function() {
   }
 });
 
+//Buttons to control speed
 timeFastButton.addEventListener('click', function() {
   if (loaded && timeScale < 9) {
     timeScale++;
