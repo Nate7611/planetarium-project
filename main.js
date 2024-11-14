@@ -465,11 +465,12 @@ function animate() {
 
   //Write time elapsed to canvas
   timeElapsedElement.innerHTML =
-    elapsedYears + ' Year(s) ' +
-    String(elapsedDays).padStart(3, '0') + ' Day(s) ' +
-    String(elapsedHours).padStart(2, '0') + ' Hour(s) ' +
-    String(elapsedMinutes).padStart(2, '0') + ' Minute(s) ' +
-    String(elapsedSeconds).padStart(2, '0') + ' Second(s)';
+    'Elapsed Time: ' +
+    elapsedYears + 'y ' +
+    String(elapsedDays).padStart(3, '0') + 'd ' +
+    String(elapsedHours).padStart(2, '0') + 'h ' +
+    String(elapsedMinutes).padStart(2, '0') + 'm ' +
+    String(elapsedSeconds).padStart(2, '0') + 's';
 
   //Miles from Sun
   distanceFromElement.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + ' mi from the Sun';
@@ -508,7 +509,7 @@ function animate() {
   }
 
   //Time until next planet text
-  timeToElement.innerHTML = 'Seconds until ' + targetPlanet.name + ': ' + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
+  timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
 
   //Set orbit control orgin to voyager
   if (!orbitingPlanet) {
