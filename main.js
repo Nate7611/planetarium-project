@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/17/Stats.js'
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -182,8 +181,6 @@ loader.load('models/saturn.glb', (gltf) => {
   scene.add(saturnModel);
 });
 
-renderer.compile(scene, camera, scene);
-
 var timer = new Timer();
 
 var frameCounter = 0;
@@ -214,11 +211,6 @@ var started = false;
 
 var targetPlanet;
 var hasTarget = false;
-
-//Temporary just for tracking stats
-var stats = new Stats();
-stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild(stats.dom);
 
 function setup() {
   //Assign loaded textures
@@ -416,17 +408,12 @@ function start() {
     animate();
   }
 
-  console.log(control.maxDistance);
-
   renderer.render(scene, camera);
 }
 
 function animate() {
   //Create loop
   requestAnimationFrame(animate);
-
-  //Track fps
-  stats.begin();
 
   //Tracker for frustrum culling
   frameCounter++;
@@ -601,8 +588,6 @@ function animate() {
   //End Debug
 
   renderer.render(scene, camera);
-
-  stats.end();
 }
 
 //Update program size and aspect ratio when window size changes
