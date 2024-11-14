@@ -45,7 +45,15 @@ const loadingBar = document.getElementById('loading-bar');
 const startButton = document.getElementById('start-button')
 
 //Facts UI
-const mercuryFacts = document.getElementById('mercury-facts');
+const factsContainer = document.getElementById('fact-container');
+const factsName = document.getElementById('fact-container__name');
+const factsDistance = document.getElementById('fact-container__distance');
+const factsRadius = document.getElementById('fact-container__radius');
+const factsLowTemp = document.getElementById('fact-container__low-tempature');
+const factsHighTemp = document.getElementById('fact-container__high-tempature');
+const factsOrbitSpeed = document.getElementById('fact-container__orbital-speed');
+const factsDayLength = document.getElementById('fact-container__day-length');
+
 
 //Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -87,10 +95,10 @@ const loadingManager = new THREE.LoadingManager(
 
 //Load Textures (bit of a mess but should run better than textureloader)
 const bitmapLoader = new THREE.ImageBitmapLoader(loadingManager);
-bitmapLoader.setOptions( { imageOrientation: 'flipY' } );
+bitmapLoader.setOptions({ imageOrientation: 'flipY' });
 
-let sunTexture, mercuryTexture, venusTexture, earthTexture, earthNormal, earthCloudTexture, moonTexture, marsTexture, jupiterTexture, uranusTexture, neptuneTexture, plutoTexture;
-let sun, mercury, venus, earth, earthCloud, moon, mars, jupiter, uranus, neptune, pluto;
+let sunTexture, mercuryTexture, venusTexture, earthTexture, moonTexture, marsTexture, jupiterTexture, uranusTexture, neptuneTexture, plutoTexture;
+let sun, mercury, venus, earth, moon, mars, jupiter, uranus, neptune, pluto;
 
 bitmapLoader.load('textures/sun.jpg', (imageBitmap) => {
   sunTexture = new THREE.Texture(imageBitmap);
@@ -262,19 +270,20 @@ function setup() {
     sunLight
   )
 
-  //Position and height where you want the voyager to stop, not accurate to planet height or position 
+  //Data for keeping track of planets 
   planets = [
-    { 'name': 'Mercury', 'visited': false, 'position': 41.596, 'height': 0.0019, 'object': mercury },
-    { 'name': 'Venus', 'visited': false, 'position': 77.723, 'height': 0.0045, 'object': venus },
-    { 'name': 'Earth', 'visited': false, 'position': 107.492, 'height': 0.0046, 'object': earth },
-    { 'name': 'The Moon', 'visited': false, 'position': 107.774, 'height': 0.0013, 'object': moon },
-    { 'name': 'Mars', 'visited': false, 'position': 163.696, 'height': 0.00246, 'object': mars },
-    { 'name': 'Jupiter', 'visited': false, 'position': 559.2, 'height': 0.0509, 'object': jupiter },
-    { 'name': 'Saturn', 'visited': false, 'position': 1028.9, 'height': 0.0418, 'object': saturnModel },
-    { 'name': 'Uranus', 'visited': false, 'position': 2066.968, 'height': 0.01829, 'object': uranus },
-    { 'name': 'Neptune', 'visited': false, 'position': 3234.968, 'height': 0.01778, 'object': neptune },
-    { 'name': 'Pluto', 'visited': false, 'position': 4219.999, 'height': 0.000856, 'object': pluto }
-  ]
+    { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, distanceFromSun: '0.4 AU', radius: '1,516 mi (2,439 km)', tempLow: '-290°F (-180°C)', tempHigh: '800°F (430°C)', orbitSpeed: '29 miles (47 kilometers) per second', dayLength: '59 Earth Days' },
+    { name: 'Venus', arrived: false, left: false, position: 77.723, endPosition: 77.737, distanceFromSun: '0.7 AU', radius: '3,760 mi (6,052 km)', tempLow: '870°F (465°C)', tempHigh: '870°F (465°C)', orbitSpeed: '22 miles (35 kilometers) per second', dayLength: '243 Earth Days' },
+    { name: 'Earth', arrived: false, left: false, position: 107.492, endPosition: 107.508, distanceFromSun: '1 AU', radius: '3,959 mi (6,371 km)', tempLow: '-128°F (-89°C)', tempHigh: '134°F (57°C)', orbitSpeed: '18.5 miles (30 kilometers) per second', dayLength: '24 hours' },
+    { name: 'The Moon', arrived: false, left: false, position: 107.774, endPosition: 107.778402704, distanceFromSun: '1 AU', radius: '1,079 mi (1,737 km)', tempLow: '-387°F (-233°C)', tempHigh: '253°F (123°C)', orbitSpeed: '0.6 miles (1 kilometer) per second', dayLength: '27.3 Earth Days' },
+    { name: 'Mars', arrived: false, left: false, position: 163.696, endPosition: 163.704, distanceFromSun: '1.5 AU', radius: '2,106 mi (3,390 km)', tempLow: '-195°F (-125°C)', tempHigh: '70°F (20°C)', orbitSpeed: '15 miles (24 kilometers) per second', dayLength: '24.6 hours' },
+    { name: 'Jupiter', arrived: false, left: false, position: 559.2, endPosition: 559.4, distanceFromSun: '5.2 AU', radius: '43,441 mi (69,911 km)', tempLow: '-234°F (-145°C)', tempHigh: '-234°F (-145°C)', orbitSpeed: '8 miles (13 kilometers) per second', dayLength: '9.9 hours' },
+    { name: 'Saturn', arrived: false, left: false, position: 1028.9, endPosition: 1029.1, distanceFromSun: '9.6 AU', radius: '36,184 mi (58,232 km)', tempLow: '-288°F (-178°C)', tempHigh: '-288°F (-178°C)', orbitSpeed: '6 miles (9.7 kilometers) per second', dayLength: '10.7 hours' },
+    { name: 'Uranus', arrived: false, left: false, position: 2066.968, endPosition: 2067.032, distanceFromSun: '19.2 AU', radius: '15,759 mi (25,362 km)', tempLow: '-371°F (-224°C)', tempHigh: '-371°F (-224°C)', orbitSpeed: '4 miles (6.8 kilometers) per second', dayLength: '17.2 hours' },
+    { name: 'Neptune', arrived: false, left: false, position: 3234.968, endPosition: 3235.032, distanceFromSun: '30.1 AU', radius: '15,299 mi (24,622 km)', tempLow: '-373°F (-225°C)', tempHigh: '-373°F (-225°C)', orbitSpeed: '3.4 miles (5.4 kilometers) per second', dayLength: '16.1 hours' },
+    { name: 'Pluto', arrived: false, left: false, position: 4219.999, endPosition: 4220.001, distanceFromSun: '39.5 AU', radius: '738 mi (1,187 km)', tempLow: '-387°F (-233°C)', tempHigh: '-369°F (-223°C)', orbitSpeed: '2.9 miles (4.7 kilometers) per second', dayLength: '153.3 hours' }
+  ];
+
 
   startUI = document.getElementById('start-UI');
   startUI.style.opacity = '1';
@@ -282,8 +291,7 @@ function setup() {
   mainUI = document.getElementById('main-UI');
   mainUI.style.opacity = '0';
 
-  mercuryFacts.style.display = 'none';
-  mercuryFacts.style.opacity = '0';
+  factsContainer.style.opacity = '0';
 
   //Move voyager in front of sun
   voyagerModel.position.setZ(0.500001);
@@ -342,7 +350,7 @@ function setup() {
 }
 
 //Run start if button is pressed and everything is loaded
-startButton.addEventListener('click', function() {
+startButton.addEventListener('click', function () {
   if (loaded) {
     started = true;
     startUI.style.animationName = 'hide';
@@ -350,13 +358,13 @@ startButton.addEventListener('click', function() {
 });
 
 //Buttons to control speed
-timeFastButton.addEventListener('click', function() {
+timeFastButton.addEventListener('click', function () {
   if (loaded && timeScale < 9) {
     timeScale++;
   }
 })
 
-timeSlowButton.addEventListener('click', function() {
+timeSlowButton.addEventListener('click', function () {
   if (loaded && timeScale > 1) {
     timeScale--;
   }
@@ -385,7 +393,7 @@ function start() {
   if (control.maxDistance > 0.000005 && started) {
     //Gradually zoom into voyager
     control.maxDistance *= 1 / (1 + (2.5 * delta));
-  } 
+  }
   else if (control.maxDistance < 0.000005 && started) {
     //Cancel loop
     cancelAnimationFrame(startLoop);
@@ -418,7 +426,7 @@ function animate() {
   //Tracker for frustrum culling
   frameCounter++;
 
-  //Turn back on culling after 1 frame, should help performance
+  //Turn back on culling after 1 frame, fixes lag spike when loading planets
   if (frameCounter == 2) {
     scene.traverse(obj => obj.frustumCulled = true);
   }
@@ -466,8 +474,9 @@ function animate() {
 
   //Stop Voyager when at planet
   for (let i = 0; i < planets.length; i++) {
-    if (voyagerModel.position.z >= planets[i].position && !planets[i].visited) {
-      planets[i].visited = true;
+    //When we arrive at planet
+    if (voyagerModel.position.z >= planets[i].position && !planets[i].arrived) {
+      planets[i].arrived = true;
       hasTarget = false;
 
       timeScale = 0;
@@ -487,13 +496,32 @@ function animate() {
         voyagerModel.position.z + camOffsetZ
       );
 
-      mercuryFacts.style.display = 'block';
-      mercuryFacts.style.opacity = '1';
+      //Fade in fact container
+      factsContainer.style.animationName = 'reveal';
+
+      //Update FactContainer with planet info
+      factsName.innerHTML = planets[i].name;
+      factsDistance.innerHTML = planets[i].distanceFromSun;
+      factsRadius.innerHTML = planets[i].radius;
+      factsLowTemp.innerHTML = planets[i].tempLow;
+      factsHighTemp.innerHTML = planets[i].tempHigh;
+      factsOrbitSpeed.innerHTML = planets[i].orbitSpeed;
+      factsDayLength.innerHTML = planets[i].dayLength;
     }
-    else if (!hasTarget && planets[i].visited == false) {
-      //Set closest non visited planet as target
+
+    //Check for new target
+    if (!hasTarget && planets[i].arrived == false) {
+      //Set closest planet that we have not yet arrived at as target
       hasTarget = true;
       targetPlanet = planets[i];
+    }
+    
+    //Check if we left planet
+    if (planets[i].arrived && !planets[i].left && voyagerModel.position.z >= planets[i].endPosition) {
+      planets[i].left = true;
+
+      //Fade out factContainer
+      factsContainer.style.animationName = 'hide';
     }
   }
 

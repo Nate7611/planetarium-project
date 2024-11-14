@@ -116,22 +116,6 @@ canvas {
   background-color: rgb(216, 216, 216);
 }
 
-#main-UI {
-  animation-name: none;
-  animation-duration: 1.5s;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: forwards;
-}
-
-#start-UI {
-  animation-name: none;
-  animation-duration: 1.5s;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-in-out;
-  animation-fill-mode: forwards;
-}
-
 #start-button {
   position: fixed;
   top: 88vh;
@@ -154,7 +138,7 @@ canvas {
   transform: scaleX(-1);
 }
 
-.fact-container {
+#fact-container {
   position: fixed;
   top: 6vh;
   left: 2.5vw;
@@ -162,15 +146,23 @@ canvas {
   height: fit-content;
   background-color: #272a3baa;
   border-radius: 5px;
+  
+  pointer-events: none;
+
+  animation-name: none;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
 }
 
-.fact-container h1 {
+#fact-container h1 {
   color: white;
   font-size: 4rem;
   text-align: center;
 }
 
-.fact-container h2 {
+#fact-container h2 {
   color: white;
   font-size: 2.5rem;
   font-weight: 600;
@@ -180,7 +172,7 @@ canvas {
   margin-inline: auto;
 }
 
-.fact-container p {
+#fact-container p {
   position: static;
   color: white;
   font-size: 1.5rem;
@@ -189,4 +181,20 @@ canvas {
   text-align: center;
   margin: 0 auto;
   text-shadow: none;
+}
+
+#main-UI {
+  animation-name: none;
+  animation-duration: 1.5s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#start-UI {
+  animation-name: none;
+  animation-duration: 1.5s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
 }
