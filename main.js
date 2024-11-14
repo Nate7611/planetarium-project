@@ -24,7 +24,7 @@ const renderer = new THREE.WebGLRenderer({
   antialias: true,
   canvas: document.querySelector('#bg'),
   alpha: true,
-  powerPreference: "high-performance",
+  powerPreference: 'high-performance',
   reverseDepthBuffer: true
 });
 

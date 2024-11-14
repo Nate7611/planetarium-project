@@ -160,7 +160,7 @@ canvas {
   left: 2.5vw;
   width: 20vw;
   height: fit-content;
-  background-color: #282b3b80;
+  background-color: #272a3baa;
   border-radius: 5px;
 }
 
@@ -173,6 +173,7 @@ canvas {
 .fact-container h2 {
   color: white;
   font-size: 2.5rem;
+  font-weight: 600;
   max-width: 90%;
   text-align: center;
   margin-top: 10px;
@@ -183,6 +184,7 @@ canvas {
   position: static;
   color: white;
   font-size: 1.5rem;
+  font-weight: 400;
   width: 85%;
   text-align: center;
   margin: 0 auto;
