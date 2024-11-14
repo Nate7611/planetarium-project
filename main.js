@@ -345,12 +345,15 @@ function setup() {
   renderer.render(scene, camera);
 
   loaded = true;
+
+  start();
 }
 
 //Run start if button is pressed and everything is loaded
 startButton.addEventListener('click', function() {
   if (loaded) {
-    start();
+    started = true;
+    startUI.style.animationName = 'hide';
   }
 });
 
@@ -387,8 +390,6 @@ function start() {
   //Rotate Sun
   sun.rotateY(((2 * Math.PI) / (27 * 86400) * delta) * 43200);
 
-  startUI.style.animationName = 'hide'; 
-
   if (control.maxDistance > 0.000005 && started) {
     //Gradually zoom into voyager
     control.maxDistance *= 1 / (1 + (2.5 * delta));
@@ -414,6 +415,8 @@ function start() {
     //Start main loop
     animate();
   }
+
+  console.log(control.maxDistance);
 
   renderer.render(scene, camera);
 }
@@ -511,9 +514,7 @@ function animate() {
   timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
 
   //Set orbit control orgin to voyager
-  if (!orbitingPlanet) {
-    control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
-  }
+  control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
 
   //Control time scale from slider value
   switch (timeScale) {
