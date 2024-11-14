@@ -214,7 +214,6 @@ var started = false;
 
 var targetPlanet;
 var hasTarget = false;
-var orbitingPlanet = false;
 
 //Temporary just for tracking stats
 var stats = new Stats();
@@ -346,14 +345,12 @@ function setup() {
   renderer.render(scene, camera);
 
   loaded = true;
-
-  start();
 }
 
 //Run start if button is pressed and everything is loaded
 startButton.addEventListener('click', function() {
   if (loaded) {
-    started = true;
+    start();
   }
 });
 
@@ -370,10 +367,9 @@ timeSlowButton.addEventListener('click', function() {
   }
 })
 
-
 //Start screen
 function start() {
-  //Store to cancle loop
+  //Store to cancel loop
   startLoop = requestAnimationFrame(start);
 
   //Set orbit target
@@ -388,15 +384,10 @@ function start() {
   //Deltatime
   var delta = timer.getDelta();
 
+  //Rotate Sun
   sun.rotateY(((2 * Math.PI) / (27 * 86400) * delta) * 43200);
 
-  //Fade out and disable start UI
-  if (parseFloat(startUI.style.opacity) > 0 && started) {
-    startUI.style.opacity = Math.max(0, parseFloat(startUI.style.opacity) - (1 * delta));
-  } 
-  else if (parseFloat(startUI.style.opacity) <= 0 && started) {
-    startUI.style.display = 'none';
-  }
+  startUI.style.animationName = 'hide'; 
 
   if (control.maxDistance > 0.000005 && started) {
     //Gradually zoom into voyager
@@ -405,6 +396,9 @@ function start() {
   else if (control.maxDistance < 0.000005 && started) {
     //Cancel loop
     cancelAnimationFrame(startLoop);
+
+    //Hide Start UI
+    startUI.style.display = 'none';
 
     //Set camera max zoom
     control.maxDistance = 0.000005;
@@ -415,6 +409,7 @@ function start() {
 
     //Bring in main ui
     mainUI.style.display = 'block';
+    mainUI.style.animationName = 'reveal';
 
     //Start main loop
     animate();
@@ -443,11 +438,6 @@ function animate() {
 
   //Deltatime
   var delta = timer.getDelta();
-
-  //Fade in main UI
-  if (parseFloat(mainUI.style.opacity) < 1) {
-    mainUI.style.opacity = Math.min(1, parseFloat(mainUI.style.opacity) + (1 * delta));
-  }
 
   //Around the 35,000 mph the voyager is moving
   pos = (0.00001124 * speed) * delta;
