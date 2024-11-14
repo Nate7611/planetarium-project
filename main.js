@@ -45,6 +45,9 @@ const loadingBar = document.getElementById('loading-bar');
 //Start UI
 const startButton = document.getElementById('start-button')
 
+//Facts UI
+const mercuryFacts = document.getElementById('mercury-facts');
+
 //Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -288,6 +291,9 @@ function setup() {
   mainUI = document.getElementById('main-UI');
   mainUI.style.opacity = '0';
 
+  mercuryFacts.style.display = 'none';
+  mercuryFacts.style.opacity = '0';
+
   //Move voyager in front of sun
   voyagerModel.position.setZ(0.500001);
 
@@ -500,6 +506,9 @@ function animate() {
         voyagerModel.position.y + camOffsetY,
         voyagerModel.position.z + camOffsetZ
       );
+
+      mercuryFacts.style.display = 'block';
+      mercuryFacts.style.opacity = '1';
     }
     else if (!hasTarget && planets[i].visited == false) {
       //Set closest non visited planet as target
