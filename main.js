@@ -36,6 +36,8 @@ const timeElapsedElement = document.getElementById('time-elapsed');
 const timeScaleElement = document.getElementById('speed-scale');
 const timeSlowButton = document.getElementById('slow-button');
 const timeFastButton = document.getElementById('fast-button');
+const unitSwitchButton = document.getElementById('unit-button');
+const unitSwitchButtonText = document.getElementById('unit-button__text');
 
 //Loading UI
 const loadingScreen = document.getElementById('loading-screen');
@@ -212,6 +214,8 @@ var planets = [];
 var startUI;
 var mainUI;
 
+var usingMetric = false;
+
 var loaded = false;
 
 var startLoop;
@@ -370,6 +374,17 @@ timeSlowButton.addEventListener('click', function () {
   }
 })
 
+unitSwitchButton.addEventListener('click', function () {
+  if (!usingMetric) {
+    usingMetric = true;
+    unitSwitchButtonText.innerHTML = 'Switch to mi';
+  } 
+  else {
+    usingMetric = false;
+    unitSwitchButtonText.innerHTML = 'Switch to km';
+  }
+})
+
 //Start screen
 function start() {
   //Store to cancel loop
@@ -466,11 +481,15 @@ function animate() {
     String(elapsedMinutes).padStart(2, '0') + 'm ' +
     String(elapsedSeconds).padStart(2, '0') + 's';
 
-  //Miles from Sun
-  distanceFromElement.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + ' mi from the Sun';
 
-  //Kilometers from Sun
-  //distanceFromElement.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + ' km from the Sun';
+  if (!usingMetric) {
+    //Miles from Sun
+    distanceFromElement.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + ' mi from the Sun';
+  }
+  else {
+    //Kilometers from Sun
+    distanceFromElement.innerHTML =  new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + ' km from the Sun';
+  }
 
   //Stop Voyager when at planet
   for (let i = 0; i < planets.length; i++) {

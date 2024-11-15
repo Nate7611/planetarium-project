@@ -19,11 +19,18 @@
     <p id="distance" style="position: fixed; top: 1vh; margin: 0;"></p>
     <p id="time-until" style="position: fixed; top: 6vh; margin: 0;"></p>
     <p id="time-elapsed" style="position: fixed; top: 11vh; margin: 0;"></p>
-    <p id="speed-scale" style="bottom: 6.5vh; height: 5vh;"></p>
+    <p id="speed-scale" style="bottom: 7vh; height: 5vh;"></p>
     <img src="img/button.svg" draggable="false" id="fast-button" alt="Button to make time faster"
       style="bottom: 4vh; right: 30vw;">
     <img src="img/button.svg" draggable="false" id="slow-button" alt="Button to make time slower"
       style="bottom: 4vh; left: 30vw;">
+    <button id="restart-button" onClick="window.location.reload();">
+      <p>Restart</p>
+      <img src="img/restart.svg" alt="Restart Button">
+    </button>
+    <button id="unit-button">
+      <p id="unit-button__text">Switch to km</p>
+    </button>
   </div>
 
   <div id="start-UI">
