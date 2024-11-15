@@ -205,6 +205,9 @@ var elapsedHours = 0;
 var elapsedDays = 0;
 var elapsedYears = 0;
 
+var secondsUntilPlanet = 0;
+var secondsUntilPlanetRaw = 0;
+
 var planetHeightOffset = 0.00005;
 
 var rotObjects = [];
@@ -288,8 +291,6 @@ function setup() {
     { name: 'Pluto', arrived: false, left: false, position: 4219.999, endPosition: 4220.001, distanceFromSun: '39.5 AU', radius: '738 mi (1,187 km)', tempLow: '-387°F (-233°C)', tempHigh: '-369°F (-223°C)', orbitSpeed: '2.9 miles (4.7 kilometers) per second', dayLength: '6.39 Earth Days' }
   ];
 
-
-
   startUI = document.getElementById('start-UI');
   startUI.style.opacity = '1';
 
@@ -360,11 +361,11 @@ startButton.addEventListener('click', function () {
     started = true;
     startUI.style.animationName = 'hide';
   }
-});
+})
 
 //Buttons to control speed
 timeFastButton.addEventListener('click', function () {
-  if (loaded && timeScale < 9) {
+  if (loaded && timeScale < 10) {
     timeScale++;
   }
 })
@@ -500,7 +501,7 @@ function animate() {
       planets[i].arrived = true;
       hasTarget = false;
 
-      timeScale = 0;
+      timeScale = 1;
 
       //Store camoffset to restore after teleport
       let camOffsetX = camera.position.x - voyagerModel.position.x;
@@ -547,7 +548,33 @@ function animate() {
   }
 
   //Time until next planet text
-  timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
+  secondsUntilPlanet = Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
+  secondsUntilPlanetRaw = (targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed);
+
+  if (secondsUntilPlanetRaw <= 0.05 && timeScale > 2) {
+
+    timeScale--;
+  }
+
+  if ((secondsUntilPlanet / 31557600) >= 1) {
+    //Print in years
+    timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 31557600) + 'y';
+  }
+  else if ((secondsUntilPlanet / 86400) >= 1) {
+    //Print in days
+    timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 86400) + 'd';
+  }
+  else if ((secondsUntilPlanet / 3600) >= 1) {
+    //Print in hours
+    timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 3600) + 'h';
+  }
+  else if ((secondsUntilPlanet / 60) >= 1) {
+    //Print in minutes
+    timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 60) + 'm';
+  } else {
+    //Print in seconds
+    timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw.toFixed(1) + 's';
+  }
 
   //Set orbit control orgin to voyager
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
@@ -555,7 +582,7 @@ function animate() {
   //Control time scale from slider value
   switch (timeScale) {
     case 0:
-      //Realtime
+      //Speed stopped
       speed = 0
       timeScaleElement.innerHTML = 'Time Stopped'
       break;
@@ -585,24 +612,24 @@ function animate() {
       timeScaleElement.innerHTML = '1s = 1d'
       break;
     case 6:
-      //Every Second is 5 days
-      speed = 432000
-      timeScaleElement.innerHTML = '1s = 5d'
-      break;
-    case 7:
       //Every Second is 15 days
       speed = 1296000
       timeScaleElement.innerHTML = '1s = 15d'
       break;
-    case 8:
+    case 7:
       //Every Second is 30 days
       speed = 2592000
       timeScaleElement.innerHTML = '1s = 30d'
       break;
+    case 8:
+      //Every Second is 60 days
+      speed = 5184000
+      timeScaleElement.innerHTML = '1s = 60d'
+      break;
     case 9:
-      //Every Second is 180 days
-      speed = 15552000
-      timeScaleElement.innerHTML = '1s = 180d'
+      //Every Second is 120 days
+      speed = 10368000
+      timeScaleElement.innerHTML = '1s = 120d'
       break;
   }
 
