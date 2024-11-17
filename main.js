@@ -366,15 +366,26 @@ startButton.addEventListener('click', function () {
 //Buttons to control speed
 timeFastButton.addEventListener('click', function () {
   if (loaded && timeScale < (timeScales.length - 1) && !slowingDown) {
+    timeFastButton.style.animationName = 'pressed';
     timeScale++;
   }
 })
 
+timeFastButton.addEventListener('animationend', () => {
+  timeFastButton.style.animationName = 'none';
+});
+
 timeSlowButton.addEventListener('click', function () {
   if (loaded && timeScale > 1 && !slowingDown) {
+    timeSlowButton.style.animationName = 'pressed';
     timeScale--;
   }
 })
+
+timeSlowButton.addEventListener('animationend', () => {
+  timeSlowButton.style.animationName = 'none';
+});
+
 
 //Switch units and button text when pressed
 unitSwitchButton.addEventListener('click', function () {

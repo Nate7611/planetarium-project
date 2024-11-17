@@ -64,6 +64,12 @@ h1, h2, h3, h4, h5, h6 {
   to {opacity: 0;}
 }
 
+@keyframes pressed {
+  0% {opacity: 1;}
+  50% {opacity: 0.6;}
+  100% {opacity: 1;}
+}
+
 body {
   font-family: "Space Grotesk", sans-serif;
   font-optical-sizing: auto;
@@ -132,6 +138,11 @@ canvas {
   user-select: none;
   cursor: pointer;
   filter: drop-shadow(5px 5px 10px black);
+
+  animation-name: none;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
 }
 
 #slow-button {
