@@ -30,6 +30,7 @@ const renderer = new THREE.WebGLRenderer({
 
 //Load html elements
 //Main UI
+const mainUI = document.getElementById('main-UI');
 const distanceFromElement = document.getElementById('distance');
 const timeToElement = document.getElementById('time-until');
 const timeElapsedElement = document.getElementById('time-elapsed');
@@ -44,6 +45,7 @@ const loadingScreen = document.getElementById('loading-screen');
 const loadingBar = document.getElementById('loading-bar');
 
 //Start UI
+const startUI = document.getElementById('start-UI');
 const startButton = document.getElementById('start-button')
 
 //Facts UI
@@ -191,10 +193,39 @@ loader.load('models/saturn.glb', (gltf) => {
   scene.add(saturnModel);
 });
 
-var timer = new Timer();
+const timer = new Timer();
 
+const planetHeightOffset = 0.00005;
+
+const planets = [
+  { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, distanceFromSun: '0.4 AU', radius: '1,516 mi (2,439 km)', tempLow: '-290°F (-180°C)', tempHigh: '800°F (430°C)', orbitSpeed: '29 miles (47 kilometers) per second', dayLength: '59 Earth Days' },
+  { name: 'Venus', arrived: false, left: false, position: 77.723, endPosition: 77.737, distanceFromSun: '0.7 AU', radius: '3,760 mi (6,052 km)', tempLow: '870°F (465°C)', tempHigh: '870°F (465°C)', orbitSpeed: '22 miles (35 kilometers) per second', dayLength: '243 Earth Days' },
+  { name: 'Earth', arrived: false, left: false, position: 107.492, endPosition: 107.508, distanceFromSun: '1 AU', radius: '3,959 mi (6,371 km)', tempLow: '-128°F (-89°C)', tempHigh: '134°F (57°C)', orbitSpeed: '18.5 miles (30 kilometers) per second', dayLength: '1 Earth Day' },
+  { name: 'The Moon', arrived: false, left: false, position: 107.774, endPosition: 107.778402704, distanceFromSun: '1 AU', radius: '1,079 mi (1,737 km)', tempLow: '-387°F (-233°C)', tempHigh: '253°F (123°C)', orbitSpeed: '0.6 miles (1 kilometer) per second', dayLength: '27.3 Earth Days' },
+  { name: 'Mars', arrived: false, left: false, position: 163.696, endPosition: 163.704, distanceFromSun: '1.5 AU', radius: '2,106 mi (3,390 km)', tempLow: '-195°F (-125°C)', tempHigh: '70°F (20°C)', orbitSpeed: '15 miles (24 kilometers) per second', dayLength: '1.03 Earth Days' },
+  { name: 'Jupiter', arrived: false, left: false, position: 559.2, endPosition: 559.4, distanceFromSun: '5.2 AU', radius: '43,441 mi (69,911 km)', tempLow: '-234°F (-145°C)', tempHigh: '-234°F (-145°C)', orbitSpeed: '8 miles (13 kilometers) per second', dayLength: '0.41 Earth Days' },
+  { name: 'Saturn', arrived: false, left: false, position: 1028.9, endPosition: 1029.1, distanceFromSun: '9.6 AU', radius: '36,184 mi (58,232 km)', tempLow: '-288°F (-178°C)', tempHigh: '-288°F (-178°C)', orbitSpeed: '6 miles (9.7 kilometers) per second', dayLength: '0.45 Earth Days' },
+  { name: 'Uranus', arrived: false, left: false, position: 2066.968, endPosition: 2067.032, distanceFromSun: '19.2 AU', radius: '15,759 mi (25,362 km)', tempLow: '-371°F (-224°C)', tempHigh: '-371°F (-224°C)', orbitSpeed: '4 miles (6.8 kilometers) per second', dayLength: '0.72 Earth Days' },
+  { name: 'Neptune', arrived: false, left: false, position: 3234.968, endPosition: 3235.032, distanceFromSun: '30.1 AU', radius: '15,299 mi (24,622 km)', tempLow: '-373°F (-225°C)', tempHigh: '-373°F (-225°C)', orbitSpeed: '3.4 miles (5.4 kilometers) per second', dayLength: '0.67 Earth Days' },
+  { name: 'Pluto', arrived: false, left: false, position: 4219.999, endPosition: 4220.001, distanceFromSun: '39.5 AU', radius: '738 mi (1,187 km)', tempLow: '-387°F (-233°C)', tempHigh: '-369°F (-223°C)', orbitSpeed: '2.9 miles (4.7 kilometers) per second', dayLength: '6.39 Earth Days' }
+];
+
+const timeScales = [
+  { speed: 0, label: 'Time Stopped' },
+  { speed: 1, label: 'Real-time' },
+  { speed: 60, label: '1s = 1m' },
+  { speed: 300, label: '1s = 5m' },
+  { speed: 3600, label: '1s = 1h' },
+  { speed: 86400, label: '1s = 1d' },
+  { speed: 1296000, label: '1s = 15d' },
+  { speed: 2592000, label: '1s = 30d' },
+  { speed: 5184000, label: '1s = 60d' },
+  { speed: 10368000, label: '1s = 120d' },
+];
+
+var rotObjects = [];
+var rotSpeed = [];
 var frameCounter = 0;
-
 var pos = 0;
 var speed = 1;
 var timeScale = 0;
@@ -204,26 +235,13 @@ var elapsedMinutes = 0;
 var elapsedHours = 0;
 var elapsedDays = 0;
 var elapsedYears = 0;
-
 var secondsUntilPlanet = 0;
 var secondsUntilPlanetRaw = 0;
-
-var planetHeightOffset = 0.00005;
-
-var rotObjects = [];
-var rotSpeed = [];
-var planets = [];
-
-var startUI;
-var mainUI;
-
 var usingMetric = false;
-
+var slowingDown = false;
 var loaded = false;
-
 var startLoop;
 var started = false;
-
 var targetPlanet;
 var hasTarget = false;
 
@@ -277,26 +295,8 @@ function setup() {
     sunLight
   )
 
-  //Data for keeping track of planets 
-  planets = [
-    { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, distanceFromSun: '0.4 AU', radius: '1,516 mi (2,439 km)', tempLow: '-290°F (-180°C)', tempHigh: '800°F (430°C)', orbitSpeed: '29 miles (47 kilometers) per second', dayLength: '59 Earth Days' },
-    { name: 'Venus', arrived: false, left: false, position: 77.723, endPosition: 77.737, distanceFromSun: '0.7 AU', radius: '3,760 mi (6,052 km)', tempLow: '870°F (465°C)', tempHigh: '870°F (465°C)', orbitSpeed: '22 miles (35 kilometers) per second', dayLength: '243 Earth Days' },
-    { name: 'Earth', arrived: false, left: false, position: 107.492, endPosition: 107.508, distanceFromSun: '1 AU', radius: '3,959 mi (6,371 km)', tempLow: '-128°F (-89°C)', tempHigh: '134°F (57°C)', orbitSpeed: '18.5 miles (30 kilometers) per second', dayLength: '1 Earth Day' },
-    { name: 'The Moon', arrived: false, left: false, position: 107.774, endPosition: 107.778402704, distanceFromSun: '1 AU', radius: '1,079 mi (1,737 km)', tempLow: '-387°F (-233°C)', tempHigh: '253°F (123°C)', orbitSpeed: '0.6 miles (1 kilometer) per second', dayLength: '27.3 Earth Days' },
-    { name: 'Mars', arrived: false, left: false, position: 163.696, endPosition: 163.704, distanceFromSun: '1.5 AU', radius: '2,106 mi (3,390 km)', tempLow: '-195°F (-125°C)', tempHigh: '70°F (20°C)', orbitSpeed: '15 miles (24 kilometers) per second', dayLength: '1.03 Earth Days' },
-    { name: 'Jupiter', arrived: false, left: false, position: 559.2, endPosition: 559.4, distanceFromSun: '5.2 AU', radius: '43,441 mi (69,911 km)', tempLow: '-234°F (-145°C)', tempHigh: '-234°F (-145°C)', orbitSpeed: '8 miles (13 kilometers) per second', dayLength: '0.41 Earth Days' },
-    { name: 'Saturn', arrived: false, left: false, position: 1028.9, endPosition: 1029.1, distanceFromSun: '9.6 AU', radius: '36,184 mi (58,232 km)', tempLow: '-288°F (-178°C)', tempHigh: '-288°F (-178°C)', orbitSpeed: '6 miles (9.7 kilometers) per second', dayLength: '0.45 Earth Days' },
-    { name: 'Uranus', arrived: false, left: false, position: 2066.968, endPosition: 2067.032, distanceFromSun: '19.2 AU', radius: '15,759 mi (25,362 km)', tempLow: '-371°F (-224°C)', tempHigh: '-371°F (-224°C)', orbitSpeed: '4 miles (6.8 kilometers) per second', dayLength: '0.72 Earth Days' },
-    { name: 'Neptune', arrived: false, left: false, position: 3234.968, endPosition: 3235.032, distanceFromSun: '30.1 AU', radius: '15,299 mi (24,622 km)', tempLow: '-373°F (-225°C)', tempHigh: '-373°F (-225°C)', orbitSpeed: '3.4 miles (5.4 kilometers) per second', dayLength: '0.67 Earth Days' },
-    { name: 'Pluto', arrived: false, left: false, position: 4219.999, endPosition: 4220.001, distanceFromSun: '39.5 AU', radius: '738 mi (1,187 km)', tempLow: '-387°F (-233°C)', tempHigh: '-369°F (-223°C)', orbitSpeed: '2.9 miles (4.7 kilometers) per second', dayLength: '6.39 Earth Days' }
-  ];
-
-  startUI = document.getElementById('start-UI');
   startUI.style.opacity = '1';
-
-  mainUI = document.getElementById('main-UI');
   mainUI.style.opacity = '0';
-
   factsContainer.style.opacity = '0';
 
   //Move voyager in front of sun
@@ -365,13 +365,13 @@ startButton.addEventListener('click', function () {
 
 //Buttons to control speed
 timeFastButton.addEventListener('click', function () {
-  if (loaded && timeScale < 10) {
+  if (loaded && timeScale < (timeScales.length - 1) && !slowingDown) {
     timeScale++;
   }
 })
 
 timeSlowButton.addEventListener('click', function () {
-  if (loaded && timeScale > 1) {
+  if (loaded && timeScale > 1 && !slowingDown) {
     timeScale--;
   }
 })
@@ -437,6 +437,10 @@ function start() {
   renderer.render(scene, camera);
 }
 
+control.addEventListener('end', () => {
+  //console.log("Camera transformed by OrbitControls:");
+});
+
 function animate() {
   //Create loop
   requestAnimationFrame(animate);
@@ -454,6 +458,8 @@ function animate() {
 
   //Deltatime
   var delta = timer.getDelta();
+
+  speed = timeScales[timeScale].speed;
 
   //Around the 35,000 mph the voyager is moving
   pos = (0.00001124 * speed) * delta;
@@ -500,7 +506,7 @@ function animate() {
     if (voyagerModel.position.z >= planets[i].position && !planets[i].arrived) {
       planets[i].arrived = true;
       hasTarget = false;
-
+      slowingDown = false;
       timeScale = 1;
 
       //Store camoffset to restore after teleport
@@ -551,11 +557,13 @@ function animate() {
   secondsUntilPlanet = Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
   secondsUntilPlanetRaw = (targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed);
 
+  //Slow down when near planet
   if (secondsUntilPlanetRaw <= 0.05 && timeScale > 2) {
-
+    slowingDown = true;
     timeScale--;
   }
 
+  //Convert from seconds
   if ((secondsUntilPlanet / 31557600) >= 1) {
     //Print in years
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 31557600) + 'y';
@@ -579,58 +587,12 @@ function animate() {
   //Set orbit control orgin to voyager
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
 
-  //Control time scale from slider value
-  switch (timeScale) {
-    case 0:
-      //Speed stopped
-      speed = 0
-      timeScaleElement.innerHTML = 'Time Stopped'
-      break;
-    case 1:
-      //Realtime
-      speed = 1
-      timeScaleElement.innerHTML = 'Real-time'
-      break;
-    case 2:
-      //Every Second is an minute
-      speed = 60
-      timeScaleElement.innerHTML = '1s = 1m'
-      break;
-    case 3:
-      //Every Second is 5 minutes
-      speed = 300
-      timeScaleElement.innerHTML = '1s = 5m'
-      break;
-    case 4:
-      //Every Second is an hour
-      speed = 3600
-      timeScaleElement.innerHTML = '1s = 1h'
-      break;
-    case 5:
-      //Every Second is a day
-      speed = 86400
-      timeScaleElement.innerHTML = '1s = 1d'
-      break;
-    case 6:
-      //Every Second is 15 days
-      speed = 1296000
-      timeScaleElement.innerHTML = '1s = 15d'
-      break;
-    case 7:
-      //Every Second is 30 days
-      speed = 2592000
-      timeScaleElement.innerHTML = '1s = 30d'
-      break;
-    case 8:
-      //Every Second is 60 days
-      speed = 5184000
-      timeScaleElement.innerHTML = '1s = 60d'
-      break;
-    case 9:
-      //Every Second is 120 days
-      speed = 10368000
-      timeScaleElement.innerHTML = '1s = 120d'
-      break;
+  //Write speed to screen
+  if (slowingDown) {
+    timeScaleElement.innerHTML = 'Slowing Down'
+  }
+  else {
+    timeScaleElement.innerHTML = timeScales[timeScale].label;
   }
 
   //Need to do this for orbit control damping
