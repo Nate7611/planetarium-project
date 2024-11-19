@@ -17,9 +17,9 @@
 <body>
   <canvas id="bg"></canvas>
   <div id="main-UI">
-    <p id="distance" style="position: fixed; top: 1vh; margin: 0;"></p>
-    <p id="time-until" style="position: fixed; top: 6vh; margin: 0;"></p>
-    <p id="time-elapsed" style="position: fixed; top: 11vh; margin: 0;"></p>
+    <p id="distance" style="position: fixed; top: 1vh; margin: 0; pointer-events: none;"></p>
+    <p id="time-elapsed" style="position: fixed; top: 6vh; margin: 0; pointer-events: none;"></p>
+    <p id="time-until" style="position: fixed; top: 11vh; margin: 0; pointer-events: none;"></p>
     <p id="speed-scale" style="bottom: 7vh; height: 5vh;"></p>
     <img src="img/button.svg" draggable="false" id="fast-button" alt="Button to make time faster"
       style="bottom: 4vh; right: 30vw;">
@@ -32,6 +32,23 @@
     <button id="unit-button">
       <p id="unit-button__text">Switch to km</p>
     </button>
+  </div>
+
+  <div id="opening-text">
+    <h1>Information</h1>
+    <hr>
+    <P>You will be observing the Voyager Probe that was launched in 1977</p>
+    <p>You will experience the time it takes to get from the Sun all the way to Pluto</p>
+    <p>The Voyager is moving at 35,000 mph (56327 km/h)</p>
+    <p>(Tap to Continue)</p>
+  </div>
+
+  <div id="tutorial">
+    <h1>Tutorial</h1>
+    <hr>
+    <p id="tutorial__camera-text">Move the camera around by dragging your finger across the screen</p>
+    <p id="tutorial__speed-text">Control the rate of time with the buttons below</p>
+    <p id="tutorial__continue-text">(Complete Each Action to Continue)</p>
   </div>
 
   <div id="start-UI">

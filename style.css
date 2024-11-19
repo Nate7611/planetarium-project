@@ -131,6 +131,51 @@ canvas {
   font-size: 3rem;
 }
 
+#opening-text, #tutorial {
+  position: fixed;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #00000046;
+
+  animation-name: none;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#opening-text p, #tutorial p {
+  position: static;
+  color: white;
+  font-size: 3rem;
+  text-align: center;
+  margin: 0 auto;
+}
+
+#opening-text h1, #tutorial h1 {
+  position: static;
+  color: white;
+  font-size: 5.5rem;
+  text-shadow: 3px 3px 5px black;
+  text-align: center;
+  margin: 0 auto;
+}
+
+#opening-text hr, #tutorial hr {
+  width: 50%;
+  margin: 0 auto;
+}
+
+p#tutorial__continue-text {
+  color: rgb(255, 123, 123);
+}
+
 #fast-button, #slow-button {
   position: fixed;
   width: 10vw;
@@ -216,7 +261,6 @@ canvas {
   text-shadow: none;
 }
 
-
 #unit-button {
   display: block;
   left: 6vw;
@@ -226,7 +270,6 @@ canvas {
   font-size: 1.5rem;
   width: 90%;
 }
-
 
 #restart-button img {
   width: 25%;

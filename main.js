@@ -58,6 +58,12 @@ const factsHighTemp = document.getElementById('fact-container__high-tempature');
 const factsOrbitSpeed = document.getElementById('fact-container__orbital-speed');
 const factsDayLength = document.getElementById('fact-container__day-length');
 
+//Opening UI
+const openingElement = document.getElementById('opening-text');
+const tutorialElement = document.getElementById('tutorial');
+const tutorialSpeedElement = document.getElementById('tutorial__speed-text');
+const tutorialCameraElement = document.getElementById('tutorial__camera-text');
+const tutorialContinueElement = document.getElementById('tutorial__continue-text');
 
 //Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -223,6 +229,12 @@ const timeScales = [
   { speed: 10368000, label: '1s = 120d' },
 ];
 
+//Track for tutorial text
+var movedCamera = false;
+var timeRateChanged = false;
+var tutorialComplete = false;
+
+//Other variables
 var rotObjects = [];
 var rotSpeed = [];
 var frameCounter = 0;
@@ -368,6 +380,11 @@ timeFastButton.addEventListener('click', function () {
   if (loaded && timeScale < (timeScales.length - 1) && !slowingDown) {
     timeFastButton.style.animationName = 'pressed';
     timeScale++;
+    timeRateChanged = true;
+
+    if (!tutorialComplete) {
+      tutorial();
+    }
   }
 })
 
@@ -376,7 +393,7 @@ timeFastButton.addEventListener('animationend', () => {
 });
 
 timeSlowButton.addEventListener('click', function () {
-  if (loaded && timeScale > 1 && !slowingDown) {
+  if (loaded && timeScale > 0 && !slowingDown) {
     timeSlowButton.style.animationName = 'pressed';
     timeScale--;
   }
@@ -398,6 +415,42 @@ unitSwitchButton.addEventListener('click', function () {
     unitSwitchButtonText.innerHTML = 'Switch to km';
   }
 })
+
+control.addEventListener('start', () => {
+  movedCamera = true;
+  if (!tutorialComplete) {
+    tutorial();
+  }
+});
+
+openingElement.addEventListener('click', () => {
+  //Hide and make none interactable
+  openingElement.style.animationName = "hide";
+  openingElement.style.pointerEvents = "none";
+
+  mainUI.style.display = 'block';
+  mainUI.style.animationName = 'reveal';
+
+  tutorialElement.style.pointerEvents = "none";
+  tutorialElement.style.display = 'flex';
+  tutorialElement.style.animationName = 'reveal';
+});
+
+function tutorial() {
+  if (timeRateChanged) {
+    tutorialSpeedElement.style.color = '#91ff73'
+  }
+
+  if (movedCamera) {
+    tutorialCameraElement.style.color = '#91ff73'
+  }
+
+  if (timeRateChanged && movedCamera) {
+    tutorialComplete = true;
+    tutorialContinueElement.style.color = '#91ff73';
+    tutorialElement.style.animationName = 'hide';
+  }
+};
 
 //Start screen
 function start() {
@@ -438,8 +491,8 @@ function start() {
     control.enableRotate = true;
 
     //Bring in main ui
-    mainUI.style.display = 'block';
-    mainUI.style.animationName = 'reveal';
+    openingElement.style.display = 'flex';
+    openingElement.style.animationName = 'reveal';
 
     //Start main loop
     animate();
@@ -447,10 +500,6 @@ function start() {
 
   renderer.render(scene, camera);
 }
-
-control.addEventListener('end', () => {
-  //console.log("Camera transformed by OrbitControls:");
-});
 
 function animate() {
   //Create loop
@@ -470,6 +519,7 @@ function animate() {
   //Deltatime
   var delta = timer.getDelta();
 
+  //Set speed
   speed = timeScales[timeScale].speed;
 
   //Around the 35,000 mph the voyager is moving
