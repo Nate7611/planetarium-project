@@ -161,7 +161,7 @@ canvas {
   pointer-events: none;
 
   animation-name: none;
-  animation-duration: 1s;
+  animation-duration: 1.5s;
   animation-iteration-count: 1;
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
@@ -235,7 +235,7 @@ canvas {
 
 #main-UI, #start-UI {
   animation-name: none;
-  animation-duration: 1.5s;
+  animation-duration: 2s;
   animation-iteration-count: 1;
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;

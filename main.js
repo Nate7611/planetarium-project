@@ -71,7 +71,7 @@ control.enableDamping = true;
 
 //Control max and min zoom of camera 
 control.maxDistance = 3;
-control.minDistance = 0.0000006;
+control.minDistance = 0.0000005;
 
 //Lock movement during start
 control.enableZoom = false;
@@ -195,7 +195,7 @@ loader.load('models/saturn.glb', (gltf) => {
 
 const timer = new Timer();
 
-const planetHeightOffset = 0.00005;
+const planetHeightOffset = 0.00003;
 
 const planets = [
   { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, distanceFromSun: '0.4 AU', radius: '1,516 mi (2,439 km)', tempLow: '-290°F (-180°C)', tempHigh: '800°F (430°C)', orbitSpeed: '29 miles (47 kilometers) per second', dayLength: '59 Earth Days' },
@@ -575,24 +575,29 @@ function animate() {
   }
 
   //Convert from seconds
-  if ((secondsUntilPlanet / 31557600) >= 1) {
+  if ((secondsUntilPlanetRaw / 31557600) >= 1 && secondsUntilPlanetRaw != Infinity) {
     //Print in years
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 31557600) + 'y';
   }
-  else if ((secondsUntilPlanet / 86400) >= 1) {
+  else if ((secondsUntilPlanetRaw / 86400) >= 1 && secondsUntilPlanetRaw != Infinity) {
     //Print in days
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 86400) + 'd';
   }
-  else if ((secondsUntilPlanet / 3600) >= 1) {
+  else if ((secondsUntilPlanetRaw / 3600) >= 1 && secondsUntilPlanetRaw != Infinity) {
     //Print in hours
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 3600) + 'h';
   }
-  else if ((secondsUntilPlanet / 60) >= 1) {
+  else if ((secondsUntilPlanetRaw / 60) >= 1 && secondsUntilPlanetRaw != Infinity) {
     //Print in minutes
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 60) + 'm';
-  } else {
+  }
+  else if (secondsUntilPlanetRaw != Infinity) {
     //Print in seconds
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw.toFixed(1) + 's';
+  }
+  else {
+    //Removes extra letters for infinity
+    timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw;
   }
 
   //Set orbit control orgin to voyager
