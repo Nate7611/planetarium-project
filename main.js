@@ -119,7 +119,7 @@ bitmapLoader.load('textures/venus.jpg', (imageBitmap) => {
   venusTexture.needsUpdate = true;
 });
 
-bitmapLoader.load('textures/earth/earth-surface.webp', (imageBitmap) => {
+bitmapLoader.load('textures/earth.jpg', (imageBitmap) => {
   earthTexture = new THREE.Texture(imageBitmap);
   earthTexture.needsUpdate = true;
 });
