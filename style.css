@@ -283,3 +283,11 @@ p#tutorial__continue-text {
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
 }
+
+#time-until {
+  animation-name: none;
+  animation-duration: 0.4s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}

@@ -202,6 +202,7 @@ loader.load('models/saturn.glb', (gltf) => {
 const timer = new Timer();
 
 const planetHeightOffset = 0.00003;
+const maxDistance = 0.000004
 
 const planets = [
   { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, distanceFromSun: '0.4 AU', radius: '1,516 mi (2,439 km)', tempLow: '-290°F (-180°C)', tempHigh: '800°F (430°C)', orbitSpeed: '29 miles (47 kilometers) per second', dayLength: '59 Earth Days' },
@@ -472,11 +473,11 @@ function start() {
   //Rotate Sun
   sun.rotateY(((2 * Math.PI) / (27 * 86400) * delta) * 43200);
 
-  if (control.maxDistance > 0.000005 && started) {
+  if (control.maxDistance > maxDistance && started) {
     //Gradually zoom into voyager
     control.maxDistance *= 1 / (1 + (2.5 * delta));
   }
-  else if (control.maxDistance < 0.000005 && started) {
+  else if (control.maxDistance < maxDistance && started) {
     //Cancel loop
     cancelAnimationFrame(startLoop);
 
@@ -484,7 +485,7 @@ function start() {
     startUI.style.display = 'none';
 
     //Set camera max zoom
-    control.maxDistance = 0.000005;
+    control.maxDistance = maxDistance;
 
     //Unlock cam
     control.enableZoom = true;
@@ -619,7 +620,7 @@ function animate() {
   secondsUntilPlanetRaw = (targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed);
 
   //Slow down when near planet
-  if (secondsUntilPlanetRaw <= 0.05 && timeScale > 2) {
+  if (secondsUntilPlanetRaw <= 0.05 && timeScale > 2 && secondsUntilPlanetRaw > 0) {
     slowingDown = true;
     timeScale--;
   }
@@ -646,8 +647,15 @@ function animate() {
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw.toFixed(1) + 's';
   }
   else {
-    //Removes extra letters for infinity
+    //Fix extra letter when writing infinity
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw;
+  }
+
+  if (secondsUntilPlanetRaw == Infinity || secondsUntilPlanetRaw < 0) {
+    timeToElement.style.animationName = 'hide';
+  }
+  else {
+    timeToElement.style.animationName = 'reveal';
   }
 
   //Set orbit control orgin to voyager
