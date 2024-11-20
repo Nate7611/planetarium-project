@@ -284,6 +284,8 @@ p#tutorial__continue-text {
   opacity: 0;
   flex-direction: column;
   justify-content: center;
+  align-content: center;
+  align-items: center;
   gap: 30px;
   top: 0;
   left: 0;
@@ -325,6 +327,35 @@ p#tutorial__continue-text {
 .ending-answer {
   opacity: 1;
   border-bottom: 4px solid white;
+  text-shadow: none;
+}
+
+#end-button {
+  display: flex;
+  border: none;
+  border-radius: 4px;
+  width: 10vw;
+  height: 6vh;
+  filter: drop-shadow(5px 5px 10px black);
+  margin-top: 50px;
+
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 22s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#end-button p {
+  position: static;
+  color: black;
+  font-size: 1.8rem;
+  font-weight: 700;
+  width: 60%;
+  text-align: center;
+  margin: auto;
   text-shadow: none;
 }
 

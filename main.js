@@ -77,6 +77,7 @@ const endingAnswer2 = document.getElementById('ending__answer-2');
 const endingAnswer3 = document.getElementById('ending__answer-3');
 const endingAnswer4 = document.getElementById('ending__answer-4');
 const endingAnswer5 = document.getElementById('ending__answer-5');
+const endButton = document.getElementById('end-button');
 
 //Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -461,6 +462,7 @@ endingElement.addEventListener('animationend', () => {
   endingAnswer4.style.animationName = 'reveal';
   endingQuestion5.style.animationName = 'reveal';
   endingAnswer5.style.animationName = 'reveal';
+  endButton.style.animationName = 'reveal';
 });
 
 
