@@ -129,6 +129,8 @@ canvas {
   width: 10vw;
   height: 7vh;
   font-size: 3rem;
+  border: none;
+  border-radius: 4px;
 }
 
 #opening-text, #tutorial {
@@ -275,6 +277,97 @@ p#tutorial__continue-text {
   width: 25%;
   margin: auto;
 }
+
+#ending {
+  position: fixed;
+  display: none;
+  opacity: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0000009d;
+
+  animation-name: none;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ending p {
+  position: static;
+  color: white;
+  font-size: 3rem;
+  font-weight: 400;
+  text-align: center;
+  margin: 0 auto;
+  text-shadow: none;
+}
+
+#ending h1 {
+  position: static;
+  color: white;
+  font-size: 4rem;
+  text-shadow: none;
+  text-align: center;
+  margin: 0 auto;
+}
+
+#ending hr {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.ending-answer {
+  opacity: 1;
+  border-bottom: 4px solid white;
+  text-shadow: none;
+}
+
+#ending__question-1 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 2s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ending__answer-1 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 4s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ending__question-2 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 6s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ending__answer-2 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 8s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
 
 #main-UI, #start-UI {
   animation-name: none;

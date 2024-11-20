@@ -65,6 +65,13 @@ const tutorialSpeedElement = document.getElementById('tutorial__speed-text');
 const tutorialCameraElement = document.getElementById('tutorial__camera-text');
 const tutorialContinueElement = document.getElementById('tutorial__continue-text');
 
+//Ending UI
+const endingElement = document.getElementById('ending');
+const endingQuestion1 = document.getElementById('ending__question-1');
+const endingQuestion2 = document.getElementById('ending__question-2');
+const endingAnswer1 = document.getElementById('ending__answer-1');
+const endingAnswer2 = document.getElementById('ending__answer-2');
+
 //Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -437,6 +444,14 @@ openingElement.addEventListener('click', () => {
   tutorialElement.style.animationName = 'reveal';
 });
 
+endingElement.addEventListener('animationend', () => {
+  endingQuestion1.style.animationName = 'reveal'
+  endingQuestion2.style.animationName = 'reveal'
+  endingAnswer1.style.animationName = 'reveal'
+  endingAnswer2.style.animationName = 'reveal'
+});
+
+
 function tutorial() {
   if (timeRateChanged) {
     tutorialSpeedElement.style.color = '#91ff73'
@@ -667,6 +682,12 @@ function animate() {
   }
   else {
     timeScaleElement.innerHTML = timeScales[timeScale].label;
+  }
+
+  if (voyagerModel.position.z > planets.at(-1).endPosition) {
+    mainUI.style.animationName = 'hide';
+    endingElement.style.display = 'flex';
+    endingElement.style.animationName = 'reveal';
   }
 
   //Need to do this for orbit control damping
