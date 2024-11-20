@@ -653,23 +653,23 @@ function animate() {
   }
 
   //Convert from seconds
-  if ((secondsUntilPlanetRaw / 31557600) >= 1 && secondsUntilPlanetRaw != Infinity) {
+  if ((secondsUntilPlanetRaw / 31557600) >= 1 && secondsUntilPlanetRaw != Infinity && !slowingDown) {
     //Print in years
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 31557600) + 'y';
   }
-  else if ((secondsUntilPlanetRaw / 86400) >= 1 && secondsUntilPlanetRaw != Infinity) {
+  else if ((secondsUntilPlanetRaw / 86400) >= 1 && secondsUntilPlanetRaw != Infinity && !slowingDown) {
     //Print in days
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 86400) + 'd';
   }
-  else if ((secondsUntilPlanetRaw / 3600) >= 1 && secondsUntilPlanetRaw != Infinity) {
+  else if ((secondsUntilPlanetRaw / 3600) >= 1 && secondsUntilPlanetRaw != Infinity && !slowingDown) {
     //Print in hours
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 3600) + 'h';
   }
-  else if ((secondsUntilPlanetRaw / 60) >= 1 && secondsUntilPlanetRaw != Infinity) {
+  else if ((secondsUntilPlanetRaw / 60) >= 1 && secondsUntilPlanetRaw != Infinity && !slowingDown) {
     //Print in minutes
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 60) + 'm';
   }
-  else if (secondsUntilPlanetRaw != Infinity) {
+  else if (secondsUntilPlanetRaw != Infinity && !slowingDown) {
     //Print in seconds
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw.toFixed(1) + 's';
   }
@@ -678,7 +678,7 @@ function animate() {
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw;
   }
 
-  if (secondsUntilPlanetRaw == Infinity || secondsUntilPlanetRaw < 0) {
+  if (secondsUntilPlanetRaw == Infinity || secondsUntilPlanetRaw < 0 ) {
     timeToElement.style.animationName = 'hide';
   }
   else {
@@ -690,7 +690,8 @@ function animate() {
 
   //Write speed to screen
   if (slowingDown) {
-    timeScaleElement.innerHTML = 'Slowing Down'
+    timeScaleElement.innerHTML = 'Slowing Down';
+    timeToElement.innerHTML = 'Arriving At ' + targetPlanet.name;
   }
   else {
     timeScaleElement.innerHTML = timeScales[timeScale].label;
