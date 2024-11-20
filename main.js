@@ -69,8 +69,14 @@ const tutorialContinueElement = document.getElementById('tutorial__continue-text
 const endingElement = document.getElementById('ending');
 const endingQuestion1 = document.getElementById('ending__question-1');
 const endingQuestion2 = document.getElementById('ending__question-2');
+const endingQuestion3 = document.getElementById('ending__question-3');
+const endingQuestion4 = document.getElementById('ending__question-4');
+const endingQuestion5 = document.getElementById('ending__question-5');
 const endingAnswer1 = document.getElementById('ending__answer-1');
 const endingAnswer2 = document.getElementById('ending__answer-2');
+const endingAnswer3 = document.getElementById('ending__answer-3');
+const endingAnswer4 = document.getElementById('ending__answer-4');
+const endingAnswer5 = document.getElementById('ending__answer-5');
 
 //Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -445,10 +451,16 @@ openingElement.addEventListener('click', () => {
 });
 
 endingElement.addEventListener('animationend', () => {
-  endingQuestion1.style.animationName = 'reveal'
-  endingQuestion2.style.animationName = 'reveal'
-  endingAnswer1.style.animationName = 'reveal'
-  endingAnswer2.style.animationName = 'reveal'
+  endingQuestion1.style.animationName = 'reveal';
+  endingAnswer1.style.animationName = 'reveal';
+  endingQuestion2.style.animationName = 'reveal';
+  endingAnswer2.style.animationName = 'reveal';
+  endingQuestion3.style.animationName = 'reveal';
+  endingAnswer3.style.animationName = 'reveal';
+  endingQuestion4.style.animationName = 'reveal';
+  endingAnswer4.style.animationName = 'reveal';
+  endingQuestion5.style.animationName = 'reveal';
+  endingAnswer5.style.animationName = 'reveal';
 });
 
 

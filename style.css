@@ -301,7 +301,7 @@ p#tutorial__continue-text {
 #ending p {
   position: static;
   color: white;
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 400;
   text-align: center;
   margin: 0 auto;
@@ -311,7 +311,7 @@ p#tutorial__continue-text {
 #ending h1 {
   position: static;
   color: white;
-  font-size: 4rem;
+  font-size: 3.5rem;
   text-shadow: none;
   text-align: center;
   margin: 0 auto;
@@ -368,6 +368,65 @@ p#tutorial__continue-text {
   animation-fill-mode: forwards;
 }
 
+#ending__question-3 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 10s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ending__answer-3 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 12s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ending__question-4 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 14s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ending__answer-4 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 16s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ending__question-5 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 18s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+#ending__answer-5 {
+  opacity: 0;
+  animation-name: none;
+  animation-duration: 2s;
+  animation-delay: 20s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
 
 #main-UI, #start-UI {
   animation-name: none;
