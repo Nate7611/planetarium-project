@@ -156,6 +156,7 @@ canvas {
   position: static;
   color: white;
   font-size: 3rem;
+  font-weight: 400;
   text-align: center;
   margin: 0 auto;
 }

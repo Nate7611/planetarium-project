@@ -53,8 +53,8 @@ const factsContainer = document.getElementById('fact-container');
 const factsName = document.getElementById('fact-container__name');
 const factsDistance = document.getElementById('fact-container__distance');
 const factsRadius = document.getElementById('fact-container__radius');
-const factsLowTemp = document.getElementById('fact-container__low-tempature');
-const factsHighTemp = document.getElementById('fact-container__high-tempature');
+const factsLowTemp = document.getElementById('fact-container__low-temperature');
+const factsHighTemp = document.getElementById('fact-container__high-temperature');
 const factsOrbitSpeed = document.getElementById('fact-container__orbital-speed');
 const factsDayLength = document.getElementById('fact-container__day-length');
 
@@ -228,7 +228,7 @@ const planets = [
   { name: 'Saturn', arrived: false, left: false, position: 1028.9, endPosition: 1029.1, distanceFromSun: '9.6 AU', radius: '36,184 mi (58,232 km)', tempLow: '-288°F (-178°C)', tempHigh: '-288°F (-178°C)', orbitSpeed: '6 miles (9.7 kilometers) per second', dayLength: '0.45 Earth Days' },
   { name: 'Uranus', arrived: false, left: false, position: 2066.968, endPosition: 2067.032, distanceFromSun: '19.2 AU', radius: '15,759 mi (25,362 km)', tempLow: '-371°F (-224°C)', tempHigh: '-371°F (-224°C)', orbitSpeed: '4 miles (6.8 kilometers) per second', dayLength: '0.72 Earth Days' },
   { name: 'Neptune', arrived: false, left: false, position: 3234.968, endPosition: 3235.032, distanceFromSun: '30.1 AU', radius: '15,299 mi (24,622 km)', tempLow: '-373°F (-225°C)', tempHigh: '-373°F (-225°C)', orbitSpeed: '3.4 miles (5.4 kilometers) per second', dayLength: '0.67 Earth Days' },
-  { name: 'Pluto', arrived: false, left: false, position: 4219.999, endPosition: 4220.001, distanceFromSun: '39.5 AU', radius: '738 mi (1,187 km)', tempLow: '-387°F (-233°C)', tempHigh: '-369°F (-223°C)', orbitSpeed: '2.9 miles (4.7 kilometers) per second', dayLength: '6.39 Earth Days' }
+  { name: 'Pluto', arrived: false, left: false, position: 4219.9978, endPosition: 4220.0022, distanceFromSun: '39.5 AU', radius: '738 mi (1,187 km)', tempLow: '-387°F (-233°C)', tempHigh: '-369°F (-223°C)', orbitSpeed: '2.9 miles (4.7 kilometers) per second', dayLength: '6.39 Earth Days' }
 ];
 
 const timeScales = [
@@ -358,6 +358,7 @@ function setup() {
 
   pluto.position.setZ(4220);
   pluto.position.setY(-0.00085366912 - planetHeightOffset);
+  pluto.rotateY(Math.PI);
 
   //Make camera face sun on load
   camera.position.setZ(1.81);
