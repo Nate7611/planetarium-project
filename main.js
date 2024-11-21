@@ -452,18 +452,25 @@ openingElement.addEventListener('click', () => {
   tutorialElement.style.animationName = 'reveal';
 });
 
-endingElement.addEventListener('animationend', () => {
-  endingQuestion1.style.animationName = 'reveal';
-  endingAnswer1.style.animationName = 'reveal';
-  endingQuestion2.style.animationName = 'reveal';
-  endingAnswer2.style.animationName = 'reveal';
-  endingQuestion3.style.animationName = 'reveal';
-  endingAnswer3.style.animationName = 'reveal';
-  endingQuestion4.style.animationName = 'reveal';
-  endingAnswer4.style.animationName = 'reveal';
-  endingQuestion5.style.animationName = 'reveal';
-  endingAnswer5.style.animationName = 'reveal';
-  endButton.style.animationName = 'reveal';
+function sleep(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve,ms);
+  });
+}
+
+endingElement.addEventListener('animationend', async () => { console.log("Endings, go!");
+  let list = [
+    endingQuestion1,endingAnswer1,
+    endingQuestion2,endingAnswer2,
+    endingQuestion3,endingAnswer3,
+    endingQuestion4,endingAnswer4,
+    endingQuestion5,endingAnswer5,
+    endButton
+  ];
+  for (let l in list) {
+    list[l].classList.add('reveal');
+    await sleep(2000);
+  }
 });
 
 
@@ -726,14 +733,6 @@ function animate() {
   if (elapsedYears < 0) {
     console.error('Error Years: ' + elapsedYears);
   }
-
-  //every second is a minute - 60
-  //every second is an hour - 3600
-  //every second is a day - 86400
-  //every second is 30 days - 2592000
-  //every second is 180 days - 15552000
-  //every second is a year - 31557600  
-
   //End Debug
 
   renderer.render(scene, camera);
