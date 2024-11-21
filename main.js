@@ -560,8 +560,8 @@ function animate() {
   //Set speed
   speed = timeScales[timeScale].speed;
 
-  //Around the 35,000 mph the voyager is moving
-  pos = (0.00001124 * speed) * delta;
+  //Around the 38,026 mph the voyager is moving
+  pos = (0.000012212 * speed) * delta;
 
   //Move voyager and camera
   voyagerModel.position.add(new THREE.Vector3(0, 0, pos));
