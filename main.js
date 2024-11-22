@@ -458,7 +458,7 @@ function sleep(ms) {
   });
 }
 
-endingElement.addEventListener('animationend', async () => { console.log("Endings, go!");
+endingElement.addEventListener('animationend', async () => {
   let list = [
     endingQuestion1,endingAnswer1,
     endingQuestion2,endingAnswer2,
@@ -467,10 +467,17 @@ endingElement.addEventListener('animationend', async () => { console.log("Ending
     endingQuestion5,endingAnswer5,
     endButton
   ];
+
   for (let l in list) {
     list[l].classList.add('reveal');
     await sleep(2000);
-  }
+  };
+});
+
+//Reload page after 30 seconds of ending
+endButton.addEventListener('animationend', async () => {
+  await sleep(30000);
+  window.location.reload();
 });
 
 
