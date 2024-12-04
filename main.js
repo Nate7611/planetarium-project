@@ -621,13 +621,6 @@ function animate() {
   //Set audio volume
   zoomSoundLoop.setVolume(timeScales[timeScale].soundVolume);
 
-  if (Math.abs(currentVolume - targetVolume) > 0.01) { // Avoid oscillation
-    currentVolume += (targetVolume - currentVolume) * volumeTransitionSpeed;
-    zoomSoundLoop.setVolume(currentVolume);
-  } else {
-    currentVolume = targetVolume; // Snap to target when close enough
-  }
-
   //Converting Seconds to largest form
   elapsedTimeRaw += delta * speed;
   elapsedSeconds = Math.trunc(elapsedTimeRaw - 60 * Math.trunc(elapsedTimeRaw / 60))
