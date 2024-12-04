@@ -54,11 +54,16 @@
   <div id="ending">
     <h1>In the distance between the Sun and Pluto, you could...</h1>
     <hr>
-    <p id="ending__question-1" class="endings">Drive between NY and CA <span class="ending-answer"><span id="ending__answer-1" class="endings">1,233,333</span></span> times.</p>
-    <p id="ending__question-2" class="endings">This would take <span class="ending-answer"><span id="ending__answer-2" class="endings">6,335</span></span> years.</p>
-    <p id="ending__question-3" class="endings">Fly around the Earth in a commercial plane <span class="ending-answer"><span id="ending__answer-3" class="endings">148,588</span></span> times.</p>
-    <p id="ending__question-4" class="endings">This would take <span class="ending-answer"><span id="ending__answer-4" class="endings">848</span></span> years.</p>
-    <p id="ending__question-5" class="endings">Orbit around the Earth in the ISS <span class="ending-answer"><span id="ending__answer-5" class="endings">69,484</span></span> times.</p>
+    <p id="ending__question-1" class="endings">Drive between NY and CA <span class="ending-answer"><span
+          id="ending__answer-1" class="endings">1,233,333</span></span> times.</p>
+    <p id="ending__question-2" class="endings">This would take <span class="ending-answer"><span id="ending__answer-2"
+          class="endings">6,335</span></span> years.</p>
+    <p id="ending__question-3" class="endings">Fly around the Earth in a commercial plane <span
+        class="ending-answer"><span id="ending__answer-3" class="endings">148,588</span></span> times.</p>
+    <p id="ending__question-4" class="endings">This would take <span class="ending-answer"><span id="ending__answer-4"
+          class="endings">848</span></span> years.</p>
+    <p id="ending__question-5" class="endings">Orbit around the Earth in the ISS <span class="ending-answer"><span
+          id="ending__answer-5" class="endings">69,484</span></span> times.</p>
     <button id="end-button" onClick="window.location.reload();" class="endings">
       <p>Restart</p>
       <img src="img/restart.svg" alt="Restart Button">
@@ -97,6 +102,18 @@
     <p id="fact-container__day-length"></p>
     <br>
   </div>
+
+  <audio id="bg-music" loop preload="auto" style="display: none">
+    <source src="sounds/bg-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="zoom-sound" preload="auto" style="display: none">
+    <source src="sounds/zoom-sound.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="zoom-sound-loop" loop preload="auto" style="display: none">
+    <source src="sounds/zoom-sound-loop.mp3" type="audio/mpeg">
+  </audio>
 
   <script type="module" src="/main.js"></script>
 </body>

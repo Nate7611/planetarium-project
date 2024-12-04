@@ -232,45 +232,55 @@ const planets = [
 ];
 
 const timeScales = [
-  { speed: 0, label: 'Time Stopped' },
-  { speed: 1, label: 'Real-time' },
-  { speed: 60, label: '1s = 1m' },
-  { speed: 300, label: '1s = 5m' },
-  { speed: 3600, label: '1s = 1h' },
-  { speed: 86400, label: '1s = 1d' },
-  { speed: 1296000, label: '1s = 15d' },
-  { speed: 2592000, label: '1s = 30d' },
-  { speed: 5184000, label: '1s = 60d' },
-  { speed: 10368000, label: '1s = 120d' },
+  { speed: 0, label: 'Time Stopped', soundVolume: 0 },
+  { speed: 1, label: 'Real-time', soundVolume: 0 },
+  { speed: 60, label: '1s = 1m', soundVolume: 0.07 },
+  { speed: 300, label: '1s = 5m', soundVolume: 0.14 },
+  { speed: 3600, label: '1s = 1h', soundVolume: 0.21 },
+  { speed: 86400, label: '1s = 1d', soundVolume: 0.28 },
+  { speed: 1296000, label: '1s = 15d', soundVolume: 0.25 },
+  { speed: 2592000, label: '1s = 30d', soundVolume: 0.35 },
+  { speed: 5184000, label: '1s = 60d', soundVolume: 0.42 },
+  { speed: 10368000, label: '1s = 120d', soundVolume: 0.49 },
 ];
 
+//Audio variable
+let listener;
+let bgMusic;
+let bgMusicElement;
+let zoomSound;
+let zoomSoundElement;
+let zoomSoundLoop;
+let zoomSoundLoopElement;
+
+
 //Track for tutorial text
-var movedCamera = false;
-var timeRateChanged = false;
-var tutorialComplete = false;
+let movedCamera = false;
+let timeRateChanged = false;
+let tutorialComplete = false;
 
 //Other variables
-var rotObjects = [];
-var rotSpeed = [];
-var frameCounter = 0;
-var pos = 0;
-var speed = 1;
-var timeScale = 0;
-var elapsedTimeRaw = 0;
-var elapsedSeconds = 0;
-var elapsedMinutes = 0;
-var elapsedHours = 0;
-var elapsedDays = 0;
-var elapsedYears = 0;
-var secondsUntilPlanet = 0;
-var secondsUntilPlanetRaw = 0;
-var usingMetric = false;
-var slowingDown = false;
-var loaded = false;
-var startLoop;
-var started = false;
-var targetPlanet;
-var hasTarget = false;
+let rotObjects = [];
+let rotSpeed = [];
+let frameCounter = 0;
+let pos = 0;
+let speed = 1;
+let timeScale = 0;
+let elapsedTimeRaw = 0;
+let elapsedSeconds = 0;
+let elapsedMinutes = 0;
+let elapsedHours = 0;
+let elapsedDays = 0;
+let elapsedYears = 0;
+let secondsUntilPlanet = 0;
+let secondsUntilPlanetRaw = 0;
+let usingMetric = false;
+let slowingDown = false;
+let loaded = false;
+let startLoop;
+let started = false;
+let targetPlanet;
+let hasTarget = false;
 
 function setup() {
   //Assign loaded textures
@@ -388,6 +398,31 @@ startButton.addEventListener('click', function () {
   if (loaded) {
     started = true;
     startUI.style.animationName = 'hide';
+
+    //Listener for music
+    listener = new THREE.AudioListener();
+    camera.add(listener);
+
+    //Global background music audio
+    bgMusic = new THREE.Audio(listener);
+    bgMusicElement = document.getElementById('bg-music');
+    bgMusic.setMediaElementSource(bgMusicElement);
+    bgMusic.setVolume(0.1);
+    bgMusicElement.play();
+
+    //Zoom sound
+    zoomSound = new THREE.Audio(listener);
+    zoomSoundElement = document.getElementById('zoom-sound');
+    zoomSound.setMediaElementSource(zoomSoundElement);
+    zoomSound.setVolume(0.4);
+    zoomSoundElement.play();
+
+    //Zoom sound
+    zoomSoundLoop = new THREE.Audio(listener);
+    zoomSoundLoopElement = document.getElementById('zoom-sound-loop');
+    zoomSoundLoop.setMediaElementSource(zoomSoundLoopElement);
+    zoomSoundLoop.setVolume(0);
+    zoomSoundLoopElement.play();
   }
 })
 
@@ -454,17 +489,17 @@ openingElement.addEventListener('click', () => {
 
 function sleep(ms) {
   return new Promise((resolve, reject) => {
-    setTimeout(resolve,ms);
+    setTimeout(resolve, ms);
   });
 }
 
 endingElement.addEventListener('animationend', async () => {
   let list = [
-    endingQuestion1,endingAnswer1,
-    endingQuestion2,endingAnswer2,
-    endingQuestion3,endingAnswer3,
-    endingQuestion4,endingAnswer4,
-    endingQuestion5,endingAnswer5,
+    endingQuestion1, endingAnswer1,
+    endingQuestion2, endingAnswer2,
+    endingQuestion3, endingAnswer3,
+    endingQuestion4, endingAnswer4,
+    endingQuestion5, endingAnswer5,
     endButton
   ];
 
@@ -497,6 +532,8 @@ function tutorial() {
   }
 };
 
+let clock = 0;
+
 //Start screen
 function start() {
   //Store to cancel loop
@@ -512,7 +549,7 @@ function start() {
   control.update();
 
   //Deltatime
-  var delta = timer.getDelta();
+  let delta = timer.getDelta();
 
   //Rotate Sun
   sun.rotateY(((2 * Math.PI) / (27 * 86400) * delta) * 43200);
@@ -539,6 +576,8 @@ function start() {
     openingElement.style.display = 'flex';
     openingElement.style.animationName = 'reveal';
 
+    zoomSoundElement.pause();
+
     //Start main loop
     animate();
   }
@@ -562,7 +601,7 @@ function animate() {
   timer.update();
 
   //Deltatime
-  var delta = timer.getDelta();
+  let delta = timer.getDelta();
 
   //Set speed
   speed = timeScales[timeScale].speed;
@@ -577,6 +616,16 @@ function animate() {
   //Rotate planets
   for (let i = 0; i < rotObjects.length; i++) {
     rotObjects[i].rotateY(((2 * Math.PI) / (rotSpeed[i] * 86400) * delta) * speed);
+  }
+
+  //Set audio volume
+  zoomSoundLoop.setVolume(timeScales[timeScale].soundVolume);
+
+  if (Math.abs(currentVolume - targetVolume) > 0.01) { // Avoid oscillation
+    currentVolume += (targetVolume - currentVolume) * volumeTransitionSpeed;
+    zoomSoundLoop.setVolume(currentVolume);
+  } else {
+    currentVolume = targetVolume; // Snap to target when close enough
   }
 
   //Converting Seconds to largest form
@@ -695,7 +744,7 @@ function animate() {
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw;
   }
 
-  if (secondsUntilPlanetRaw == Infinity || secondsUntilPlanetRaw < 0 ) {
+  if (secondsUntilPlanetRaw == Infinity || secondsUntilPlanetRaw < 0) {
     timeToElement.style.animationName = 'hide';
   }
   else {
