@@ -16,15 +16,19 @@
 
 <body>
   <canvas id="bg"></canvas>
+
+  <img src="img/mute.svg" draggable="false" id="mute-button-on" class="volume-buttons" alt="Mute Button" style="display: none;">
+  <img src="img/volume.svg" draggable="false" id="mute-button-off" class="volume-buttons" alt="Mute Button">
+  
   <div id="main-UI">
     <p id="distance" style="position: fixed; top: 1vh; margin: 0; pointer-events: none;"></p>
     <p id="time-elapsed" style="position: fixed; top: 7vh; margin: 0; pointer-events: none;"></p>
     <p id="time-until" style="position: fixed; top: 13vh; margin: 0; pointer-events: none;"></p>
     <p id="speed-scale" style="bottom: 7vh; height: 5vh;"></p>
-    <img src="img/button.svg" draggable="false" id="fast-button" class="speed-button-tutorial" alt="Button to make time faster"
-      style="bottom: 4vh; right: 30vw;">
-    <img src="img/button2.svg" draggable="false" id="slow-button" class="speed-button-tutorial" alt="Button to make time slower"
-      style="bottom: 4vh; left: 30vw;">
+    <img src="img/fast-button.svg" draggable="false" id="fast-button" class="speed-button-tutorial"
+      alt="Button to make time faster" style="bottom: 4vh; right: 30vw;">
+    <img src="img/slow-button.svg" draggable="false" id="slow-button" class="speed-button-tutorial"
+      alt="Button to make time slower" style="bottom: 4vh; left: 30vw;">
     <button id="restart-button" onClick="window.location.reload();">
       <p>Restart</p>
       <img src="img/restart.svg" alt="Restart Button">
@@ -71,7 +75,7 @@
   </div>
 
   <div id="start-UI">
-    <p style="top: 2vh; font-size: 5rem;">Journey Through the Solar System</p>
+    <p style="top: 2vh; font-size: 5rem; pointer-events: none;">Journey Through the Solar System</p>
     <button id="start-button">Start</button>
   </div>
 

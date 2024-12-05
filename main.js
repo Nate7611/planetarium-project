@@ -39,6 +39,8 @@ const timeSlowButton = document.getElementById('slow-button');
 const timeFastButton = document.getElementById('fast-button');
 const unitSwitchButton = document.getElementById('unit-button');
 const unitSwitchButtonText = document.getElementById('unit-button__text');
+const muteButtonOff = document.getElementById('mute-button-off');
+const muteButtonOn = document.getElementById('mute-button-on');
 
 //Loading UI
 const loadingScreen = document.getElementById('loading-screen');
@@ -251,6 +253,9 @@ let zoomSound;
 let zoomSoundElement;
 let zoomSoundLoop;
 let zoomSoundLoopElement;
+let muted = false;
+let bgMusicVol = 0.2;
+let startZoomVol =  0.4;
 
 
 //Track for tutorial text
@@ -406,24 +411,40 @@ startButton.addEventListener('click', function () {
     bgMusic = new THREE.Audio(listener);
     bgMusicElement = document.getElementById('bg-music');
     bgMusic.setMediaElementSource(bgMusicElement);
-    bgMusic.setVolume(0.1);
     bgMusicElement.play();
 
     //Zoom sound
     zoomSound = new THREE.Audio(listener);
     zoomSoundElement = document.getElementById('zoom-sound');
     zoomSound.setMediaElementSource(zoomSoundElement);
-    zoomSound.setVolume(0.4);
     zoomSoundElement.play();
 
     //Zoom sound
     zoomSoundLoop = new THREE.Audio(listener);
     zoomSoundLoopElement = document.getElementById('zoom-sound-loop');
     zoomSoundLoop.setMediaElementSource(zoomSoundLoopElement);
-    zoomSoundLoop.setVolume(0);
     zoomSoundLoopElement.play();
+    zoomSoundLoop.setVolume(0);
   }
-})
+});
+
+//Volume buttons
+muteButtonOff.addEventListener('click', function () {
+  if (!muted) {
+    muted = true;
+    muteButtonOff.style.display = 'none';
+    muteButtonOn.style.display = 'block';
+  }
+});
+
+muteButtonOn.addEventListener('click', function () {
+  if (muted) {
+    muted = false;
+    muteButtonOn.style.display = 'none';
+    muteButtonOff.style.display = 'block';
+  }
+});
+
 
 //Buttons to control speed
 timeFastButton.addEventListener('click', function () {
@@ -436,7 +457,7 @@ timeFastButton.addEventListener('click', function () {
       tutorial();
     }
   }
-})
+});
 
 timeFastButton.addEventListener('animationend', () => {
   timeFastButton.style.animationName = 'none';
@@ -557,6 +578,15 @@ function start() {
   if (control.maxDistance > maxDistance && started) {
     //Gradually zoom into voyager
     control.maxDistance *= 1 / (1 + (2.5 * delta));
+    
+    if (!muted) {
+      zoomSound.setVolume(startZoomVol);
+      bgMusic.setVolume(bgMusicVol);
+    } 
+    else {
+      zoomSound.setVolume(0);
+      bgMusic.setVolume(0);
+    }
   }
   else if (control.maxDistance < maxDistance && started) {
     //Cancel loop
@@ -619,7 +649,14 @@ function animate() {
   }
 
   //Set audio volume
-  zoomSoundLoop.setVolume(timeScales[timeScale].soundVolume);
+  if (muted) {
+    zoomSoundLoop.setVolume(0);
+    bgMusic.setVolume(0);
+  }
+  else {
+    zoomSoundLoop.setVolume(timeScales[timeScale].soundVolume);
+    bgMusic.setVolume(bgMusicVol);
+  }
 
   //Converting Seconds to largest form
   elapsedTimeRaw += delta * speed;

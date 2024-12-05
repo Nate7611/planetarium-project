@@ -151,6 +151,16 @@ canvas {
   border-radius: 4px;
 }
 
+.volume-buttons {
+  position: fixed;
+  top: 6vh;
+  right: 6vw;
+  width: 10vw;
+  height: 7vh;
+  filter: drop-shadow(5px 5px 10px black);
+  cursor: pointer;
+}
+
 #opening-text, #tutorial {
   position: fixed;
   display: none;
