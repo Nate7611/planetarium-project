@@ -63,7 +63,6 @@ const openingElement = document.getElementById('opening-text');
 const tutorialElement = document.getElementById('tutorial');
 const tutorialSpeedElement = document.getElementById('tutorial__speed-text');
 const tutorialCameraElement = document.getElementById('tutorial__camera-text');
-const tutorialContinueElement = document.getElementById('tutorial__continue-text');
 
 //Ending UI
 const endingElement = document.getElementById('ending');
@@ -518,16 +517,17 @@ endButton.addEventListener('animationend', async () => {
 
 function tutorial() {
   if (timeRateChanged) {
-    tutorialSpeedElement.style.color = '#91ff73'
+    tutorialSpeedElement.style.textDecoration = 'line-through';
+    timeSlowButton.classList.remove('speed-button-tutorial');
+    timeFastButton.classList.remove('speed-button-tutorial');
   }
 
   if (movedCamera) {
-    tutorialCameraElement.style.color = '#91ff73'
+    tutorialCameraElement.style.textDecoration = 'line-through';
   }
 
   if (timeRateChanged && movedCamera) {
     tutorialComplete = true;
-    tutorialContinueElement.style.color = '#91ff73';
     tutorialElement.style.animationName = 'hide';
   }
 };

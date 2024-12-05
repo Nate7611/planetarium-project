@@ -82,6 +82,12 @@ h1, h2, h3, h4, h5, h6 {
   100% {opacity: 1;}
 }
 
+@keyframes pop {
+  0% {transform:scale(1);}
+  50% {transform:scale(1.5);}
+  100% {transform:scale(1);}
+}
+
 body {
   font-family: "Space Grotesk", sans-serif;
   font-optical-sizing: auto;
@@ -187,10 +193,6 @@ canvas {
   margin: 0 auto;
 }
 
-p#tutorial__continue-text {
-  color: rgb(255, 123, 123);
-}
-
 #fast-button, #slow-button {
   position: fixed;
   width: 10vw;
@@ -205,8 +207,10 @@ p#tutorial__continue-text {
   animation-timing-function: ease-in-out;
 }
 
-#slow-button {
-  transform: scaleX(-1);
+.speed-button-tutorial {
+  animation-name: pop !important;
+  animation-duration: 3s !important;
+  animation-iteration-count: infinite !important;
 }
 
 #fact-container {
