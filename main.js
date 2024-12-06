@@ -16,7 +16,7 @@ scene.background = new THREE.CubeTextureLoader()
   .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
 
 //Lower background brightness
-scene.backgroundIntensity = 0.7
+scene.backgroundIntensity = 0.7;
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.000000118, 5000);
 
@@ -29,6 +29,11 @@ const renderer = new THREE.WebGLRenderer({
 });
 
 //Load html elements
+
+//Global UI
+const muteButtonOff = document.getElementById('mute-button-off');
+const muteButtonOn = document.getElementById('mute-button-on');
+
 //Main UI
 const mainUI = document.getElementById('main-UI');
 const distanceFromElement = document.getElementById('distance');
@@ -39,8 +44,6 @@ const timeSlowButton = document.getElementById('slow-button');
 const timeFastButton = document.getElementById('fast-button');
 const unitSwitchButton = document.getElementById('unit-button');
 const unitSwitchButtonText = document.getElementById('unit-button__text');
-const muteButtonOff = document.getElementById('mute-button-off');
-const muteButtonOn = document.getElementById('mute-button-on');
 
 //Loading UI
 const loadingScreen = document.getElementById('loading-screen');
@@ -99,21 +102,21 @@ control.enableZoom = false;
 control.enableRotate = false;
 control.enablePan = false;
 
-// Create a Loading Manager
+//Create a Loading Manager
 const loadingManager = new THREE.LoadingManager(
   () => {
-    // Called when all assets are loaded
+    //Called when all assets are loaded
     console.log('All assets loaded.');
     loadingScreen.style.display = 'none';
     setup();
   },
   (url, itemsLoaded, itemsTotal) => {
-    // Called during loading to update progress
+    //Called during loading to update progress
     console.log(`Loading file: ${url}. Loaded ${itemsLoaded} of ${itemsTotal} files.`);
     loadingBar.style.width = String((itemsLoaded / itemsTotal) * 100 + '%')
   },
   (url) => {
-    // Called if there’s an error loading
+    //Called if there’s an error loading
     console.error(`There was an error loading ${url}`);
   }
 );
@@ -217,7 +220,7 @@ loader.load('models/saturn.glb', (gltf) => {
 const timer = new Timer();
 
 const planetHeightOffset = 0.00003;
-const maxDistance = 0.000004
+const maxDistance = 0.000004;
 
 const planets = [
   { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, distanceFromSun: '0.4 AU', radius: '1,516 mi (2,439 km)', tempLow: '-290°F (-180°C)', tempHigh: '800°F (430°C)', orbitSpeed: '29 miles (47 kilometers) per second', dayLength: '59 Earth Days' },
@@ -235,14 +238,14 @@ const planets = [
 const timeScales = [
   { speed: 0, label: 'Time Stopped', soundVolume: 0 },
   { speed: 1, label: 'Real-time', soundVolume: 0 },
-  { speed: 60, label: '1s = 1m', soundVolume: 0.07 },
-  { speed: 300, label: '1s = 5m', soundVolume: 0.14 },
-  { speed: 3600, label: '1s = 1h', soundVolume: 0.21 },
-  { speed: 86400, label: '1s = 1d', soundVolume: 0.28 },
-  { speed: 1296000, label: '1s = 15d', soundVolume: 0.25 },
-  { speed: 2592000, label: '1s = 30d', soundVolume: 0.35 },
-  { speed: 5184000, label: '1s = 60d', soundVolume: 0.42 },
-  { speed: 10368000, label: '1s = 120d', soundVolume: 0.49 },
+  { speed: 60, label: '1s = 1m', soundVolume: 0.08 },
+  { speed: 300, label: '1s = 5m', soundVolume: 0.16 },
+  { speed: 3600, label: '1s = 1h', soundVolume: 0.24 },
+  { speed: 86400, label: '1s = 1d', soundVolume: 0.32 },
+  { speed: 1296000, label: '1s = 15d', soundVolume: 0.4 },
+  { speed: 2592000, label: '1s = 30d', soundVolume: 0.48 },
+  { speed: 5184000, label: '1s = 60d', soundVolume: 0.56 },
+  { speed: 10368000, label: '1s = 120d', soundVolume: 0.64 },
 ];
 
 //Audio variable
@@ -256,7 +259,6 @@ let zoomSoundLoopElement;
 let muted = false;
 let bgMusicVol = 0.2;
 let startZoomVol =  0.4;
-
 
 //Track for tutorial text
 let movedCamera = false;
@@ -381,7 +383,7 @@ function setup() {
   rotObjects = [sun, mercury, venus, earth, moon, mars, jupiter, saturnModel, uranus, neptune, pluto];
 
   //Planet rotation speed in earth days (starts with sun)
-  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667, 6.4]
+  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667, 6.4];
 
   //Gets rid of lag spike when turning camera around
   scene.traverse(obj => obj.frustumCulled = false);
@@ -444,7 +446,6 @@ muteButtonOn.addEventListener('click', function () {
     muteButtonOff.style.display = 'block';
   }
 });
-
 
 //Buttons to control speed
 timeFastButton.addEventListener('click', function () {
@@ -552,8 +553,6 @@ function tutorial() {
     tutorialElement.style.animationName = 'hide';
   }
 };
-
-let clock = 0;
 
 //Start screen
 function start() {
