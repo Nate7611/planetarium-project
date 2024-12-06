@@ -257,11 +257,12 @@ let zoomSoundLoop;
 let zoomSoundLoopElement;
 
 let muted;
-if (localStorage.getItem('muted') == 'true') {
-  muted = true;
+
+if (localStorage.getItem('muted') == 'false') {
+  muted = false;
 }
 else {
-  muted = false;
+  muted = true;
 }
 
 let bgMusicVol = 0.15;
