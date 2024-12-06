@@ -483,7 +483,7 @@ timeFastButton.addEventListener('animationend', () => {
 });
 
 timeSlowButton.addEventListener('click', function () {
-  if (loaded && timeScale > 0 && !slowingDown && !reversed) {
+  if (loaded && timeScale > 0 && !slowingDown) {
     timeSlowButton.style.animationName = 'pressed';
     timeScale--;
   }
