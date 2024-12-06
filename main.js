@@ -4,32 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Timer } from 'three/addons/misc/Timer.js';
 
-const scene = new THREE.Scene();
-
-const light = new THREE.AmbientLight(0x404040, 8);
-const sunLight = new THREE.PointLight(0x404040, 500, 0, 0.5);
-sunLight.castShadow = true;
-
-//Space background
-scene.background = new THREE.CubeTextureLoader()
-  .setPath('textures/cube/space/')
-  .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
-
-//Lower background brightness
-scene.backgroundIntensity = 0.7;
-
-const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.000000118, 5000);
-
-const renderer = new THREE.WebGLRenderer({
-  antialias: true,
-  canvas: document.querySelector('#bg'),
-  alpha: true,
-  powerPreference: 'high-performance',
-  reverseDepthBuffer: true
-});
-
 //Load html elements
-
 //Global UI
 const muteButtonOff = document.getElementById('mute-button-off');
 const muteButtonOn = document.getElementById('mute-button-on');
@@ -82,6 +57,30 @@ const endingAnswer3 = document.getElementById('ending__answer-3');
 const endingAnswer4 = document.getElementById('ending__answer-4');
 const endingAnswer5 = document.getElementById('ending__answer-5');
 const endButton = document.getElementById('end-button');
+
+const scene = new THREE.Scene();
+
+const light = new THREE.AmbientLight(0x404040, 8);
+const sunLight = new THREE.PointLight(0x404040, 500, 0, 0.5);
+sunLight.castShadow = true;
+
+//Space background
+scene.background = new THREE.CubeTextureLoader()
+  .setPath('textures/cube/space/')
+  .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
+
+//Lower background brightness
+scene.backgroundIntensity = 0.7;
+
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.000000118, 5000);
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  canvas: document.querySelector('#bg'),
+  alpha: true,
+  powerPreference: 'high-performance',
+  reverseDepthBuffer: true
+});
 
 //Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -178,6 +177,25 @@ bitmapLoader.load('textures/pluto.jpg', (imageBitmap) => {
   plutoTexture.needsUpdate = true;
 });
 
+//Load models
+const loader = new GLTFLoader(loadingManager);
+let voyagerModel;
+loader.load('models/voyager.glb', (gltf) => {
+  voyagerModel = gltf.scene;
+  voyagerModel.scale.set(0.0000001, 0.0000001, 0.0000001);
+  voyagerModel.position.set(0, -0.0000001, 0);
+  voyagerModel.rotation.set((90 * Math.PI) / 180, (90 * Math.PI) / 180, 0)
+  scene.add(voyagerModel);
+});
+
+let saturnModel;
+loader.load('models/saturn.glb', (gltf) => {
+  saturnModel = gltf.scene;
+  saturnModel.scale.set(0.01, 0.01, 0.01);
+  saturnModel.position.set(0, 0, 1029);
+  scene.add(saturnModel);
+});
+
 //Create planets geometry
 const sunGeometry = new THREE.SphereGeometry(0.5, 128, 64);
 const mercuryGeometry = new THREE.SphereGeometry(0.0017525, 64, 32);
@@ -198,25 +216,6 @@ const uranusGeometry = new THREE.SphereGeometry(0.01822, 64, 32);
 const neptuneGeometry = new THREE.SphereGeometry(0.01769, 64, 32);
 const plutoGeometry = new THREE.SphereGeometry(0.00085366912, 64, 32);
 
-//Load models
-const loader = new GLTFLoader(loadingManager);
-let voyagerModel;
-loader.load('models/voyager.glb', (gltf) => {
-  voyagerModel = gltf.scene;
-  voyagerModel.scale.set(0.0000001, 0.0000001, 0.0000001);
-  voyagerModel.position.set(0, -0.0000001, 0);
-  voyagerModel.rotation.set((90 * Math.PI) / 180, (90 * Math.PI) / 180, 0)
-  scene.add(voyagerModel);
-});
-
-let saturnModel;
-loader.load('models/saturn.glb', (gltf) => {
-  saturnModel = gltf.scene;
-  saturnModel.scale.set(0.01, 0.01, 0.01);
-  saturnModel.position.set(0, 0, 1029);
-  scene.add(saturnModel);
-});
-
 const timer = new Timer();
 
 const planetHeightOffset = 0.00003;
@@ -236,6 +235,15 @@ const planets = [
 ];
 
 const timeScales = [
+  { speed: -10368000, label: '1s = -120d', soundVolume: 0.64 },
+  { speed: -5184000, label: '1s = -60d', soundVolume: 0.56 },
+  { speed: -2592000, label: '1s = -30d', soundVolume: 0.48 },
+  { speed: -1296000, label: '1s = -15d', soundVolume: 0.4 },
+  { speed: -86400, label: '1s = -1d', soundVolume: 0.32 },
+  { speed: -3600, label: '1s = -1h', soundVolume: 0.24 },
+  { speed: -300, label: '1s = -5m', soundVolume: 0.16 },
+  { speed: -60, label: '1s = -1m', soundVolume: 0.08 },
+  { speed: -1, label: '-Real-time', soundVolume: 0 },
   { speed: 0, label: 'Time Stopped', soundVolume: 0 },
   { speed: 1, label: 'Real-time', soundVolume: 0 },
   { speed: 60, label: '1s = 1m', soundVolume: 0.08 },
@@ -258,7 +266,7 @@ let zoomSoundLoop;
 let zoomSoundLoopElement;
 let muted = false;
 let bgMusicVol = 0.2;
-let startZoomVol =  0.4;
+let startZoomVol = 0.4;
 
 //Track for tutorial text
 let movedCamera = false;
@@ -271,7 +279,7 @@ let rotSpeed = [];
 let frameCounter = 0;
 let pos = 0;
 let speed = 1;
-let timeScale = 0;
+let timeScale = Math.floor(timeScales.length / 2); //Get the middle object of array
 let elapsedTimeRaw = 0;
 let elapsedSeconds = 0;
 let elapsedMinutes = 0;
@@ -287,6 +295,7 @@ let startLoop;
 let started = false;
 let targetPlanet;
 let hasTarget = false;
+let reversed = false;
 
 function setup() {
   //Assign loaded textures
@@ -465,7 +474,7 @@ timeFastButton.addEventListener('animationend', () => {
 });
 
 timeSlowButton.addEventListener('click', function () {
-  if (loaded && timeScale > 0 && !slowingDown) {
+  if (loaded && timeScale > 0 && !slowingDown && !reversed) {
     timeSlowButton.style.animationName = 'pressed';
     timeScale--;
   }
@@ -474,7 +483,6 @@ timeSlowButton.addEventListener('click', function () {
 timeSlowButton.addEventListener('animationend', () => {
   timeSlowButton.style.animationName = 'none';
 });
-
 
 //Switch units and button text when pressed
 unitSwitchButton.addEventListener('click', function () {
@@ -514,6 +522,7 @@ function sleep(ms) {
   });
 }
 
+//Fade in elements 2 seconds after each other
 endingElement.addEventListener('animationend', async () => {
   let list = [
     endingQuestion1, endingAnswer1,
@@ -577,11 +586,11 @@ function start() {
   if (control.maxDistance > maxDistance && started) {
     //Gradually zoom into voyager
     control.maxDistance *= 1 / (1 + (2.5 * delta));
-    
+
     if (!muted) {
       zoomSound.setVolume(startZoomVol);
       bgMusic.setVolume(bgMusicVol);
-    } 
+    }
     else {
       zoomSound.setVolume(0);
       bgMusic.setVolume(0);
@@ -691,7 +700,7 @@ function animate() {
       planets[i].arrived = true;
       hasTarget = false;
       slowingDown = false;
-      timeScale = 1;
+      timeScale = Math.floor(timeScales.length / 2) + 1;
 
       //Store camoffset to restore after teleport
       let camOffsetX = camera.position.x - voyagerModel.position.x;
@@ -742,7 +751,7 @@ function animate() {
   secondsUntilPlanetRaw = (targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed);
 
   //Slow down when near planet
-  if (secondsUntilPlanetRaw <= 0.05 && timeScale > 2 && secondsUntilPlanetRaw > 0) {
+  if (secondsUntilPlanetRaw <= 0.05 && timeScale > (Math.floor(timeScales.length / 2)) + 2 && secondsUntilPlanetRaw > 0) {
     slowingDown = true;
     timeScale--;
   }
