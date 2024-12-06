@@ -235,15 +235,6 @@ const planets = [
 ];
 
 const timeScales = [
-  { speed: -10368000, label: '1s = -120d', soundVolume: 0.64 },
-  { speed: -5184000, label: '1s = -60d', soundVolume: 0.56 },
-  { speed: -2592000, label: '1s = -30d', soundVolume: 0.48 },
-  { speed: -1296000, label: '1s = -15d', soundVolume: 0.4 },
-  { speed: -86400, label: '1s = -1d', soundVolume: 0.32 },
-  { speed: -3600, label: '1s = -1h', soundVolume: 0.24 },
-  { speed: -300, label: '1s = -5m', soundVolume: 0.16 },
-  { speed: -60, label: '1s = -1m', soundVolume: 0.08 },
-  { speed: -1, label: '-Real-time', soundVolume: 0 },
   { speed: 0, label: 'Time Stopped', soundVolume: 0 },
   { speed: 1, label: 'Real-time', soundVolume: 0 },
   { speed: 60, label: '1s = 1m', soundVolume: 0.08 },
@@ -287,7 +278,7 @@ let rotSpeed = [];
 let frameCounter = 0;
 let pos = 0;
 let speed = 1;
-let timeScale = Math.floor(timeScales.length / 2); //Get the middle object of array
+let timeScale = 0; //Get the middle object of array
 let elapsedTimeRaw = 0;
 let elapsedSeconds = 0;
 let elapsedMinutes = 0;
@@ -303,7 +294,6 @@ let startLoop;
 let started = false;
 let targetPlanet;
 let hasTarget = false;
-let reversed = false;
 
 function setup() {
   //Assign loaded textures
@@ -719,7 +709,7 @@ function animate() {
       planets[i].arrived = true;
       hasTarget = false;
       slowingDown = false;
-      timeScale = Math.floor(timeScales.length / 2) + 1;
+      timeScale = 1;
 
       //Store camoffset to restore after teleport
       let camOffsetX = camera.position.x - voyagerModel.position.x;
@@ -770,7 +760,7 @@ function animate() {
   secondsUntilPlanetRaw = (targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed);
 
   //Slow down when near planet
-  if (secondsUntilPlanetRaw <= 0.05 && timeScale > (Math.floor(timeScales.length / 2)) + 2 && secondsUntilPlanetRaw > 0) {
+  if (secondsUntilPlanetRaw <= 0.05 && timeScale > 2 && secondsUntilPlanetRaw > 0) {
     slowingDown = true;
     timeScale--;
   }
