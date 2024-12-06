@@ -264,7 +264,15 @@ let zoomSound;
 let zoomSoundElement;
 let zoomSoundLoop;
 let zoomSoundLoopElement;
-let muted = false;
+
+let muted;
+if (localStorage.getItem('muted') == 'true') {
+  muted = true;
+}
+else {
+  muted = false;
+}
+
 let bgMusicVol = 0.2;
 let startZoomVol = 0.4;
 
@@ -350,6 +358,15 @@ function setup() {
   startUI.style.opacity = '1';
   mainUI.style.opacity = '0';
   factsContainer.style.opacity = '0';
+
+  if (muted) {
+    muteButtonOff.style.display = 'none';
+    muteButtonOn.style.display = 'block';
+  } 
+  else {
+    muteButtonOn.style.display = 'none';
+    muteButtonOff.style.display = 'block';
+  }
 
   //Move voyager in front of sun
   voyagerModel.position.setZ(0.500001);
@@ -443,6 +460,7 @@ startButton.addEventListener('click', function () {
 muteButtonOff.addEventListener('click', function () {
   if (!muted) {
     muted = true;
+    localStorage.setItem('muted', 'true');
     muteButtonOff.style.display = 'none';
     muteButtonOn.style.display = 'block';
   }
@@ -451,6 +469,7 @@ muteButtonOff.addEventListener('click', function () {
 muteButtonOn.addEventListener('click', function () {
   if (muted) {
     muted = false;
+    localStorage.setItem('muted', 'false');
     muteButtonOn.style.display = 'none';
     muteButtonOff.style.display = 'block';
   }
@@ -505,13 +524,13 @@ control.addEventListener('start', () => {
 
 openingElement.addEventListener('click', () => {
   //Hide and make none interactable
-  openingElement.style.animationName = "hide";
-  openingElement.style.pointerEvents = "none";
+  openingElement.style.animationName = 'hide';
+  openingElement.style.pointerEvents = 'none';
 
   mainUI.style.display = 'block';
   mainUI.style.animationName = 'reveal';
 
-  tutorialElement.style.pointerEvents = "none";
+  tutorialElement.style.pointerEvents = 'none';
   tutorialElement.style.display = 'flex';
   tutorialElement.style.animationName = 'reveal';
 });
