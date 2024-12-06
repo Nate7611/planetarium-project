@@ -264,7 +264,7 @@ else {
   muted = false;
 }
 
-let bgMusicVol = 0.2;
+let bgMusicVol = 0.15;
 let startZoomVol = 0.4;
 
 //Track for tutorial text
@@ -437,7 +437,7 @@ startButton.addEventListener('click', function () {
     zoomSound.setMediaElementSource(zoomSoundElement);
     zoomSoundElement.play();
 
-    //Zoom sound
+    //Looping zoom sound
     zoomSoundLoop = new THREE.Audio(listener);
     zoomSoundLoopElement = document.getElementById('zoom-sound-loop');
     zoomSoundLoop.setMediaElementSource(zoomSoundLoopElement);
