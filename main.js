@@ -222,15 +222,15 @@ const planetHeightOffset = 0.00003;
 const maxDistance = 0.000004;
 
 const planets = [
-  { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, distanceFromSun: '0.4 AU', radius: '1,516 mi (2,439 km)', tempLow: '-290°F (-180°C)', tempHigh: '800°F (430°C)', orbitSpeed: '29 miles (47 kilometers) per second', dayLength: '59 Earth Days' },
-  { name: 'Venus', arrived: false, left: false, position: 77.723, endPosition: 77.737, distanceFromSun: '0.7 AU', radius: '3,760 mi (6,052 km)', tempLow: '870°F (465°C)', tempHigh: '870°F (465°C)', orbitSpeed: '22 miles (35 kilometers) per second', dayLength: '243 Earth Days' },
+  { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, distanceFromSun: '0.387 AU', radius: '1,516 mi (2,440 km)', tempLow: '-290°F (-180°C)', tempHigh: '800°F (430°C)', orbitSpeed: '29 miles (47 kilometers) per second', dayLength: '175.9 Earth Days' },
+  { name: 'Venus', arrived: false, left: false, position: 77.723, endPosition: 77.737, distanceFromSun: '0.723 AU', radius: '3,760 mi (6,052 km)', tempLow: '870°F (465°C)', tempHigh: '870°F (465°C)', orbitSpeed: '22 miles (35 kilometers) per second', dayLength: '116.8 Earth Days' },
   { name: 'Earth', arrived: false, left: false, position: 107.492, endPosition: 107.508, distanceFromSun: '1 AU', radius: '3,959 mi (6,371 km)', tempLow: '-128°F (-89°C)', tempHigh: '134°F (57°C)', orbitSpeed: '18.5 miles (30 kilometers) per second', dayLength: '1 Earth Day' },
-  { name: 'The Moon', arrived: false, left: false, position: 107.774, endPosition: 107.778402704, distanceFromSun: '1 AU', radius: '1,079 mi (1,737 km)', tempLow: '-387°F (-233°C)', tempHigh: '253°F (123°C)', orbitSpeed: '0.6 miles (1 kilometer) per second', dayLength: '27.3 Earth Days' },
+  { name: 'The Moon', arrived: false, left: false, position: 107.774, endPosition: 107.778402704, distanceFromSun: '1 AU', radius: '1,079 mi (1,737 km)', tempLow: '-387°F (-233°C)', tempHigh: '253°F (123°C)', orbitSpeed: '0.6 miles (1 kilometer) per second', dayLength: '29.5 Earth Days' },
   { name: 'Mars', arrived: false, left: false, position: 163.696, endPosition: 163.704, distanceFromSun: '1.5 AU', radius: '2,106 mi (3,390 km)', tempLow: '-195°F (-125°C)', tempHigh: '70°F (20°C)', orbitSpeed: '15 miles (24 kilometers) per second', dayLength: '1.03 Earth Days' },
-  { name: 'Jupiter', arrived: false, left: false, position: 559.2, endPosition: 559.4, distanceFromSun: '5.2 AU', radius: '43,441 mi (69,911 km)', tempLow: '-234°F (-145°C)', tempHigh: '-234°F (-145°C)', orbitSpeed: '8 miles (13 kilometers) per second', dayLength: '0.41 Earth Days' },
-  { name: 'Saturn', arrived: false, left: false, position: 1028.9, endPosition: 1029.1, distanceFromSun: '9.6 AU', radius: '36,184 mi (58,232 km)', tempLow: '-288°F (-178°C)', tempHigh: '-288°F (-178°C)', orbitSpeed: '6 miles (9.7 kilometers) per second', dayLength: '0.45 Earth Days' },
-  { name: 'Uranus', arrived: false, left: false, position: 2066.968, endPosition: 2067.032, distanceFromSun: '19.2 AU', radius: '15,759 mi (25,362 km)', tempLow: '-371°F (-224°C)', tempHigh: '-371°F (-224°C)', orbitSpeed: '4 miles (6.8 kilometers) per second', dayLength: '0.72 Earth Days' },
-  { name: 'Neptune', arrived: false, left: false, position: 3234.968, endPosition: 3235.032, distanceFromSun: '30.1 AU', radius: '15,299 mi (24,622 km)', tempLow: '-373°F (-225°C)', tempHigh: '-373°F (-225°C)', orbitSpeed: '3.4 miles (5.4 kilometers) per second', dayLength: '0.67 Earth Days' },
+  { name: 'Jupiter', arrived: false, left: false, position: 559.2, endPosition: 559.4, distanceFromSun: '5.2 AU', radius: '43,441 mi (69,911 km)', tempLow: '-234°F (-145°C)', tempHigh: '-234°F (-145°C)', orbitSpeed: '8 miles (13 kilometers) per second', dayLength: '0.414 Earth Days' },
+  { name: 'Saturn', arrived: false, left: false, position: 1028.9, endPosition: 1029.1, distanceFromSun: '9.6 AU', radius: '36,184 mi (58,232 km)', tempLow: '-288°F (-178°C)', tempHigh: '-288°F (-178°C)', orbitSpeed: '6 miles (9.7 kilometers) per second', dayLength: '0.444 Earth Days' },
+  { name: 'Uranus', arrived: false, left: false, position: 2066.968, endPosition: 2067.032, distanceFromSun: '19.2 AU', radius: '15,759 mi (25,362 km)', tempLow: '-371°F (-224°C)', tempHigh: '-371°F (-224°C)', orbitSpeed: '4 miles (6.8 kilometers) per second', dayLength: '0.718 Earth Days' },
+  { name: 'Neptune', arrived: false, left: false, position: 3234.968, endPosition: 3235.032, distanceFromSun: '30.1 AU', radius: '15,299 mi (24,622 km)', tempLow: '-373°F (-225°C)', tempHigh: '-373°F (-225°C)', orbitSpeed: '3.4 miles (5.4 kilometers) per second', dayLength: '0.671 Earth Days' },
   { name: 'Pluto', arrived: false, left: false, position: 4219.9978, endPosition: 4220.0022, distanceFromSun: '39.5 AU', radius: '738 mi (1,187 km)', tempLow: '-387°F (-233°C)', tempHigh: '-369°F (-223°C)', orbitSpeed: '2.9 miles (4.7 kilometers) per second', dayLength: '6.39 Earth Days' }
 ];
 
@@ -399,8 +399,8 @@ function setup() {
   // Assign speed to all these
   rotObjects = [sun, mercury, venus, earth, moon, mars, jupiter, saturnModel, uranus, neptune, pluto];
 
-  // Planet rotation speed in earth days (starts with sun)
-  rotSpeed = [27, 58.66667, 243.018056, 0.997222, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667, 6.4];
+  // Planet rotation speed in hours (starts with sun)
+  rotSpeed = [648, 1407.6, -5832.5, 23.9, 655.7, 24.6, 9.9, 10.7, -17.2, 16.1, -153.3];
 
   // Gets rid of lag spike when turning camera around
   scene.traverse(obj => obj.frustumCulled = false);
@@ -663,7 +663,7 @@ function animate() {
 
   // Rotate planets
   for (let i = 0; i < rotObjects.length; i++) {
-    rotObjects[i].rotateY(((2 * Math.PI) / (rotSpeed[i] * 86400) * delta) * speed);
+    rotObjects[i].rotateY(((2 * Math.PI) / (rotSpeed[i] * 3600) * delta) * speed);
   }
 
   // Set audio volume
