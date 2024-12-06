@@ -348,6 +348,7 @@ function setup() {
 
   startUI.style.opacity = '1';
   mainUI.style.opacity = '0';
+  mainUI.style.display = 'none';
   factsContainer.style.opacity = '0';
 
   if (muted) {
