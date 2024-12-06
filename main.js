@@ -4,12 +4,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Timer } from 'three/addons/misc/Timer.js';
 
-//Load html elements
-//Global UI
+// Load html elements
+// Global UI
 const muteButtonOff = document.getElementById('mute-button-off');
 const muteButtonOn = document.getElementById('mute-button-on');
 
-//Main UI
+// Main UI
 const mainUI = document.getElementById('main-UI');
 const distanceFromElement = document.getElementById('distance');
 const timeToElement = document.getElementById('time-until');
@@ -20,15 +20,15 @@ const timeFastButton = document.getElementById('fast-button');
 const unitSwitchButton = document.getElementById('unit-button');
 const unitSwitchButtonText = document.getElementById('unit-button__text');
 
-//Loading UI
+// Loading UI
 const loadingScreen = document.getElementById('loading-screen');
 const loadingBar = document.getElementById('loading-bar');
 
-//Start UI
+// Start UI
 const startUI = document.getElementById('start-UI');
 const startButton = document.getElementById('start-button')
 
-//Facts UI
+// Facts UI
 const factsContainer = document.getElementById('fact-container');
 const factsName = document.getElementById('fact-container__name');
 const factsDistance = document.getElementById('fact-container__distance');
@@ -38,13 +38,13 @@ const factsHighTemp = document.getElementById('fact-container__high-temperature'
 const factsOrbitSpeed = document.getElementById('fact-container__orbital-speed');
 const factsDayLength = document.getElementById('fact-container__day-length');
 
-//Opening UI
+// Opening UI
 const openingElement = document.getElementById('opening-text');
 const tutorialElement = document.getElementById('tutorial');
 const tutorialSpeedElement = document.getElementById('tutorial__speed-text');
 const tutorialCameraElement = document.getElementById('tutorial__camera-text');
 
-//Ending UI
+// Ending UI
 const endingElement = document.getElementById('ending');
 const endingQuestion1 = document.getElementById('ending__question-1');
 const endingQuestion2 = document.getElementById('ending__question-2');
@@ -60,16 +60,16 @@ const endButton = document.getElementById('end-button');
 
 const scene = new THREE.Scene();
 
-const light = new THREE.AmbientLight(0x404040, 8);
+const light = new THREE.AmbientLight(0x404040, 10);
 const sunLight = new THREE.PointLight(0x404040, 500, 0, 0.5);
 sunLight.castShadow = true;
 
-//Space background
+// Space background
 scene.background = new THREE.CubeTextureLoader()
   .setPath('textures/cube/space/')
   .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']);
 
-//Lower background brightness
+// Lower background brightness
 scene.backgroundIntensity = 0.7;
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.000000118, 5000);
@@ -82,45 +82,45 @@ const renderer = new THREE.WebGLRenderer({
   reverseDepthBuffer: true
 });
 
-//Make program fullscreen
+// Make program fullscreen
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-//Create orbit controls
+// Create orbit controls
 const control = new OrbitControls(camera, renderer.domElement);
 
-//Makes orbit controls smooth
+// Makes orbit controls smooth
 control.enableDamping = true;
 
-//Control max and min zoom of camera 
+// Control max and min zoom of camera 
 control.maxDistance = 3;
 control.minDistance = 0.0000005;
 
-//Lock movement during start
+// Lock movement during start
 control.enableZoom = false;
 control.enableRotate = false;
 control.enablePan = false;
 
-//Create a Loading Manager
+// Create a Loading Manager
 const loadingManager = new THREE.LoadingManager(
   () => {
-    //Called when all assets are loaded
+    // Called when all assets are loaded
     console.log('All assets loaded.');
     loadingScreen.style.display = 'none';
     setup();
   },
   (url, itemsLoaded, itemsTotal) => {
-    //Called during loading to update progress
+    // Called during loading to update progress
     console.log(`Loading file: ${url}. Loaded ${itemsLoaded} of ${itemsTotal} files.`);
     loadingBar.style.width = String((itemsLoaded / itemsTotal) * 100 + '%')
   },
   (url) => {
-    //Called if there’s an error loading
+    // Called if there’s an error loading
     console.error(`There was an error loading ${url}`);
   }
 );
 
-//Load Textures (bit of a mess but should run better than textureloader)
+// Load Textures (bit of a mess but should run better than textureloader)
 const bitmapLoader = new THREE.ImageBitmapLoader(loadingManager);
 bitmapLoader.setOptions({ imageOrientation: 'flipY' });
 
@@ -177,7 +177,7 @@ bitmapLoader.load('textures/pluto.jpg', (imageBitmap) => {
   plutoTexture.needsUpdate = true;
 });
 
-//Load models
+// Load models
 const loader = new GLTFLoader(loadingManager);
 let voyagerModel;
 loader.load('models/voyager.glb', (gltf) => {
@@ -196,7 +196,7 @@ loader.load('models/saturn.glb', (gltf) => {
   scene.add(saturnModel);
 });
 
-//Create planets geometry
+// Create planets geometry
 const sunGeometry = new THREE.SphereGeometry(0.5, 128, 64);
 const mercuryGeometry = new THREE.SphereGeometry(0.0017525, 64, 32);
 const venusGeometry = new THREE.SphereGeometry(0.0043465, 64, 32);
@@ -247,7 +247,7 @@ const timeScales = [
   { speed: 10368000, label: '1s = 120d', soundVolume: 0.64 },
 ];
 
-//Audio variable
+// Audio variable
 let listener;
 let bgMusic;
 let bgMusicElement;
@@ -267,18 +267,18 @@ else {
 let bgMusicVol = 0.15;
 let startZoomVol = 0.4;
 
-//Track for tutorial text
+// Track for tutorial text
 let movedCamera = false;
 let timeRateChanged = false;
 let tutorialComplete = false;
 
-//Other variables
+// Other variables
 let rotObjects = [];
 let rotSpeed = [];
 let frameCounter = 0;
 let pos = 0;
 let speed = 1;
-let timeScale = 0; //Get the middle object of array
+let timeScale = 0;
 let elapsedTimeRaw = 0;
 let elapsedSeconds = 0;
 let elapsedMinutes = 0;
@@ -296,7 +296,7 @@ let targetPlanet;
 let hasTarget = false;
 
 function setup() {
-  //Assign loaded textures
+  // Assign loaded textures
   let sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture, });
   sun = new THREE.Mesh(sunGeometry, sunMaterial);
 
@@ -327,7 +327,7 @@ function setup() {
   let plutoMaterial = new THREE.MeshStandardMaterial({ map: plutoTexture });
   pluto = new THREE.Mesh(plutoGeometry, plutoMaterial);
 
-  //Add objects to scene
+  // Add objects to scene
   scene.add(
     sun,
     mercury,
@@ -358,10 +358,10 @@ function setup() {
     muteButtonOff.style.display = 'block';
   }
 
-  //Move voyager in front of sun
+  // Move voyager in front of sun
   voyagerModel.position.setZ(0.500001);
 
-  //Set planet distance from sun
+  // Set planet distance from sun
   mercury.position.setZ(41.6);
   mercury.position.setY(-0.0017525 - planetHeightOffset);
 
@@ -392,22 +392,22 @@ function setup() {
   pluto.position.setY(-0.00085366912 - planetHeightOffset);
   pluto.rotateY(Math.PI);
 
-  //Make camera face sun on load
+  // Make camera face sun on load
   camera.position.setZ(1.81);
 
-  //Assign speed to all these
+  // Assign speed to all these
   rotObjects = [sun, mercury, venus, earth, moon, mars, jupiter, saturnModel, uranus, neptune, pluto];
 
-  //Planet rotation speed in earth days (starts with sun)
+  // Planet rotation speed in earth days (starts with sun)
   rotSpeed = [27, 58.66667, 243.018056, 0.997222, 27.32, 1.025, 0.413194, 0.439583, 0.718056, 0.666667, 6.4];
 
-  //Gets rid of lag spike when turning camera around
+  // Gets rid of lag spike when turning camera around
   scene.traverse(obj => obj.frustumCulled = false);
 
-  //Compile scene (may help performance... idk)
+  // Compile scene (may help performance... idk)
   renderer.compile(scene, camera);
 
-  //Render scene
+  // Render scene
   renderer.render(scene, camera);
 
   loaded = true;
@@ -415,29 +415,29 @@ function setup() {
   start();
 }
 
-//Run start if button is pressed and everything is loaded
+// Run start if button is pressed and everything is loaded
 startButton.addEventListener('click', function () {
   if (loaded) {
     started = true;
     startUI.style.animationName = 'hide';
 
-    //Listener for music
+    // Listener for music
     listener = new THREE.AudioListener();
     camera.add(listener);
 
-    //Global background music audio
+    // Global background music audio
     bgMusic = new THREE.Audio(listener);
     bgMusicElement = document.getElementById('bg-music');
     bgMusic.setMediaElementSource(bgMusicElement);
     bgMusicElement.play();
 
-    //Zoom sound
+    // Zoom sound
     zoomSound = new THREE.Audio(listener);
     zoomSoundElement = document.getElementById('zoom-sound');
     zoomSound.setMediaElementSource(zoomSoundElement);
     zoomSoundElement.play();
 
-    //Looping zoom sound
+    // Looping zoom sound
     zoomSoundLoop = new THREE.Audio(listener);
     zoomSoundLoopElement = document.getElementById('zoom-sound-loop');
     zoomSoundLoop.setMediaElementSource(zoomSoundLoopElement);
@@ -446,7 +446,7 @@ startButton.addEventListener('click', function () {
   }
 });
 
-//Volume buttons
+// Volume buttons
 muteButtonOff.addEventListener('click', function () {
   if (!muted) {
     muted = true;
@@ -465,7 +465,7 @@ muteButtonOn.addEventListener('click', function () {
   }
 });
 
-//Buttons to control speed
+// Buttons to control speed
 timeFastButton.addEventListener('click', function () {
   if (loaded && timeScale < (timeScales.length - 1) && !slowingDown) {
     timeFastButton.style.animationName = 'pressed';
@@ -493,7 +493,7 @@ timeSlowButton.addEventListener('animationend', () => {
   timeSlowButton.style.animationName = 'none';
 });
 
-//Switch units and button text when pressed
+// Switch units and button text when pressed
 unitSwitchButton.addEventListener('click', function () {
   if (!usingMetric) {
     usingMetric = true;
@@ -513,7 +513,7 @@ control.addEventListener('start', () => {
 });
 
 openingElement.addEventListener('click', () => {
-  //Hide and make none interactable
+  // Hide and make none interactable
   openingElement.style.animationName = 'hide';
   openingElement.style.pointerEvents = 'none';
 
@@ -531,7 +531,7 @@ function sleep(ms) {
   });
 }
 
-//Fade in elements 2 seconds after each other
+// Fade in elements 2 seconds after each other
 endingElement.addEventListener('animationend', async () => {
   let list = [
     endingQuestion1, endingAnswer1,
@@ -548,7 +548,7 @@ endingElement.addEventListener('animationend', async () => {
   };
 });
 
-//Reload page after 30 seconds of ending
+// Reload page after 30 seconds of ending
 endButton.addEventListener('animationend', async () => {
   await sleep(30000);
   window.location.reload();
@@ -572,28 +572,28 @@ function tutorial() {
   }
 };
 
-//Start screen
+// Start screen
 function start() {
-  //Store to cancel loop
+  // Store to cancel loop
   startLoop = requestAnimationFrame(start);
 
-  //Set orbit target
+  // Set orbit target
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
 
-  //Need to do this to get accurate deltatime
+  // Need to do this to get accurate deltatime
   timer.update();
 
-  //Needed for control damping
+  // Needed for control damping
   control.update();
 
-  //Deltatime
+  // Deltatime
   let delta = timer.getDelta();
 
-  //Rotate Sun
+  // Rotate Sun
   sun.rotateY(((2 * Math.PI) / (27 * 86400) * delta) * 43200);
 
   if (control.maxDistance > maxDistance && started) {
-    //Gradually zoom into voyager
+    // Gradually zoom into voyager
     control.maxDistance *= 1 / (1 + (2.5 * delta));
 
     if (!muted) {
@@ -606,26 +606,26 @@ function start() {
     }
   }
   else if (control.maxDistance < maxDistance && started) {
-    //Cancel loop
+    // Cancel loop
     cancelAnimationFrame(startLoop);
 
-    //Hide Start UI
+    // Hide Start UI
     startUI.style.display = 'none';
 
-    //Set camera max zoom
+    // Set camera max zoom
     control.maxDistance = maxDistance;
 
-    //Unlock cam
+    // Unlock cam
     control.enableZoom = true;
     control.enableRotate = true;
 
-    //Bring in main ui
+    // Bring in main ui
     openingElement.style.display = 'flex';
     openingElement.style.animationName = 'reveal';
 
     zoomSoundElement.pause();
 
-    //Start main loop
+    // Start main loop
     animate();
   }
 
@@ -633,39 +633,39 @@ function start() {
 }
 
 function animate() {
-  //Create loop
+  // Create loop
   requestAnimationFrame(animate);
 
-  //Tracker for frustrum culling
+  // Tracker for frustrum culling
   frameCounter++;
 
-  //Turn back on culling after 1 frame, fixes lag spike when loading planets
+  // Turn back on culling after 1 frame, fixes lag spike when loading planets
   if (frameCounter == 2) {
     scene.traverse(obj => obj.frustumCulled = true);
   }
 
-  //Need to do this to get accurate deltatime
+  // Need to do this to get accurate deltatime
   timer.update();
 
-  //Deltatime
+  // Deltatime
   let delta = timer.getDelta();
 
-  //Set speed
+  // Set speed
   speed = timeScales[timeScale].speed;
 
-  //Around the 38,026 mph the voyager is moving
+  // Around the 38,026 mph the voyager is moving
   pos = (0.000012212 * speed) * delta;
 
-  //Move voyager and camera
+  // Move voyager and camera
   voyagerModel.position.add(new THREE.Vector3(0, 0, pos));
   camera.position.add(new THREE.Vector3(0, 0, pos));
 
-  //Rotate planets
+  // Rotate planets
   for (let i = 0; i < rotObjects.length; i++) {
     rotObjects[i].rotateY(((2 * Math.PI) / (rotSpeed[i] * 86400) * delta) * speed);
   }
 
-  //Set audio volume
+  // Set audio volume
   if (muted) {
     zoomSoundLoop.setVolume(0);
     bgMusic.setVolume(0);
@@ -675,7 +675,7 @@ function animate() {
     bgMusic.setVolume(bgMusicVol);
   }
 
-  //Converting Seconds to largest form
+  // Converting Seconds to largest form
   elapsedTimeRaw += delta * speed;
   elapsedSeconds = Math.trunc(elapsedTimeRaw - 60 * Math.trunc(elapsedTimeRaw / 60))
   elapsedMinutes = Math.trunc((elapsedTimeRaw / 60) - 60 * Math.trunc(elapsedTimeRaw / 3600));
@@ -683,7 +683,7 @@ function animate() {
   elapsedDays = Math.trunc((elapsedTimeRaw / 86400) - 365.25 * Math.trunc(elapsedTimeRaw / 31557600));
   elapsedYears = Math.trunc(elapsedTimeRaw / 31557600);
 
-  //Write time elapsed to canvas
+  // Write time elapsed to canvas
   timeElapsedElement.innerHTML =
     'Elapsed Time: ' +
     elapsedYears + 'y ' +
@@ -694,42 +694,42 @@ function animate() {
 
 
   if (!usingMetric) {
-    //Miles from Sun
+    // Miles from Sun
     distanceFromElement.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1609) - 432567.34)) + ' mi from the Sun';
   }
   else {
-    //Kilometers from Sun
+    // Kilometers from Sun
     distanceFromElement.innerHTML = new Intl.NumberFormat().format(Math.round(((voyagerModel.position.z * 1392000000) / 1000) - 695999.99999)) + ' km from the Sun';
   }
 
-  //Stop Voyager when at planet
+  // Stop Voyager when at planet
   for (let i = 0; i < planets.length; i++) {
-    //When we arrive at planet
+    // When we arrive at planet
     if (voyagerModel.position.z >= planets[i].position && !planets[i].arrived) {
       planets[i].arrived = true;
       hasTarget = false;
       slowingDown = false;
       timeScale = 1;
 
-      //Store camoffset to restore after teleport
+      // Store camoffset to restore after teleport
       let camOffsetX = camera.position.x - voyagerModel.position.x;
       let camOffsetY = camera.position.y - voyagerModel.position.y;
       let camOffsetZ = camera.position.z - voyagerModel.position.z;
 
-      //Teleport to set location as high speeds can shoot past it
+      // Teleport to set location as high speeds can shoot past it
       voyagerModel.position.z = planets[i].position;
 
-      //Restore camera orbital position around voyager
+      // Restore camera orbital position around voyager
       camera.position.set(
         voyagerModel.position.x + camOffsetX,
         voyagerModel.position.y + camOffsetY,
         voyagerModel.position.z + camOffsetZ
       );
 
-      //Fade in fact container
+      // Fade in fact container
       factsContainer.style.animationName = 'reveal';
 
-      //Update FactContainer with planet info
+      // Update FactContainer with planet info
       factsName.innerHTML = planets[i].name;
       factsDistance.innerHTML = planets[i].distanceFromSun;
       factsRadius.innerHTML = planets[i].radius;
@@ -739,55 +739,55 @@ function animate() {
       factsDayLength.innerHTML = planets[i].dayLength;
     }
 
-    //Check for new target
+    // Check for new target
     if (!hasTarget && planets[i].arrived == false) {
-      //Set closest planet that we have not yet arrived at as target
+      // Set closest planet that we have not yet arrived at as target
       hasTarget = true;
       targetPlanet = planets[i];
     }
 
-    //Check if we left planet
+    // Check if we left planet
     if (planets[i].arrived && !planets[i].left && voyagerModel.position.z >= planets[i].endPosition) {
       planets[i].left = true;
 
-      //Fade out factContainer
+      // Fade out factContainer
       factsContainer.style.animationName = 'hide';
     }
   }
 
-  //Time until next planet text
+  // Time until next planet text
   secondsUntilPlanet = Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
   secondsUntilPlanetRaw = (targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed);
 
-  //Slow down when near planet
+  // Slow down when near planet
   if (secondsUntilPlanetRaw <= 0.05 && timeScale > 2 && secondsUntilPlanetRaw > 0) {
     slowingDown = true;
     timeScale--;
   }
 
-  //Convert from seconds
+  // Convert from seconds
   if ((secondsUntilPlanetRaw / 31557600) >= 1 && secondsUntilPlanetRaw != Infinity && !slowingDown) {
-    //Print in years
+    // Print in years
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 31557600) + 'y';
   }
   else if ((secondsUntilPlanetRaw / 86400) >= 1 && secondsUntilPlanetRaw != Infinity && !slowingDown) {
-    //Print in days
+    // Print in days
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 86400) + 'd';
   }
   else if ((secondsUntilPlanetRaw / 3600) >= 1 && secondsUntilPlanetRaw != Infinity && !slowingDown) {
-    //Print in hours
+    // Print in hours
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 3600) + 'h';
   }
   else if ((secondsUntilPlanetRaw / 60) >= 1 && secondsUntilPlanetRaw != Infinity && !slowingDown) {
-    //Print in minutes
+    // Print in minutes
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + Math.round(secondsUntilPlanet / 60) + 'm';
   }
   else if (secondsUntilPlanetRaw != Infinity && !slowingDown) {
-    //Print in seconds
+    // Print in seconds
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw.toFixed(1) + 's';
   }
   else {
-    //Fix extra letter when writing infinity
+    // Fix extra letter when writing infinity
     timeToElement.innerHTML = 'Time until ' + targetPlanet.name + ': ' + secondsUntilPlanetRaw;
   }
 
@@ -798,10 +798,10 @@ function animate() {
     timeToElement.style.animationName = 'reveal';
   }
 
-  //Set orbit control orgin to voyager
+  // Set orbit control orgin to voyager
   control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
 
-  //Write speed to screen
+  // Write speed to screen
   if (slowingDown) {
     timeScaleElement.innerHTML = 'Slowing Down';
     timeToElement.innerHTML = 'Arriving At ' + targetPlanet.name;
@@ -816,11 +816,11 @@ function animate() {
     endingElement.style.animationName = 'reveal';
   }
 
-  //Need to do this for orbit control damping
+  // Need to do this for orbit control damping
   control.update();
 
-  //Debug
-  //Time Elapsed Error Checking
+  // Debug
+  // Time Elapsed Error Checking
   if (elapsedSeconds < 0 || elapsedSeconds > 60) {
     console.error('Error Seconds: ' + elapsedSeconds);
   }
@@ -836,12 +836,12 @@ function animate() {
   if (elapsedYears < 0) {
     console.error('Error Years: ' + elapsedYears);
   }
-  //End Debug
+  // End Debug
 
   renderer.render(scene, camera);
 }
 
-//Update program size and aspect ratio when window size changes
+// Update program size and aspect ratio when window size changes
 window.addEventListener('resize', () => {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
