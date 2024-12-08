@@ -31,11 +31,10 @@ const startButton = document.getElementById('start-button')
 // Facts UI
 const factsContainer = document.getElementById('fact-container');
 const factsName = document.getElementById('fact-container__name');
-const factsDistance = document.getElementById('fact-container__distance');
-const factsRadius = document.getElementById('fact-container__radius');
-const factsLowTemp = document.getElementById('fact-container__low-temperature');
-const factsHighTemp = document.getElementById('fact-container__high-temperature');
-const factsOrbitSpeed = document.getElementById('fact-container__orbital-speed');
+const factsFunFact = document.getElementById('fact-container__fun-fact');
+const factsDiameter = document.getElementById('fact-container__radius');
+const factsTemperature = document.getElementById('fact-container__temperature');
+const factsMoons = document.getElementById('fact-container__moons');
 const factsDayLength = document.getElementById('fact-container__day-length');
 
 // Opening UI
@@ -222,16 +221,16 @@ const planetHeightOffset = 0.00003;
 const maxDistance = 0.000004;
 
 const planets = [
-  { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, distanceFromSun: '0.387 AU', radius: '1,516 mi (2,440 km)', tempLow: '-290°F (-180°C)', tempHigh: '800°F (430°C)', orbitSpeed: '29 miles (47 kilometers) per second', dayLength: '175.9 Earth Days' },
-  { name: 'Venus', arrived: false, left: false, position: 77.723, endPosition: 77.737, distanceFromSun: '0.723 AU', radius: '3,760 mi (6,052 km)', tempLow: '870°F (465°C)', tempHigh: '870°F (465°C)', orbitSpeed: '22 miles (35 kilometers) per second', dayLength: '116.8 Earth Days' },
-  { name: 'Earth', arrived: false, left: false, position: 107.492, endPosition: 107.508, distanceFromSun: '1 AU', radius: '3,959 mi (6,371 km)', tempLow: '-128°F (-89°C)', tempHigh: '134°F (57°C)', orbitSpeed: '18.5 miles (30 kilometers) per second', dayLength: '1 Earth Day' },
-  { name: 'The Moon', arrived: false, left: false, position: 107.774, endPosition: 107.778402704, distanceFromSun: '1 AU', radius: '1,079 mi (1,737 km)', tempLow: '-387°F (-233°C)', tempHigh: '253°F (123°C)', orbitSpeed: '0.6 miles (1 kilometer) per second', dayLength: '29.5 Earth Days' },
-  { name: 'Mars', arrived: false, left: false, position: 163.696, endPosition: 163.704, distanceFromSun: '1.5 AU', radius: '2,106 mi (3,390 km)', tempLow: '-195°F (-125°C)', tempHigh: '70°F (20°C)', orbitSpeed: '15 miles (24 kilometers) per second', dayLength: '1.03 Earth Days' },
-  { name: 'Jupiter', arrived: false, left: false, position: 559.2, endPosition: 559.4, distanceFromSun: '5.2 AU', radius: '43,441 mi (69,911 km)', tempLow: '-234°F (-145°C)', tempHigh: '-234°F (-145°C)', orbitSpeed: '8 miles (13 kilometers) per second', dayLength: '0.414 Earth Days' },
-  { name: 'Saturn', arrived: false, left: false, position: 1028.9, endPosition: 1029.1, distanceFromSun: '9.6 AU', radius: '36,184 mi (58,232 km)', tempLow: '-288°F (-178°C)', tempHigh: '-288°F (-178°C)', orbitSpeed: '6 miles (9.7 kilometers) per second', dayLength: '0.444 Earth Days' },
-  { name: 'Uranus', arrived: false, left: false, position: 2066.968, endPosition: 2067.032, distanceFromSun: '19.2 AU', radius: '15,759 mi (25,362 km)', tempLow: '-371°F (-224°C)', tempHigh: '-371°F (-224°C)', orbitSpeed: '4 miles (6.8 kilometers) per second', dayLength: '0.718 Earth Days' },
-  { name: 'Neptune', arrived: false, left: false, position: 3234.968, endPosition: 3235.032, distanceFromSun: '30.1 AU', radius: '15,299 mi (24,622 km)', tempLow: '-373°F (-225°C)', tempHigh: '-373°F (-225°C)', orbitSpeed: '3.4 miles (5.4 kilometers) per second', dayLength: '0.671 Earth Days' },
-  { name: 'Pluto', arrived: false, left: false, position: 4219.9978, endPosition: 4220.0022, distanceFromSun: '39.5 AU', radius: '738 mi (1,187 km)', tempLow: '-387°F (-233°C)', tempHigh: '-369°F (-223°C)', orbitSpeed: '2.9 miles (4.7 kilometers) per second', dayLength: '6.39 Earth Days' }
+  { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, diameter: '3,032 mi (4,879 km)', temperature: '333°F (167°C)', moons: '0', dayLength: '175.9 Earth Days', funFact: 'Mercury is the closest planet to the Sun and has the most extreme temperature variations of any planet in the Solar System.' },
+  { name: 'Venus', arrived: false, left: false, position: 77.723, endPosition: 77.737, diameter: '7,521 mi (12,104 km)', temperature: '867°F (464°C)', moons: '0', dayLength: '116.8 Earth Days', funFact: 'Venus has a thick atmosphere of carbon dioxide that makes it hotter than Mercury, despite being farther from the Sun.' },
+  { name: 'Earth', arrived: false, left: false, position: 107.492, endPosition: 107.508, diameter: '7,926 mi (12,756 km)', temperature: '59°F (15°C)', moons: '1', dayLength: '1 Earth Day', funFact: 'Earth is the only planet in the Universe known to support life.' },
+  { name: 'The Moon', arrived: false, left: false, position: 107.774, endPosition: 107.778402704, diameter: '2,159 mi (3,475 km)', temperature: '-4°F (-20°C)', moons: '0', dayLength: '29.5 Earth Days', funFact: "When the Moon is at its farthest distance from Earth, you could fit all the other planets (including Pluto) in the space between them." },
+  { name: 'Mars', arrived: false, left: false, position: 163.696, endPosition: 163.704, diameter: '4,221 mi (6,792 km)', temperature: '-85°F (-65°C)', moons: '2', dayLength: '1.03 Earth Days', funFact: 'Mars is home to the tallest volcano in the Solar System, Olympus Mons, which is about 13.6 miles (22 km) high.' },
+  { name: 'Jupiter', arrived: false, left: false, position: 559.2, endPosition: 559.4, diameter: '88,846 mi (142,984 km)', temperature: '-166°F (-110°C)', moons: '95', dayLength: '0.414 Earth Days', funFact: "Jupiter actually has rings, along with Uranus and Neptune. These rings are just much harder to see compared to Saturn's rings." },
+  { name: 'Saturn', arrived: false, left: false, position: 1028.9, endPosition: 1029.1, diameter: '74,897 mi (120,536 km)', temperature: '-220°F (-140°C)', moons: '146', dayLength: '0.444 Earth Days', funFact: "Despite Saturn's rings being around 175,000 miles (282,000 km) wide, their thickness is less than the length of a football field." },
+  { name: 'Uranus', arrived: false, left: false, position: 2066.968, endPosition: 2067.032, diameter: '31,763 mi (51,118 km)', temperature: '-320°F (-195°C)', moons: '27', dayLength: '0.718 Earth Days', funFact: 'Uranus is unique because it rotates on its side, with its axis tilted by about 98 degrees.' },
+  { name: 'Neptune', arrived: false, left: false, position: 3234.968, endPosition: 3235.032, diameter: '30,775 mi (49,528 km)', temperature: '-330°F (-200°C)', moons: '14', dayLength: '0.671 Earth Days', funFact: 'Neptune is known for its strong winds, the fastest in the Solar System, reaching speeds of more than 1,200 mph (2,000 km/h).' },
+  { name: 'Pluto', arrived: false, left: false, position: 4219.9978, endPosition: 4220.0022, diameter: '1,476 mi (2,376 km)', temperature: '-375°F (-225°C)', moons: '5', dayLength: '6.39 Earth Days', funFact: 'Pluto was once considered the ninth planet in our Solar System before being reclassified as a dwarf planet in 2006.' }
 ];
 
 const timeScales = [
@@ -265,7 +264,7 @@ else {
   muted = true;
 }
 
-let bgMusicVol = 0.15;
+let bgMusicVol = 0.1;
 let startZoomVol = 0.4;
 
 // Track for tutorial text
@@ -733,12 +732,11 @@ function animate() {
 
       // Update FactContainer with planet info
       factsName.innerHTML = planets[i].name;
-      factsDistance.innerHTML = planets[i].distanceFromSun;
-      factsRadius.innerHTML = planets[i].radius;
-      factsLowTemp.innerHTML = planets[i].tempLow;
-      factsHighTemp.innerHTML = planets[i].tempHigh;
-      factsOrbitSpeed.innerHTML = planets[i].orbitSpeed;
+      factsDiameter.innerHTML = planets[i].diameter;
+      factsTemperature.innerHTML = planets[i].temperature;
       factsDayLength.innerHTML = planets[i].dayLength;
+      factsMoons.innerHTML = planets[i].moons;
+      factsFunFact.innerHTML = planets[i].funFact;
     }
 
     // Check for new target

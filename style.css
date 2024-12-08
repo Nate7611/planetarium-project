@@ -225,9 +225,9 @@ canvas {
 
 #fact-container {
   position: fixed;
-  top: 4vh;
+  top: 3vh;
   left: 2.5vw;
-  width: 20vw;
+  width: 22vw;
   height: fit-content;
   background-color: #272a3baa;
   border-radius: 5px;
@@ -249,7 +249,7 @@ canvas {
 
 #fact-container h2 {
   color: white;
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   font-weight: 600;
   max-width: 90%;
   text-align: center;
@@ -262,7 +262,7 @@ canvas {
   color: white;
   font-size: 1.5rem;
   font-weight: 400;
-  width: 85%;
+  width: 90%;
   text-align: center;
   margin: 0 auto;
   text-shadow: none;
