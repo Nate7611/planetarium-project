@@ -50,6 +50,7 @@ p {
   font-size: 3rem;
   text-shadow: 3px 3px 5px black;
   pointer-events: none;
+  user-select: none;
 }
 
 hr {
@@ -116,12 +117,13 @@ canvas {
   display: none;
   flex-direction: column;
   justify-content: center;
-  gap: 30px;
+  gap: 20px;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   background-color: #00000046;
+  z-index: 999;
 
   animation-name: none;
   animation-duration: 1s;
@@ -240,16 +242,17 @@ canvas {
   border: none;
   border-radius: 4px;
   width: 200px;
+  min-width: 200px;
   height: 80px;
   filter: drop-shadow(5px 5px 10px black);
 }
 
 #unit-button {
-  margin-right: 200px;
+  margin-right: 150px;
 }
 
 #restart-button {
-  margin-left: 200px;
+  margin-left: 150px;
 }
 
 #restart-button p, #unit-button p {
