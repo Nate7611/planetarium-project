@@ -221,7 +221,7 @@ const planetHeightOffset = 0.00003;
 const maxDistance = 0.000004;
 
 const planets = [
-  { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, diameter: '3,032 mi (4,879 km)', temperature: '333°F (167°C)', moons: '0', dayLength: '175.9 Earth Days', funFact: "Mercury's temperature fluctuates from about 800°F (430°C) during the day to -290°F (-180°C) at night." },
+  { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, diameter: '3,032 mi (4,879 km)', temperature: '333°F (167°C)', moons: '0', dayLength: '175.9 Earth Days', funFact: "Mercury's temperature fluctuates from around 800°F (430°C) during the day to around -290°F (-180°C) at night." },
   { name: 'Venus', arrived: false, left: false, position: 77.723, endPosition: 77.737, diameter: '7,521 mi (12,104 km)', temperature: '867°F (464°C)', moons: '0', dayLength: '116.8 Earth Days', funFact: 'Venus has a thick atmosphere of carbon dioxide that makes it hotter than Mercury, despite being farther from the Sun.' },
   { name: 'Earth', arrived: false, left: false, position: 107.492, endPosition: 107.508, diameter: '7,926 mi (12,756 km)', temperature: '59°F (15°C)', moons: '1', dayLength: '1 Earth Day', funFact: 'Earth is the only planet in the Universe known to support life.' },
   { name: 'The Moon', arrived: false, left: false, position: 107.774, endPosition: 107.778402704, diameter: '2,159 mi (3,475 km)', temperature: '-4°F (-20°C)', moons: '0', dayLength: '29.5 Earth Days', funFact: "When the Moon is at its farthest distance from Earth, you could fit all the other planets (including Pluto) in the space between them." },
