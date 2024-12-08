@@ -187,6 +187,7 @@ canvas {
   font-weight: 400;
   text-align: center;
   margin: 0 auto;
+  pointer-events: none;
 }
 
 #opening-text h1, #tutorial h1 {
@@ -225,9 +226,9 @@ canvas {
 
 #fact-container {
   position: fixed;
-  top: 3vh;
+  top: 2vh;
   left: 2.5vw;
-  width: 22vw;
+  width: 22.5vw;
   height: fit-content;
   background-color: #272a3baa;
   border-radius: 5px;
@@ -253,19 +254,20 @@ canvas {
   font-weight: 600;
   max-width: 90%;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 8px;
   margin-inline: auto;
 }
 
 #fact-container p {
   position: static;
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 400;
   width: 90%;
   text-align: center;
   margin: 0 auto;
   text-shadow: none;
+  text-wrap: pretty;
 }
 
 #restart-button, #unit-button {
@@ -335,6 +337,7 @@ canvas {
   text-align: center;
   margin: 0 auto;
   text-shadow: none;
+  pointer-events: none;
 }
 
 #ending h1 {
