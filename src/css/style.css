@@ -114,7 +114,7 @@ canvas {
 
 .fullscreen-buttons {
   position: fixed;
-  top: 16vh;
+  top: calc(6vh + 135px);
   right: 6vw;
   width: 100px;
   height: 100px;
