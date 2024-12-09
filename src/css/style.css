@@ -107,7 +107,19 @@ canvas {
   width: 100px;
   height: 100px;
   filter: drop-shadow(5px 5px 10px black);
-  z-index: 999;
+  z-index: 9999;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fullscreen-buttons {
+  position: fixed;
+  top: 16vh;
+  right: 6vw;
+  width: 100px;
+  height: 100px;
+  filter: drop-shadow(5px 5px 5px black);
+  z-index: 9999;
   cursor: pointer;
   user-select: none;
 }
@@ -155,7 +167,7 @@ canvas {
   margin: 0 auto;
 }
 
-#test-container {
+#bottom-container {
   display: flex;
   margin-top: calc(100vh - 150px);
   justify-content: center;
@@ -163,7 +175,7 @@ canvas {
   align-items: center;
 }
 
-#test-container p {
+#bottom-container p {
   position: static;
   max-width: 425px;
 }

@@ -19,7 +19,12 @@
   <canvas id="bg"></canvas>
 
   <img src="img/mute.svg" draggable="false" id="mute-button-on" class="volume-buttons" alt="Mute Button">
-  <img src="img/volume.svg" draggable="false" id="mute-button-off" class="volume-buttons" alt="Mute Button">
+  <img src="img/volume.svg" draggable="false" id="mute-button-off" class="volume-buttons" alt="Unmute Button">
+
+  <img src="img/maximize-button.svg" draggable="false" id="maximize-button" class="fullscreen-buttons"
+    alt="Fullscreen Button">
+  <img src="img/minimize-button.svg" draggable="false" id="minimize-button" class="fullscreen-buttons"
+    alt="Exit Fullscreen Button" style="display: none;">
 
   <div id="loading-screen">
     <div id="loading-border">
@@ -55,7 +60,7 @@
     <p id="time-elapsed" style="position: fixed; top: 7vh; margin: 0;"></p>
     <p id="time-until" style="position: fixed; top: 13vh; margin: 0;"></p>
 
-    <div id="test-container">
+    <div id="bottom-container">
       <button id="unit-button">
         <p id="unit-button__text">Switch to km</p>
       </button>

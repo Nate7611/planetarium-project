@@ -8,6 +8,8 @@ import { Timer } from 'three/addons/misc/Timer.js';
 // Global UI
 const muteButtonOff = document.getElementById('mute-button-off');
 const muteButtonOn = document.getElementById('mute-button-on');
+const minimizeButton = document.getElementById('minimize-button');
+const maximizeButton = document.getElementById('maximize-button');
 
 // Main UI
 const mainUI = document.getElementById('main-UI');
@@ -353,7 +355,7 @@ function setup() {
   if (muted) {
     muteButtonOff.style.display = 'none';
     muteButtonOn.style.display = 'block';
-  } 
+  }
   else {
     muteButtonOn.style.display = 'none';
     muteButtonOff.style.display = 'block';
@@ -444,8 +446,6 @@ startButton.addEventListener('click', function () {
     zoomSoundLoop.setMediaElementSource(zoomSoundLoopElement);
     zoomSoundLoopElement.play();
     zoomSoundLoop.setVolume(0);
-
-    document.documentElement.requestFullscreen();
   }
 });
 
@@ -465,6 +465,33 @@ muteButtonOn.addEventListener('click', function () {
     localStorage.setItem('muted', 'false');
     muteButtonOn.style.display = 'none';
     muteButtonOff.style.display = 'block';
+  }
+});
+
+// Fullscreen buttons (I dont need both if statements but I dont want the user to get stuck so I am leaving them in case)
+maximizeButton.addEventListener('click', function () {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+    maximizeButton.style.display = 'none';
+    minimizeButton.style.display = 'block';
+  } 
+  else if (document.exitFullscreen) {
+    document.exitFullscreen();
+    minimizeButton.style.display = 'none';
+    maximizeButton.style.display = 'block';
+  }
+});
+
+minimizeButton.addEventListener('click', function () {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+    maximizeButton.style.display = 'none';
+    minimizeButton.style.display = 'block';
+  } 
+  else if (document.exitFullscreen) {
+    document.exitFullscreen();
+    minimizeButton.style.display = 'none';
+    maximizeButton.style.display = 'block';
   }
 });
 
