@@ -444,6 +444,8 @@ startButton.addEventListener('click', function () {
     zoomSoundLoop.setMediaElementSource(zoomSoundLoopElement);
     zoomSoundLoopElement.play();
     zoomSoundLoop.setVolume(0);
+
+    document.documentElement.requestFullscreen();
   }
 });
 

@@ -336,8 +336,9 @@ canvas {
   display: flex;
   border: none;
   border-radius: 4px;
-  width: 10vw;
-  height: 6vh;
+  width: 200px;
+  min-width: 200px;
+  height: 80px;
   filter: drop-shadow(5px 5px 10px black);
   margin-top: 50px;
 }
