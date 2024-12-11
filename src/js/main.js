@@ -23,6 +23,7 @@ const unitSwitchButton = document.getElementById('unit-button');
 const unitSwitchButtonText = document.getElementById('unit-button__text');
 const fastTravelButton = document.getElementById('travel-button');
 const fastTravelElement = document.getElementById('fast-travel');
+const orbitButton = document.getElementById('orbit-button');
 
 // Loading UI
 const loadingScreen = document.getElementById('loading-screen');
@@ -228,7 +229,7 @@ const maxDistance = 0.000004;
 const planets = [
   { name: 'Mercury', arrived: false, left: false, position: 41.596, endPosition: 41.604, diameter: '3,032 mi (4,879 km)', temperature: '333°F (167°C)', moons: '0', dayLength: '175.9 Earth Days', funFact: "Mercury's temperature fluctuates from around 800°F (430°C) during the day to around -290°F (-180°C) at night.", button: document.getElementById('discovered-planets__mercury') },
   { name: 'Venus', arrived: false, left: false, position: 77.723, endPosition: 77.737, diameter: '7,521 mi (12,104 km)', temperature: '867°F (464°C)', moons: '0', dayLength: '116.8 Earth Days', funFact: 'Venus has a thick atmosphere of carbon dioxide that makes it hotter than Mercury, despite being farther from the Sun.', button: document.getElementById('discovered-planets__venus') },
-  { name: 'Earth', arrived: false, left: false, position: 107.492, endPosition: 107.508, diameter: '7,926 mi (12,756 km)', temperature: '59°F (15°C)', moons: '1', dayLength: '1 Earth Day', funFact: 'Earth is the only planet in the Universe known to support life.', button: document.getElementById('discovered-planets__earth') },
+  { name: 'Earth', arrived: false, left: false, position: 107.492, endPosition: 107.508, diameter: '7,926 mi (12,756 km)', temperature: '59°F (15°C)', moons: '1', dayLength: '1 Earth Day', funFact: 'Earth is the only planet in the Universe known to support life.', button: document.getElementById('discovered-planets__earth'), object: earth },
   { name: 'The Moon', arrived: false, left: false, position: 107.774, endPosition: 107.778402704, diameter: '2,159 mi (3,475 km)', temperature: '-4°F (-20°C)', moons: '0', dayLength: '29.5 Earth Days', funFact: "When the Moon is at its farthest distance from Earth, you could fit all the other planets (including Pluto) in the space between them.", button: document.getElementById('discovered-planets__moon') },
   { name: 'Mars', arrived: false, left: false, position: 163.696, endPosition: 163.704, diameter: '4,221 mi (6,792 km)', temperature: '-85°F (-65°C)', moons: '2', dayLength: '1.03 Earth Days', funFact: 'Mars is home to the tallest volcano in the Solar System, Olympus Mons, which is about two and a half times the height of Mount Everest.', button: document.getElementById('discovered-planets__mars') },
   { name: 'Jupiter', arrived: false, left: false, position: 559.2, endPosition: 559.4, diameter: '88,846 mi (142,984 km)', temperature: '-166°F (-110°C)', moons: '95', dayLength: '0.414 Earth Days', funFact: "Jupiter actually has rings, along with Uranus and Neptune. These rings are just much harder to see compared to Saturn's rings.", button: document.getElementById('discovered-planets__jupiter') },
@@ -266,7 +267,7 @@ const fastTravel = {
 
 // Really hacky implementation but it is due in a few hours...
 for (const i in fastTravel) {
-  fastTravel[i].addEventListener('click', function() {
+  fastTravel[i].addEventListener('click', function () {
     const planet = planets.find(p => p.name.toLowerCase() === i); // Match planets name
 
     // Since the moon is not just named moon it wont find a match in the search hench the else
@@ -277,8 +278,10 @@ for (const i in fastTravel) {
       camera.position.z = planet.position - 1;
     }
     else {
-      voyagerModel.position.z = 107.774; // 107.774 is the moons start position
-      camera.position.z = 107.774 - 1;
+      planets[3].arrived = false; // planets[3] is the moon
+      planets[3].left = false;
+      voyagerModel.position.z = planets[3].position;
+      camera.position.z = planets[3].position - 1;
     }
 
     fastTravelElement.style.display = 'none';
@@ -334,6 +337,9 @@ let startLoop;
 let started = false;
 let targetPlanet;
 let hasTarget = false;
+let activePlanet;
+let planetObjects;
+let isOrbiting = false;
 
 function setup() {
   // Assign loaded textures
@@ -432,6 +438,10 @@ function setup() {
   pluto.position.setZ(4220);
   pluto.position.setY(-0.00085366912 - planetHeightOffset);
   pluto.rotateY(Math.PI);
+
+  planetObjects = [
+    mercury, venus, earth, moon, mars, jupiter, saturnModel, uranus, neptune, pluto
+  ]
 
   // Make camera face sun on load
   camera.position.setZ(1.81);
@@ -571,6 +581,40 @@ fastTravelButton.addEventListener('click', () => {
   }
 });
 
+orbitButton.addEventListener('click', function () {
+  if (!isOrbiting) {
+    timeScale = 0;
+    isOrbiting = true;
+
+    mainUI.style.animationName = 'hide';
+    mainUI.style.pointerEvents = 'none';
+
+    factsContainer.style.animationName = 'hide';
+
+    orbitButton.style.animationIterationCount = 'infinite';
+    orbitButton.style.animationName = 'pop';
+
+    control.target = new THREE.Vector3(activePlanet.position.x, activePlanet.position.y, activePlanet.position.z);
+    control.maxDistance = activePlanet.geometry.parameters.radius + (activePlanet.geometry.parameters.radius * 8);
+    control.minDistance = activePlanet.geometry.parameters.radius + (activePlanet.geometry.parameters.radius / 4);
+  }
+  else {
+    isOrbiting = false;
+
+    control.maxDistance = maxDistance;
+    control.minDistance = 0.0000005;
+    camera.position.z = 0;
+
+    mainUI.style.animationName = 'reveal';
+    mainUI.style.pointerEvents = 'auto';
+
+    orbitButton.style.animationIterationCount = '1';
+    orbitButton.style.animationName = 'none';
+    
+    factsContainer.style.animationName = 'reveal';
+  }
+});
+
 // Switch units and button text when pressed
 unitSwitchButton.addEventListener('click', function () {
   if (!usingMetric) {
@@ -581,7 +625,7 @@ unitSwitchButton.addEventListener('click', function () {
     usingMetric = false;
     unitSwitchButtonText.innerHTML = 'Switch to km';
   }
-})
+});
 
 control.addEventListener('start', () => {
   movedCamera = true;
@@ -753,6 +797,13 @@ function animate() {
     bgMusic.setVolume(bgMusicVol);
   }
 
+  if (fastTravelElement.style.display == 'block' && fastTravelButton.animationName != 'pop') {
+    fastTravelButton.style.animationName = 'pop';
+  }
+  else if (fastTravelElement.style.display != 'block') {
+    fastTravelButton.style.animationName = 'none';
+  }
+
   // Converting Seconds to largest form
   elapsedTimeRaw = (voyagerModel.position.z - 0.500001) / 0.000012212; // Time is based on position
   elapsedSeconds = Math.trunc(elapsedTimeRaw - 60 * Math.trunc(elapsedTimeRaw / 60))
@@ -785,9 +836,19 @@ function animate() {
     // When we arrive at planet
     if (voyagerModel.position.z >= planets[i].position && !planets[i].arrived) {
       planets[i].arrived = true;
+      activePlanet = planetObjects[i];
       hasTarget = false;
       slowingDown = false;
       timeScale = 1;
+
+      orbitButton.style.display = 'block';
+      orbitButton.style.animationName = 'reveal';
+
+      // Since going past pluto ends it we enable the button when we arrive
+      if (planets[i].name == 'Pluto') {
+        planets[i].button.style.opacity = '1';
+        planets[i].button.style.pointerEvents = 'auto';
+      }
 
       // Store camoffset to restore after teleport
       let camOffsetX = camera.position.x - voyagerModel.position.x;
@@ -826,6 +887,8 @@ function animate() {
     // Check if we left planet
     if (planets[i].arrived && !planets[i].left && voyagerModel.position.z >= planets[i].endPosition) {
       planets[i].left = true;
+
+      orbitButton.style.display = 'none';
 
       // Enable fast travel buttons
       planets[i].button.style.opacity = '1';
@@ -880,7 +943,9 @@ function animate() {
   }
 
   // Set orbit control orgin to voyager
-  control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
+  if (!isOrbiting) {
+    control.target = new THREE.Vector3(voyagerModel.position.x, voyagerModel.position.y, voyagerModel.position.z);
+  }
 
   // Write speed to screen
   if (slowingDown) {
