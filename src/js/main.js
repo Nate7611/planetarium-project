@@ -474,7 +474,7 @@ maximizeButton.addEventListener('click', function () {
     document.documentElement.requestFullscreen();
     maximizeButton.style.display = 'none';
     minimizeButton.style.display = 'block';
-  } 
+  }
   else if (document.exitFullscreen) {
     document.exitFullscreen();
     minimizeButton.style.display = 'none';
@@ -487,7 +487,7 @@ minimizeButton.addEventListener('click', function () {
     document.documentElement.requestFullscreen();
     maximizeButton.style.display = 'none';
     minimizeButton.style.display = 'block';
-  } 
+  }
   else if (document.exitFullscreen) {
     document.exitFullscreen();
     minimizeButton.style.display = 'none';
@@ -706,7 +706,7 @@ function animate() {
   }
 
   // Converting Seconds to largest form
-  elapsedTimeRaw += delta * speed;
+  elapsedTimeRaw = (voyagerModel.position.z - 0.500001) / 0.000012212; // Time is based on position
   elapsedSeconds = Math.trunc(elapsedTimeRaw - 60 * Math.trunc(elapsedTimeRaw / 60))
   elapsedMinutes = Math.trunc((elapsedTimeRaw / 60) - 60 * Math.trunc(elapsedTimeRaw / 3600));
   elapsedHours = Math.trunc((elapsedTimeRaw / 3600) - 24 * Math.trunc(elapsedTimeRaw / 86400));
