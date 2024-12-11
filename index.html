@@ -37,25 +37,9 @@
     <button id="start-button">Start</button>
   </div>
 
-  <div id="opening-text">
-    <h1>Information</h1>
-    <hr>
-    <P>You will be observing the Voyager 1 Probe that was launched in 1977.</p>
-    <p>You will experience the time it takes to get from the Sun all the way to Pluto.</p>
-    <p>The Voyager 1 is moving at 38,026 mph (61,197 km/h).</p>
-    <p>Be aware, once you leave a Planet there is no going back!</p>
-    <p>(Tap to Continue)</p>
-  </div>
-
-  <div id="tutorial">
-    <h1>Tutorial</h1>
-    <hr>
-    <p id="tutorial__camera-text">Move the camera around by dragging your finger across the screen.</p>
-    <p id="tutorial__speed-text">Control the rate of time with the buttons below.</p>
-    <p id="tutorial__continue-text">(Complete Each Action to Continue)</p>
-  </div>
-
   <div id="main-UI" style="display: none; opacity: 0;">
+    <img src="img/rocket.svg" draggable="false" id="travel-button" alt="Fast Travel Button">
+
     <p id="distance" style="position: fixed; top: 1vh; margin: 0;"></p>
     <p id="time-elapsed" style="position: fixed; top: 7vh; margin: 0;"></p>
     <p id="time-until" style="position: fixed; top: 13vh; margin: 0;"></p>
@@ -76,6 +60,24 @@
     </div>
   </div>
 
+  <div id="opening-text">
+    <h1>Information</h1>
+    <hr>
+    <P>You will be observing the Voyager 1 Probe that was launched in 1977.</p>
+    <p>You will experience the time it takes to get from the Sun all the way to Pluto.</p>
+    <p>The Voyager 1 is moving at 38,026 mph (61,197 km/h).</p>
+    <p>You can teleport to planets you've visited before from the rocket ship icon!</p>
+    <p>(Tap to Continue)</p>
+  </div>
+
+  <div id="tutorial">
+    <h1>Tutorial</h1>
+    <hr>
+    <p id="tutorial__camera-text">Move the camera around by dragging your finger across the screen.</p>
+    <p id="tutorial__speed-text">Control the rate of time with the buttons below.</p>
+    <p id="tutorial__continue-text">(Complete Each Action to Continue)</p>
+  </div>
+
   <div id="ending">
     <h1>In the distance between the Sun and Pluto, you could...</h1>
     <hr>
@@ -93,6 +95,22 @@
       <p>Restart</p>
       <img src="img/restart.svg" alt="Restart Button">
     </button>
+  </div>
+
+  <div id="fast-travel" style="display: none;">
+    <h1>Tap to Travel</h1>
+    <div id="discovered-planets">
+      <p id="discovered-planets__mercury" style="opacity: 0.1; pointer-events: none;">Mercury</p>
+      <p id="discovered-planets__venus" style="opacity: 0.1; pointer-events: none;">Venus</p>
+      <p id="discovered-planets__earth" style="opacity: 0.1; pointer-events: none;">Earth</p>
+      <p id="discovered-planets__moon" style="opacity: 0.1; pointer-events: none;">The Moon</p>
+      <p id="discovered-planets__mars" style="opacity: 0.1; pointer-events: none;">Mars</p>
+      <p id="discovered-planets__jupiter" style="opacity: 0.1; pointer-events: none;">Jupiter</p>
+      <p id="discovered-planets__saturn" style="opacity: 0.1; pointer-events: none;">Saturn</p>
+      <p id="discovered-planets__uranus" style="opacity: 0.1; pointer-events: none;">Uranus</p>
+      <p id="discovered-planets__neptune" style="opacity: 0.1; pointer-events: none;">Neptune</p>
+      <p id="discovered-planets__pluto" style="opacity: 0.1; pointer-events: none;">Pluto</p>
+    </div>
   </div>
 
   <div id="fact-container" style="opacity: 0;">
