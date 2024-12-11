@@ -586,6 +586,8 @@ orbitButton.addEventListener('click', function () {
     timeScale = 0;
     isOrbiting = true;
 
+    fastTravelElement.style.display = 'none';
+
     mainUI.style.animationName = 'hide';
     mainUI.style.pointerEvents = 'none';
 
