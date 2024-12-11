@@ -586,6 +586,8 @@ orbitButton.addEventListener('click', function () {
     timeScale = 0;
     isOrbiting = true;
 
+    console.log(activePlanet);
+
     fastTravelElement.style.display = 'none';
 
     mainUI.style.animationName = 'hide';
@@ -597,8 +599,22 @@ orbitButton.addEventListener('click', function () {
     orbitButton.style.animationName = 'pop';
 
     control.target = new THREE.Vector3(activePlanet.position.x, activePlanet.position.y, activePlanet.position.z);
-    control.maxDistance = activePlanet.geometry.parameters.radius + (activePlanet.geometry.parameters.radius * 8);
-    control.minDistance = activePlanet.geometry.parameters.radius + (activePlanet.geometry.parameters.radius / 4);
+
+    if (activePlanet.geometry) {
+      control.maxDistance = activePlanet.geometry.parameters.radius + (activePlanet.geometry.parameters.radius * 2);
+      control.minDistance = activePlanet.geometry.parameters.radius + (activePlanet.geometry.parameters.radius / 4);
+
+      camera.position.z = 1;
+    }
+    else {
+      // Saturn since it has no geometry
+      control.maxDistance = 0.15;
+      control.minDistance = 0.06;
+
+      // Not good to make it fixed but I have no time left
+      camera.position.y = 0.006939;
+      camera.position.z = 1028.8581;
+    }
   }
   else {
     isOrbiting = false;
@@ -900,6 +916,8 @@ function animate() {
       factsContainer.style.animationName = 'hide';
     }
   }
+
+  console.log(camera.position)
 
   // Time until next planet text
   secondsUntilPlanet = Math.round((targetPlanet.position - voyagerModel.position.z) / (0.00001124 * speed));
