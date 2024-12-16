@@ -978,6 +978,7 @@ function animate() {
 
   if (voyagerModel.position.z > planets.at(-1).endPosition) {
     mainUI.style.animationName = 'hide';
+    fastTravelElement.style.display = 'none';
     endingElement.style.display = 'flex';
     endingElement.style.animationName = 'reveal';
   }
